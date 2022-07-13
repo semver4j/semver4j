@@ -53,7 +53,7 @@ If the version is invalid, a `SemverException` will be thrown.
 You can access the different parts of the version using `getMajor()`, `getMinor()`, `getPatch()`, `getSuffixTokens()` or `getBuild()`.
 
 | Type      | Mandatory           | Optional                    |
-| --------- | ------------------- | --------------------------- |
+|-----------|---------------------|-----------------------------|
 | STRICT    | major, minor, patch | suffix, build               |
 | LOOSE     | major               | minor, patch, suffix, build |
 | NPM       | major               | minor, patch, suffix, build |
