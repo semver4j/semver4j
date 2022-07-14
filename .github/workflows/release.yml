@@ -21,11 +21,6 @@ jobs:
       - name: Build with Apache Maven
         run: mvn --batch-mode package
 
-      - name: Publish to GitHub Packages Apache Maven
-        run: mvn --batch-mode deploy -Drevision=${{ steps.set_version.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v3
         with:
