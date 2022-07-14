@@ -17,10 +17,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
       - name: Set Java ${{ matrix.java }}
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
-      - name: Build with Maven
+
+      - name: Build with Apache Maven
         run: mvn clean test

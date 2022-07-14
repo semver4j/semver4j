@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.semver4j</groupId>
     <artifactId>semver4j</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>${revision}-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>semver4j</name>
@@ -29,8 +30,8 @@
         <connection>scm:git:git@github.com:semver4j/semver4j.git</connection>
         <developerConnection>scm:git:git@github.com:semver4j/semver4j.git</developerConnection>
         <url>git@github.com:semver4j/semver4j.git</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -68,59 +69,58 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
-                    <scmCommentPrefix xml:space="preserve">[release]</scmCommentPrefix>
-                    <goals>deploy</goals>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
 
-    <!--    <profiles>-->
-    <!--        <profile>-->
-    <!--            <id>release</id>-->
-    <!--            <build>-->
-    <!--                <plugins>-->
-    <!--                    <plugin>-->
-    <!--                        <groupId>org.apache.maven.plugins</groupId>-->
-    <!--                        <artifactId>maven-source-plugin</artifactId>-->
-    <!--                        <version>3.2.1</version>-->
-    <!--                        <executions>-->
-    <!--                            <execution>-->
-    <!--                                <id>attach-sources</id>-->
-    <!--                                <goals>-->
-    <!--                                    <goal>jar-no-fork</goal>-->
-    <!--                                </goals>-->
-    <!--                            </execution>-->
-    <!--                        </executions>-->
-    <!--                    </plugin>-->
-    <!--                </plugins>-->
-    <!--            </build>-->
-    <!--        </profile>-->
-    <!--    </profiles>-->
-
     <distributionManagement>
         <repository>
-            <id>localnexus</id>
-            <url>http://localhost:8081/repository/maven-releases/</url>
+            <id>ossrh</id>
+            <name>Nexus Release Repository</name>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
         <snapshotRepository>
-            <id>localnexus</id>
-            <url>http://localhost:8081/repository/maven-snapshots/</url>
+            <id>ossrh</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
-        <!--        <repository>-->
-        <!--            <id>ossrh</id>-->
-        <!--            <name>Nexus Release Repository</name>-->
-        <!--            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-        <!--        </repository>-->
-        <!--        <snapshotRepository>-->
-        <!--            <id>ossrh</id>-->
-        <!--            <name>Sonatype Nexus Snapshots</name>-->
-        <!--            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
-        <!--        </snapshotRepository>-->
     </distributionManagement>
 </project>

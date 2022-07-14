@@ -1,0 +1,42 @@
+name: Publish package to the Maven Central Repository
+on:
+  release:
+    types: [ published ]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set version
+        uses: actions/github-script@v4
+        id: set_version
+        with:
+          script: |
+            const tagName = context.payload.release.tag_name
+            const version = tagName.replace('v', '')
+            core.setOutput('version', version)
+
+      - name: Build with Apache Maven
+        run: mvn --batch-mode package
+
+      - name: Publish to GitHub Packages Apache Maven
+        run: mvn --batch-mode deploy -Drevision=${{ steps.set_version.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Set up Apache Maven Central
+        uses: actions/setup-java@v3
+        with:
+          java-version: 8
+          distribution: temurin
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+
+      - name: Publish package to Apache Maven Central
+        run: mvn --batch-mode deploy -Drevision=${{ steps.set_version.outputs.version }}
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
