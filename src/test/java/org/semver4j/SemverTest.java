@@ -402,6 +402,6 @@ public class SemverTest {
         //when/then
         assertThatThrownBy(() -> new Semver("1.1.1.1"))
                 .isInstanceOf(SemverException.class)
-                .hasMessage("Invalid version number, must contains only MAJOR.MINOR.PATCH");
+                .hasMessage("Version [1.1.1.1] is not valid to strict semver.");
     }
 }
