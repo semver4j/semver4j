@@ -1,0 +1,21 @@
+template: |
+  ## What's Changed
+  
+  $CHANGES
+categories:
+  - title: '🪳 Bug Fixes'
+    label: 'bug'
+  - title: '🚀 Features'
+    label: 'enhancement'
+  - title: '📔 Documentation'
+    label: 'documentation'
+  - title: '⬆ Dependency Updates'
+    label: 'dependencies'
+    collapse-after: 5
+change-template: '* (#$NUMBER) $TITLE by @$AUTHOR'
+exclude-labels:
+  - 'duplicate'
+  - 'invalid'
+  - 'question'
+  - 'wontfix'
+  
