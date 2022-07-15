@@ -1,38 +1,41 @@
 # Semver4j
 
+---
 
-This is an active copy of great [semver4j](https://github.com/vdurmont/semver4j) library created by vdurmont,
-which was abandoned.
-
+> ### This is an active copy of great [semver4j](https://github.com/vdurmont/semver4j) library created by @vdurmont, which is no longer maintained 
+ 
+ ---
 
 **Semver4j** is a lightweight Java library that helps you handling versions. 
-It follows the rules of the [semantic versioning](http://semver.org) specification and provides several versioning modes: strict, NPM, CocoaPods...
+It follows the rules of the [semantic versioning](http://semver.org) specification and provides several versioning modes: strict, [node-semver](https://github.com/npm/node-semver), [CocoaPods](https://guides.cocoapods.org/using/the-podfile.html) and [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html).
 
 ## Installation
 
 Add the dependency to your project:
 
-#### Using maven
+### Using maven
 
 ```xml
 <dependency>
-  <groupId>com.vdurmont</groupId>
+  <groupId>org.semver4j</groupId>
   <artifactId>semver4j</artifactId>
-  <version>3.1.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
-#### Using gradle
+### Using gradle
 
 ```
-compile 'com.vdurmont:semver4j:3.1.0'
+implementation 'org.semver4j:semver4j:1.0.0'
 ```
+
+###### Version `v1.0.0` references to orginally version `v3.1.0` in source repository.
 
 ## Usage
 
 ### What is a version?
 
-In Semver4j, a version looks like: `1.2.3-beta.4+sha899d8g79f87`.
+In **Semver4j**, a version looks like: `1.2.3-beta.4+sha899d8g79f87`.
 
 - `1` is the major part (required)
 - `2` is the minor part (required in strict mode)
@@ -58,6 +61,7 @@ You can access the different parts of the version using `getMajor()`, `getMinor(
 | LOOSE     | major               | minor, patch, suffix, build |
 | NPM       | major               | minor, patch, suffix, build |
 | COCOAPODS | major               | minor, patch, suffix, build |
+| IVY       | major               | minor, patch, suffix, build |
 
 ### Is the version stable?
 
