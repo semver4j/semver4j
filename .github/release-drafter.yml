@@ -7,9 +7,9 @@ categories:
     label: 'bug'
   - title: '🚀 Features'
     label: 'enhancement'
-  - title: '📔 Documentation'
+  - title: '📝 Documentation'
     label: 'documentation'
-  - title: '⬆ Dependency Updates'
+  - title: '📦 Dependency Updates'
     label: 'dependencies'
     collapse-after: 5
 change-template: '* (#$NUMBER) $TITLE by @$AUTHOR'
