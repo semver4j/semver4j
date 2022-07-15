@@ -13,7 +13,7 @@ It follows the rules of the [semantic versioning](http://semver.org) specificati
 
 Add the dependency to your project:
 
-### Using maven
+### Using Maven
 
 ```xml
 <dependency>
@@ -23,7 +23,7 @@ Add the dependency to your project:
 </dependency>
 ```
 
-### Using gradle
+### Using Gradle
 
 ```
 implementation 'org.semver4j:semver4j:1.0.0'
