@@ -4,7 +4,7 @@
 
     <groupId>org.semver4j</groupId>
     <artifactId>semver4j</artifactId>
-    <version>${revision}-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <name>semver4j</name>
