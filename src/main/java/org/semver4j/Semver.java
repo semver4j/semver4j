@@ -1,7 +1,14 @@
 package org.semver4j;
 
+import org.semver4j.parsers.OtherSemverParser;
+import org.semver4j.parsers.ParsedVersion;
+import org.semver4j.parsers.SemverParser;
+import org.semver4j.parsers.StrictSemverParser;
+
 import java.util.Objects;
 
+import static java.lang.String.format;
+import static org.semver4j.Semver.SemverType.NPM;
 import static org.semver4j.Semver.SemverType.STRICT;
 
 /**
@@ -11,136 +18,41 @@ import static org.semver4j.Semver.SemverType.STRICT;
 public class Semver implements Comparable<Semver> {
     private final String originalValue;
     private final SemverType type;
-
     private final String value;
-    private final Integer major;
+
+    private final int major;
     private final Integer minor;
     private final Integer patch;
     private final String[] suffixTokens;
     private final String build;
 
-    public Semver(String originalValue) {
-        this(originalValue, STRICT);
+    public Semver(String version) {
+        this(version, STRICT);
     }
 
-    public Semver(String originalValue, SemverType type) {
-        this.originalValue = originalValue;
+    public Semver(String version, SemverType type) {
+        this.originalValue = version;
         this.type = type;
 
-        originalValue = originalValue.trim();
-        if (type == SemverType.NPM && (originalValue.startsWith("v") || originalValue.startsWith("V"))) {
-            originalValue = originalValue.substring(1).trim();
+        version = version.trim();
+        if (type == NPM && (version.startsWith("v") || version.startsWith("V"))) {
+            version = version.substring(1).trim();
         }
-        this.value = originalValue;
-        String[] tokens;
+        this.value = version;
 
-        if (hasPreRelease(originalValue)) {
-            tokens = originalValue.split("-", 2);
-        } else {
-            tokens = new String[]{originalValue};
-        }
+        SemverParser semverParser = type == STRICT ? new StrictSemverParser() : new OtherSemverParser(type);
+        ParsedVersion parsedVersion = semverParser.parse(version);
 
-        String build = null;
-        Integer minor = null;
-        Integer patch = null;
-        try {
-            String[] mainTokens;
-            if (tokens.length == 1) {
-                // The build version may be in the main tokens
-                if (tokens[0].endsWith("+")) {
-                    throw new SemverException("The build cannot be empty.");
-                }
-                String[] tmp = tokens[0].split("\\+");
-                mainTokens = tmp[0].split("\\.");
-                if (tmp.length == 2) {
-                    build = tmp[1];
-                }
-            } else {
-                mainTokens = tokens[0].split("\\.");
-            }
-
-            if (mainTokens.length > 3) {
-                throw new SemverException("Invalid version number, must contains only MAJOR.MINOR.PATCH");
-            }
-
-            try {
-                this.major = Integer.valueOf(mainTokens[0]);
-            } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                throw new SemverException("Invalid version (no major version): " + originalValue);
-            }
-
-            try {
-                minor = Integer.valueOf(mainTokens[1]);
-            } catch (IndexOutOfBoundsException e) {
-                if (type == STRICT) {
-                    throw new SemverException("Invalid version (no minor version): " + originalValue);
-                }
-            } catch (NumberFormatException e) {
-                if (type != SemverType.NPM || (!"x".equalsIgnoreCase(mainTokens[1]) && !"*".equals(mainTokens[1]))) {
-                    throw new SemverException("Invalid version (no minor version): " + originalValue);
-                }
-            }
-            try {
-                patch = Integer.valueOf(mainTokens[2]);
-            } catch (IndexOutOfBoundsException e) {
-                if (type == STRICT) {
-                    throw new SemverException("Invalid version (no patch version): " + originalValue);
-                }
-            } catch (NumberFormatException e) {
-                if (type != SemverType.NPM || (!"x".equalsIgnoreCase(mainTokens[2]) && !"*".equals(mainTokens[2]))) {
-                    throw new SemverException("Invalid version (no patch version): " + originalValue);
-                }
-            }
-        } catch (NumberFormatException | IndexOutOfBoundsException e) {
-            throw new SemverException("The version is invalid: " + originalValue);
-        }
-        this.minor = minor;
-        this.patch = patch;
-
-        String[] suffix = new String[0];
-        try {
-            // The build version may be in the suffix tokens
-            if (tokens[1].endsWith("+")) {
-                throw new SemverException("The build cannot be empty.");
-            }
-            String[] tmp = tokens[1].split("\\+");
-            if (tmp.length == 2) {
-                suffix = tmp[0].split("\\.");
-                build = tmp[1];
-            } else {
-                suffix = tokens[1].split("\\.");
-            }
-        } catch (IndexOutOfBoundsException ignored) {
-        }
-        this.suffixTokens = suffix;
-
-        this.build = build;
-
-        this.validate(type);
-    }
-
-    private void validate(SemverType type) {
-        if (this.minor == null && type == STRICT) {
-            throw new SemverException("Invalid version (no minor version): " + value);
-        }
-        if (this.patch == null && type == STRICT) {
-            throw new SemverException("Invalid version (no patch version): " + value);
-        }
-    }
-
-    private boolean hasPreRelease(String version) {
-        int firstIndexOfPlus = value.indexOf("+");
-        int firstIndexOfHyphen = value.indexOf("-");
-
-        if (firstIndexOfHyphen == -1) {
-            return false;
-        }
-
-        return firstIndexOfPlus == -1 || firstIndexOfHyphen < firstIndexOfPlus;
+        major = parsedVersion.getMajor();
+        minor = parsedVersion.getMinor();
+        patch = parsedVersion.getPatch();
+        String preRelease = parsedVersion.getPreRelease();
+        suffixTokens = preRelease == null ? new String[0] : preRelease.split("\\.");
+        build = parsedVersion.getBuild();
     }
 
     /**
-     * Check if the version satisfies a requirement
+     * Check if the version satisfies a requirement.
      *
      * @param requirement the requirement
      * @return true if the version satisfies the requirement
@@ -150,14 +62,14 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Check if the version satisfies a requirement
+     * Check if the version satisfies a requirement.
      *
      * @param requirement the requirement
      * @return true if the version satisfies the requirement
      */
     public boolean satisfies(String requirement) {
         Requirement req;
-        switch (this.type) {
+        switch (type) {
             case STRICT:
                 req = Requirement.buildStrict(requirement);
                 break;
@@ -174,7 +86,7 @@ public class Semver implements Comparable<Semver> {
                 req = Requirement.buildIvy(requirement);
                 break;
             default:
-                throw new SemverException("Invalid requirement type: " + type);
+                throw new SemverException(format("Invalid requirement type: %s", type));
         }
         return this.satisfies(req);
     }
@@ -353,7 +265,7 @@ public class Semver implements Comparable<Semver> {
      * @return true if the current version is stable
      */
     public boolean isStable() {
-        return (this.getMajor() != null && this.getMajor() > 0) &&
+        return (this.getMajor() > 0) &&
                 (this.getSuffixTokens() == null || this.getSuffixTokens().length == 0);
     }
 
@@ -531,7 +443,7 @@ public class Semver implements Comparable<Semver> {
 
     @Override
     public String toString() {
-        return this.getValue();
+        return getValue();
     }
 
     /**
@@ -558,8 +470,8 @@ public class Semver implements Comparable<Semver> {
      *
      * @return the major part of the version
      */
-    public Integer getMajor() {
-        return this.major;
+    public int getMajor() {
+        return major;
     }
 
     /**
@@ -569,7 +481,7 @@ public class Semver implements Comparable<Semver> {
      * @return the minor part of the version
      */
     public Integer getMinor() {
-        return this.minor;
+        return minor;
     }
 
     /**
@@ -579,7 +491,7 @@ public class Semver implements Comparable<Semver> {
      * @return the patch part of the version
      */
     public Integer getPatch() {
-        return this.patch;
+        return patch;
     }
 
     /**
