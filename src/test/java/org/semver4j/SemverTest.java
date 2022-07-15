@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -394,5 +395,13 @@ public class SemverTest {
         assertThrows(SemverException.class, () -> {
             new Semver("1.2.Y");
         });
+    }
+
+    @Test
+    void shouldThrowExceptionWhenThereIsToManyParts() {
+        //when/then
+        assertThatThrownBy(() -> new Semver("1.1.1.1"))
+                .isInstanceOf(SemverException.class)
+                .hasMessage("Invalid version number, must contains only MAJOR.MINOR.PATCH");
     }
 }

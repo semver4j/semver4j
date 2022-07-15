@@ -59,6 +59,10 @@ public class Semver implements Comparable<Semver> {
                 mainTokens = tokens[0].split("\\.");
             }
 
+            if (mainTokens.length > 3) {
+                throw new SemverException("Invalid version number, must contains only MAJOR.MINOR.PATCH");
+            }
+
             try {
                 this.major = Integer.valueOf(mainTokens[0]);
             } catch (NumberFormatException | IndexOutOfBoundsException e) {
