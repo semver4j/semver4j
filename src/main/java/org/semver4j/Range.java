@@ -3,59 +3,66 @@ package org.semver4j;
 import java.util.Objects;
 
 import static java.lang.String.format;
+import static java.util.Arrays.stream;
 
-// TODO doc
 public class Range {
-    protected final Semver version;
-    protected final RangeOperator op;
+    private final Semver rangeVersion;
+    private final RangeOperator rangeOperator;
 
-    public Range(Semver version, RangeOperator op) {
-        this.version = version;
-        this.op = op;
+    public Range(Semver rangeVersion, RangeOperator rangeOperator) {
+        this.rangeVersion = rangeVersion;
+        this.rangeOperator = rangeOperator;
     }
 
-    public Range(String version, RangeOperator op) {
-        this(new Semver(version, Semver.SemverType.LOOSE), op);
+    public Range(String rangeVersion, RangeOperator rangeOperator) {
+        this(new Semver(rangeVersion), rangeOperator);
+    }
+
+    public Semver getRangeVersion() {
+        return rangeVersion;
     }
 
     public boolean isSatisfiedBy(String version) {
-        return this.isSatisfiedBy(new Semver(version, this.version.getType()));
+        return isSatisfiedBy(new Semver(version));
     }
 
     public boolean isSatisfiedBy(Semver version) {
-        switch (this.op) {
+        switch (rangeOperator) {
             case EQ:
-                return version.isEquivalentTo(this.version);
+                return version.isEquivalentTo(rangeVersion);
             case LT:
-                return version.isLowerThan(this.version);
+                return version.isLowerThan(rangeVersion);
             case LTE:
-                return version.isLowerThan(this.version) || version.isEquivalentTo(this.version);
+                return version.isLowerThanOrEqualTo(rangeVersion);
             case GT:
-                return version.isGreaterThan(this.version);
+                return version.isGreaterThan(rangeVersion);
             case GTE:
-                return version.isGreaterThan(this.version) || version.isEquivalentTo(this.version);
+                return version.isGreaterThanOrEqualTo(rangeVersion);
         }
 
-        throw new RuntimeException(format("Code error. Unknown RangeOperator: %s", this.op)); // Should never happen
+        throw new RuntimeException(format("Code error. Unknown RangeOperator: %s", this.rangeOperator));
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Range)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Range range = (Range) o;
-        return Objects.equals(version, range.version) &&
-                op == range.op;
+        return Objects.equals(rangeVersion, range.rangeVersion) && rangeOperator == range.rangeOperator;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(version, op);
+        return Objects.hash(rangeVersion, rangeOperator);
     }
 
     @Override
     public String toString() {
-        return this.op.asString() + this.version;
+        return rangeOperator.asString() + rangeVersion;
     }
 
     public enum RangeOperator {
@@ -65,7 +72,7 @@ public class Range {
         EQ("="),
 
         /**
-         * The version is lower than the requirent
+         * The version is lower than the requirement
          */
         LT("<"),
 
@@ -82,16 +89,27 @@ public class Range {
         /**
          * The version is greater than or equivalent to the requirement
          */
-        GTE(">=");
+        GTE(">="),
+        ;
 
-        private final String s;
+        private final String string;
 
-        RangeOperator(String s) {
-            this.s = s;
+        RangeOperator(String string) {
+            this.string = string;
         }
 
         public String asString() {
-            return s;
+            return string;
+        }
+
+        public static RangeOperator value(String string) {
+            if (string.isEmpty()) {
+                return EQ;
+            }
+            return stream(values())
+                    .filter(rangeOperator -> rangeOperator.asString().equals(string))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException(format("Range operator for '%s' not found.", string)));
         }
     }
 }

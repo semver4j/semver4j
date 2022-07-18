@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.semver4j.Semver.SemverType.NPM;
 
 public class NpmSemverTest {
     public static Stream<Arguments> getParameters() {
@@ -33,7 +32,7 @@ public class NpmSemverTest {
                 arguments("2.3.0-alpha", "1.2.3 - 2.3.0-beta", true),
                 arguments("2.3.4", "1.2.3 - 2.3", true),
                 arguments("2.3.4", "1.2.3 - 2", true),
-                arguments("4.4", "3.X - 4.X", true),
+                arguments("4.4.0", "3.X - 4.X", true),
                 arguments("1.0.0", "1.2.3 - 2.3.4", false),
                 arguments("3.0.0", "1.2.3 - 2.3.4", false),
                 arguments("2.4.3", "1.2.3 - 2.3", false),
@@ -44,7 +43,7 @@ public class NpmSemverTest {
                 arguments("3.1.5", "", true),
                 arguments("3.1.5", "*", true),
                 arguments("0.0.0", "*", true),
-                arguments("1.0.0-beta", "*", true),
+                arguments("1.0.0-beta", "*", false),
                 arguments("3.1.5-beta", "3.1.x", false),
                 arguments("3.1.5-beta+exp.sha.5114f85", "3.1.x", false),
                 arguments("3.1.5+exp.sha.5114f85", "3.1.x", true),
@@ -207,14 +206,77 @@ public class NpmSemverTest {
                 arguments("2.0.1", "1.2 <1.2.8 || >2.0.0", true),
                 arguments("1.1.0", "1.2 <1.2.8 || >2.0.0", false),
                 arguments("1.2.9", "1.2 <1.2.8 || >2.0.0", false),
-                arguments("2.0.0", "1.2 <1.2.8 || >2.0.0", false)
+                arguments("2.0.0", "1.2 <1.2.8 || >2.0.0", false),
+
+                arguments("1.2.2", " ~> 1.2.3 ", false),
+                arguments("1.2.3", " ~> 1.2.3 ", true),
+                arguments("1.2.4", " ~> 1.2.3 ", true),
+                arguments("1.3.0", " ~> 1.2.3 ", false),
+                arguments("2.2.0", " ~> 2.2 ", true),
+                arguments("2.3.0", " ~> 2.2 ", false),
+
+                arguments("0.0.9", "[1.0,2.0]", false),
+                arguments("1.0.0", "[1.0,2.0]", true),
+                arguments("2.0.0", "[1.0,2.0]", true),
+                arguments("1.5.6", "[1.0,2.0]", true),
+                arguments("2.0.1", "[1.0,2.0]", false),
+
+                arguments("2.0.0", "[1.0,2.0[", false),
+                arguments("1.0.0", "[1.0,2.0[", true),
+                arguments("0.0.9", "[1.0,2.0[", false),
+                arguments("2.0.1", "[1.0,2.0[", false),
+                arguments("1.5.6", "[1.0,2.0[", true),
+
+                arguments("1.0.0", "]1.0,2.0]", false),
+                arguments("1.5.6", "]1.0,2.0]", true),
+                arguments("2.0.0", "]1.0,2.0]", true),
+                arguments("2.0.1", "]1.0,2.0]", false),
+
+                arguments("1.0.0", "]1.0,2.0[", false),
+                arguments("2.0.0", "]1.0,2.0[", false),
+                arguments("1.5.6", "]1.0,2.0[", true),
+
+                arguments("1.0.0", "[1.0,)", true),
+                arguments("1.0.100", "[1.0,)", true),
+                arguments("100.0.1", "[1.0,)", true),
+                arguments("0.0.9", "[1.0,)", false),
+
+                arguments("1.0.0", "]1.0,)", false),
+                arguments("1.0.100", "]1.0,)", true),
+                arguments("100.0.1", "]1.0,)", true),
+                arguments("0.0.9", "]1.0,)", false),
+
+                arguments("2.0.0", "(,2.0]", true),
+                arguments("2.0.10", "(,2.0]", false),
+                arguments("3.0.10", "(,2.0]", false),
+                arguments("1.0.100", "(,2.0]", true),
+                arguments("0.0.9", "(,2.0]", true),
+
+                arguments("2.0.0", "(,2.0[", false),
+                arguments("2.0.10", "(,2.0[", false),
+                arguments("3.0.10", "(,2.0[", false),
+                arguments("1.0.100", "(,2.0[", true),
+                arguments("0.0.9", "(,2.0[", true),
+
+                arguments("1.2.0", "1.2.+", true),
+                arguments("1.1.90", "1.2.+", false),
+                arguments("1.3.0", "1.2.+", false),
+                arguments("1.2.90", "1.2.+", true),
+
+                arguments("1.0.0", "1.+", true),
+                arguments("2.0.0", "1.+", false),
+                arguments("2.0.1", "1.+", false),
+                arguments("1.3.0", "1.+", true),
+                arguments("1.2.90", "1.+", true),
+
+                arguments("0.0.0", "latest.integration", true)
         );
     }
 
     @ParameterizedTest
     @MethodSource("getParameters")
     public void test(String version, String rangeExpression, boolean expected) {
-        boolean satisfies = new Semver(version, NPM).satisfies(rangeExpression);
+        boolean satisfies = new Semver(version).satisfies(rangeExpression);
         assertEquals(expected, satisfies, version + " , " + rangeExpression);
     }
 }
