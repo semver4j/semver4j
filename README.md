@@ -1,5 +1,11 @@
 # Semver4j
 
+[![CI](https://github.com/semver4j/semver4j/workflows/Java%20CI/badge.svg)](https://github.com/semver4j/semver4j/actions/workflows/ci.yml)
+[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/semver4j/semver4j/blob/main/LICENSE)
+
+[![Maven Central](https://img.shields.io/maven-central/v/org.semver4j/semver4j.svg)](https://search.maven.org/artifact/org.semver4j/semver4j/)
+[![Javadoc](https://www.javadoc.io/badge/org.semver4j/semver4j.svg)](https://www.javadoc.io/doc/org.semver4j/semver4j)
+
 ---
 
 > ### This is an active copy of great [semver4j](https://github.com/vdurmont/semver4j) library created by @vdurmont, which is no longer maintained 
