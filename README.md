@@ -8,7 +8,7 @@
 
 ---
 
-> ### This is an active copy of great [semver4j](https://github.com/vdurmont/semver4j) library created by @vdurmont, which is no longer maintained 
+> ### This is an active copy of great [semver4j](https://github.com/vdurmont/semver4j) library created by [@vdurmont](https://github.com/vdurmont), which is no longer maintained 😭
  
  ---
 
