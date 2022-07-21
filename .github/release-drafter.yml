@@ -3,6 +3,8 @@ template: |
   
   $CHANGES
 categories:
+  - title: '💥 Breaking'
+    label: 'breaking'
   - title: '🪳 Bug Fixes'
     label: 'bug'
   - title: '🚀 Features'
