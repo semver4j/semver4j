@@ -15,6 +15,7 @@ public class NpmSemverTest {
                 // Fully-qualified versions:
                 arguments("1.2.3", "1.2.3", true),
                 arguments("1.2.4", "1.2.3", false),
+                arguments("1.0.0-setup-20220428123901", "1.0.0-setup-20220428123901", true),
 
                 // Minor versions:
                 arguments("1.2.3", "1.2", true),
