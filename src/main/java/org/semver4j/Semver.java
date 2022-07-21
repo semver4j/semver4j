@@ -1,9 +1,6 @@
 package org.semver4j;
 
-import org.semver4j.internal.Comparator;
-import org.semver4j.internal.Differ;
-import org.semver4j.internal.Modifier;
-import org.semver4j.internal.StrictParser;
+import org.semver4j.internal.*;
 import org.semver4j.internal.StrictParser.Version;
 import org.semver4j.internal.range.RangesListFactory;
 
@@ -44,6 +41,25 @@ public class Semver implements Comparable<Semver> {
         patch = parsedVersion.getPatch();
         preRelease = parsedVersion.getPreRelease();
         build = parsedVersion.getBuild();
+    }
+
+    /**
+     * Try to parse string as semver.
+     *
+     * @param version version string to parse
+     * @return {@link Semver} when done, {@code null} otherwise
+     */
+    public static Semver parse(String version) {
+        try {
+            return new Semver(version);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Semver coerce(String version) {
+        String coerce = Coerce.coerce(version);
+        return parse(coerce);
     }
 
     /**
