@@ -23,7 +23,7 @@ import static org.semver4j.Semver.coerce;
 
 class SemverTest {
     @ParameterizedTest
-    @ValueSource(strings = {"1.Y.3", "1.2.Y", "1.1.1.1", "1.0.0+"})
+    @ValueSource(strings = {"1.Y.3", "1.2.Y", "1.1.1.1", "1.0.0+", "1.0.0-", "1.0.0-alpha..1", "1.0.0-001", "1.0.0-äöü", "1.2.3."})
     void shouldThrowExceptionWhenSemverIsNotValid(String version) {
         //when/then
         assertThatThrownBy(() -> new Semver(version))
