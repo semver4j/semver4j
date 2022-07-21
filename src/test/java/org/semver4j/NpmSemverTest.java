@@ -83,6 +83,7 @@ public class NpmSemverTest {
                 arguments("1.2.3-beta.1", "~1.2.3-beta.2", false),
 
                 // Caret ranges:
+                arguments("16.14.0", "^16.0.0-0", true),
                 arguments("1.2.3", "^1.2.3", true),
                 arguments("1.2.4", "^1.2.3", true),
                 arguments("1.3.0", "^1.2.3", true),
