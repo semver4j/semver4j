@@ -11,14 +11,15 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
+import static java.lang.String.join;
 import static java.util.Arrays.asList;
+import static java.util.Collections.nCopies;
 import static java.util.Collections.sort;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.semver4j.Semver.VersionDiff.*;
+import static org.semver4j.Semver.coerce;
 
 class SemverTest {
     @ParameterizedTest
@@ -675,18 +676,93 @@ class SemverTest {
     }
 
     @Test
-    void statisfies_works_will_all_the_types() {
-        String version = "1.2.3";
-        Semver semver = new Semver(version);
+    void shouldReturnNullWhenCannotParseVersion() {
+        //when
+        Semver version = Semver.parse("1.0");
 
-        // Used to prevent bugs when we add a new type
-        assertTrue(semver.satisfies("1.2.3"));
-        assertFalse(semver.satisfies("4.5.6"));
+        //then
+        assertThat(version).isNull();
     }
-//
 
-    //
-//
+    @Test
+    void shouldReturnSemverWhenCanParseVersion() {
+        //when
+        Semver version = Semver.parse("1.0.0");
+
+        //then
+        assertThat(version).isInstanceOf(Semver.class);
+    }
+
+    @ParameterizedTest
+    @MethodSource("coerceVersions")
+    void shouldTryCoerceVersion(String versionToCoerce, String expected) {
+        //when
+        Semver semver = coerce(versionToCoerce);
+
+        //then
+        assertThat(semver.toString()).isEqualTo(expected);
+    }
+
+    public static Stream<Arguments> coerceVersions() {
+        return Stream.of(
+                arguments(".1", "1.0.0"),
+                arguments(".1.", "1.0.0"),
+                arguments("..1", "1.0.0"),
+                arguments(".1.1", "1.1.0"),
+                arguments("1.", "1.0.0"),
+                arguments("1.0", "1.0.0"),
+                arguments("1.0.0", "1.0.0"),
+                arguments("0", "0.0.0"),
+                arguments("0.0", "0.0.0"),
+                arguments("0.0.0", "0.0.0"),
+                arguments("0.1", "0.1.0"),
+                arguments("0.0.1", "0.0.1"),
+                arguments("0.1.1", "0.1.1"),
+                arguments("1", "1.0.0"),
+                arguments("1.2", "1.2.0"),
+                arguments("1.2.3", "1.2.3"),
+                arguments("1.2.3.4", "1.2.3"),
+                arguments("13", "13.0.0"),
+                arguments("35.12", "35.12.0"),
+                arguments("35.12.18", "35.12.18"),
+                arguments("35.12.18.24", "35.12.18"),
+                arguments("v1", "1.0.0"),
+                arguments("v1.2", "1.2.0"),
+                arguments("v1.2.3", "1.2.3"),
+                arguments("v1.2.3.4", "1.2.3"),
+                arguments(" 1", "1.0.0"),
+                arguments("1 ", "1.0.0"),
+                arguments("1 0", "1.0.0"),
+                arguments("1 1", "1.0.0"),
+                arguments("1.1 1", "1.1.0"),
+                arguments("1.1-1", "1.1.0"),
+                arguments("1.1-1", "1.1.0"),
+                arguments("a1", "1.0.0"),
+                arguments("a1a", "1.0.0"),
+                arguments("1a", "1.0.0"),
+                arguments("version 1", "1.0.0"),
+                arguments("version1", "1.0.0"),
+                arguments("version1.0", "1.0.0"),
+                arguments("version1.1", "1.1.0"),
+                arguments("42.6.7.9.3-alpha", "42.6.7"),
+                arguments("v2", "2.0.0"),
+                arguments("v3.4 replaces v3.3.1", "3.4.0"),
+                arguments("4.6.3.9.2-alpha2", "4.6.3"),
+                arguments(format("%s.2", repeat("1", 17)), "2.0.0"),
+                arguments(format("%s.2.3", repeat("1", 17)), "2.3.0"),
+                arguments(format("1.%s.3", repeat("2", 17)), "1.0.0"),
+                arguments(format("1.2.%s", repeat("3", 17)), "1.2.0"),
+                arguments(format("%s.2.3.4", repeat("1", 17)), "2.3.4"),
+                arguments(format("1.%s.3.4", repeat("2", 17)), "1.0.0"),
+                arguments(format("1.2.%s.4", repeat("3", 17)), "1.2.0"),
+                arguments("10", "10.0.0")
+        );
+    }
+
+    private static String repeat(String s, int n) {
+        return join("", nCopies(n, s));
+    }
+
 //    @Test
 //    public void statisfies_calls_the_requirement() {
 //        Requirement req = mock(Requirement.class);

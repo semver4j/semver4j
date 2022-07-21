@@ -62,4 +62,6 @@ public class Tokenizers {
     private static final String GLTL = "((?:<|>)?=?)";
 
     public static final String COMPARATOR = format("^%s\\s*(%s)$|^$", GLTL, STRICT_PLAIN);
+
+    public static final String COERCE = "(^|[^\\d])(\\d{1,16})(?:\\.(\\d{1,16}))?(?:\\.(\\d{1,16}))?(?:$|[^\\d])";
 }
