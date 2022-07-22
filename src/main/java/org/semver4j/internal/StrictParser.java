@@ -53,6 +53,10 @@ public class StrictParser {
             this.build = build;
         }
 
+        Version(int major, int minor, int patch) {
+            this(major, minor, patch, emptyList(), emptyList());
+        }
+
         public int getMajor() {
             return major;
         }
