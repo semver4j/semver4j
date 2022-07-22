@@ -15,8 +15,8 @@ import static org.semver4j.internal.range.processor.RangesUtils.*;
  * <br>
  * Translates:
  * <ul>
- *     <li>{@code ^1.2.3} to {@code >=1.2.3 <2.0.0}</li>
- *     <li>{@code ^0.2.3} to {@code >=0.2.3 <0.3.0}</li>
+ *     <li>{@code ^1.2.3} to {@code &gt;=1.2.3 &lt;2.0.0}</li>
+ *     <li>{@code ^0.2.3} to {@code &gt;=0.2.3 &lt;0.3.0}</li>
  * </ul>
  */
 public class CaretProcessor implements Processor {
