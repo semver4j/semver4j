@@ -11,7 +11,7 @@ import java.util.StringJoiner;
  * Following range:
  *
  * <pre>
- * <= 2.6.8 || >= 3.0.0 <= 3.0.1
+ * &lt;= 2.6.8 || &gt;= 3.0.0 &lt;= 3.0.1
  * </pre>
  * <p>
  * is parsed into:
