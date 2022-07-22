@@ -13,6 +13,8 @@ public class NpmSemverTest {
     public static Stream<Arguments> getParameters() {
         return Stream.of(
                 // Fully-qualified versions:
+                arguments("1.0.0", "1.0.0", true),
+                arguments("1.0.0", "=1.0.0", true),
                 arguments("1.2.3", "1.2.3", true),
                 arguments("1.2.4", "1.2.3", false),
                 arguments("1.0.0-setup-20220428123901", "1.0.0-setup-20220428123901", true),
