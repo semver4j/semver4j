@@ -800,6 +800,30 @@ class SemverTest {
         assertThat(equalTo1).isEqualTo(equalTo2);
     }
 
+    @Test
+    void shouldComparatorsBeSymmetric() {
+        //given
+        Semver version1 = coerce("2.0");
+        Semver version2 = new Semver("2.0.0");
+
+        //when
+        boolean greaterThan1 = version1.isGreaterThan(version2);
+        boolean greaterThan2 = version2.isGreaterThan(version1);
+
+        boolean equivalentTo1 = version1.isEquivalentTo(version2);
+        boolean equivalentTo2 = version2.isEquivalentTo(version1);
+
+        boolean lowerThan1 = version1.isLowerThan(version2);
+        boolean lowerThan2 = version2.isLowerThan(version1);
+
+        //then
+        assertThat(greaterThan1).isEqualTo(greaterThan2);
+
+        assertThat(equivalentTo1).isEqualTo(equivalentTo2);
+
+        assertThat(lowerThan1).isEqualTo(lowerThan2);
+    }
+
     private static String repeat(String s, int n) {
         return join("", nCopies(n, s));
     }
