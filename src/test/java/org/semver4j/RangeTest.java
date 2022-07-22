@@ -1,93 +1,110 @@
 package org.semver4j;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.semver4j.Range.RangeOperator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.stream.Stream;
 
-public class RangeTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.semver4j.Range.RangeOperator.*;
+
+class RangeTest {
     @Test
-    public void isSatisfiedBy_EQ() {
-        Range range = new Range("1.2.3", Range.RangeOperator.EQ);
+    void shouldCheckSatisfiedByForEqual() {
+        //given
+        Range range = new Range("1.2.3", EQ);
 
-        // SAME VERSION
-        assertTrue(range.isSatisfiedBy("1.2.3"));
+        //when/then
+        assertThat(range.isSatisfiedBy("1.2.3")).isTrue();
 
-        // GREATER
-        assertFalse(range.isSatisfiedBy("2.2.3")); // major
-        assertFalse(range.isSatisfiedBy("1.3.3")); // minor
-        assertFalse(range.isSatisfiedBy("1.2.4")); // patch
+        assertThat(range.isSatisfiedBy("2.2.3")).isFalse();
+        assertThat(range.isSatisfiedBy("1.3.3")).isFalse();
+        assertThat(range.isSatisfiedBy("1.2.4")).isFalse();
 
-        // LOWER
-        assertFalse(range.isSatisfiedBy("0.2.3")); // major
-        assertFalse(range.isSatisfiedBy("1.1.3")); // minor
-        assertFalse(range.isSatisfiedBy("1.2.2")); // patch
-        Range rangeWithSuffix = new Range("1.2.3-alpha", Range.RangeOperator.EQ);
-        assertFalse(rangeWithSuffix.isSatisfiedBy("1.2.3")); // null suffix
-        assertFalse(rangeWithSuffix.isSatisfiedBy("1.2.3-beta")); // non null suffix
+        assertThat(range.isSatisfiedBy("0.2.3")).isFalse();
+        assertThat(range.isSatisfiedBy("1.1.3")).isFalse();
+        assertThat(range.isSatisfiedBy("1.2.2")).isFalse();
     }
 
     @Test
-    public void isSatisfiedBy_LT() {
-        Range range = new Range("1.2.3", Range.RangeOperator.LT);
+    void shouldCheckSatisfiedByForEqualWithPreRelease() {
+        //given
+        Range range = new Range("1.2.3-alpha", EQ);
 
+        //when/then
         assertFalse(range.isSatisfiedBy("1.2.3"));
-        assertFalse(range.isSatisfiedBy("1.2.4"));
-        assertTrue(range.isSatisfiedBy("1.2.2"));
+        assertFalse(range.isSatisfiedBy("1.2.3-beta"));
     }
 
     @Test
-    public void isSatisfiedBy_LTE() {
-        Range range = new Range("1.2.3", Range.RangeOperator.LTE);
+    void shouldCheckSatisfiedByForLowerThan() {
+        //given
+        Range range = new Range("1.2.3", LT);
 
-        assertTrue(range.isSatisfiedBy("1.2.3"));
-        assertFalse(range.isSatisfiedBy("1.2.4"));
-        assertTrue(range.isSatisfiedBy("1.2.2"));
+        //when/then
+        assertThat(range.isSatisfiedBy("1.2.3")).isFalse();
+        assertThat(range.isSatisfiedBy("1.2.4")).isFalse();
+        assertThat(range.isSatisfiedBy("1.2.2")).isTrue();
     }
 
     @Test
-    public void isSatisfiedBy_GT() {
-        Range range = new Range("1.2.3", Range.RangeOperator.GT);
+    void shouldCheckSatisfiedByForLowerThanOrEqual() {
+        //given
+        Range range = new Range("1.2.3", LTE);
 
-        assertFalse(range.isSatisfiedBy("1.2.3"));
-        assertFalse(range.isSatisfiedBy("1.2.2"));
-        assertTrue(range.isSatisfiedBy("1.2.4"));
+        //when/then
+        assertThat(range.isSatisfiedBy("1.2.4")).isFalse();
+        assertThat(range.isSatisfiedBy("1.2.3")).isTrue();
+        assertThat(range.isSatisfiedBy("1.2.2")).isTrue();
     }
 
     @Test
-    public void isSatisfiedBy_GTE() {
-        Range range = new Range("1.2.3", Range.RangeOperator.GTE);
+    void shouldCheckSatisfiedByForGreaterThan() {
+        //given
+        Range range = new Range("1.2.3", GT);
 
-        assertTrue(range.isSatisfiedBy("1.2.3"));
-        assertFalse(range.isSatisfiedBy("1.2.2"));
-        assertTrue(range.isSatisfiedBy("1.2.4"));
+        //when/then
+        assertThat(range.isSatisfiedBy("1.2.3")).isFalse();
+        assertThat(range.isSatisfiedBy("1.2.2")).isFalse();
+        assertThat(range.isSatisfiedBy("1.2.4")).isTrue();
     }
 
     @Test
-    public void prettyString() {
-        assertEquals("=1.2.3", new Range("1.2.3", Range.RangeOperator.EQ).toString());
-        assertEquals("<1.2.3", new Range("1.2.3", Range.RangeOperator.LT).toString());
-        assertEquals("<=1.2.3", new Range("1.2.3", Range.RangeOperator.LTE).toString());
-        assertEquals(">1.2.3", new Range("1.2.3", Range.RangeOperator.GT).toString());
-        assertEquals(">=1.2.3", new Range("1.2.3", Range.RangeOperator.GTE).toString());
+    void shouldCheckSatisfiedByForGreaterThanOrEqual() {
+        //given
+        Range range = new Range("1.2.3", GTE);
+
+        //when/then
+        assertThat(range.isSatisfiedBy("1.2.2")).isFalse();
+        assertThat(range.isSatisfiedBy("1.2.3")).isTrue();
+        assertThat(range.isSatisfiedBy("1.2.4")).isTrue();
     }
 
-    @Test
-    public void testEquals() {
-        Range range = new Range("1.2.3", Range.RangeOperator.EQ);
+    @ParameterizedTest
+    @MethodSource("prettyPrint")
+    void shouldPrettyPrintRange(String expected, RangeOperator rangeOperator) {
+        //given
+        Range range = new Range("1.2.3", rangeOperator);
 
-        assertEquals(range, range);
-        assertNotEquals(range, null);
-        assertNotEquals(range, "string");
-        assertNotEquals(range, new Range("1.2.3", Range.RangeOperator.GTE));
-        assertNotEquals(range, new Range("1.2.4", Range.RangeOperator.EQ));
+        //when
+        String actual = range.toString();
+
+        //then
+        assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    public void testHashCode() {
-        Range range = new Range("1.2.3", Range.RangeOperator.EQ);
-
-        assertEquals(range.hashCode(), range.hashCode());
-        assertNotEquals(range.hashCode(), new Range("1.2.3", Range.RangeOperator.GTE).hashCode());
-        assertNotEquals(range.hashCode(), new Range("1.2.4", Range.RangeOperator.EQ).hashCode());
+    static Stream<Arguments> prettyPrint() {
+        return Stream.of(
+                arguments("=1.2.3", EQ),
+                arguments("<1.2.3", LT),
+                arguments("<=1.2.3", LTE),
+                arguments(">1.2.3", GT),
+                arguments(">=1.2.3", GTE)
+        );
     }
 }

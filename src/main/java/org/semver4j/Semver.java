@@ -57,6 +57,12 @@ public class Semver implements Comparable<Semver> {
         }
     }
 
+    /**
+     * Coerce string into semver if is possible.
+     *
+     * @param version version to coerce
+     * @return {@link Semver} if can coerce version, {@code null} otherwise
+     */
     public static Semver coerce(String version) {
         String coerce = Coerce.coerce(version);
         return parse(coerce);
@@ -273,8 +279,10 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * @param version the version to compare
-     * @return true if the current version is greater than the provided version
+     * Checks if the version is greater than another version.
+     *
+     * @param version version to compare
+     * @return {@code true} if the current version is greater than the provided version, {@code false} otherwise
      * @see #isGreaterThan(Semver)
      */
     public boolean isGreaterThan(String version) {
@@ -282,18 +290,21 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Checks if the version is greater than another version
+     * Checks if the version is greater than another version.
      *
-     * @param version the version to compare
-     * @return true if the current version is greater than the provided version
+     * @param version version to compare
+     * @return {@code true} if the current version is greater than the provided version, {@code false} otherwise
+     * @see #isGreaterThan(String)
      */
     public boolean isGreaterThan(Semver version) {
         return compareTo(version) > 0;
     }
 
     /**
-     * @param version the version to compare
-     * @return true if the current version is greater than or equal to the provided version
+     * Checks if the version is greater than or equal to another version.
+     *
+     * @param version version to compare
+     * @return {@code true} if the current version is greater than or equal to the provided version, {@code false} otherwise
      * @see #isGreaterThanOrEqualTo(Semver)
      */
     public boolean isGreaterThanOrEqualTo(String version) {
@@ -301,18 +312,21 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Checks if the version is greater than or equal to another version
+     * Checks if the version is greater than or equal to another version.
      *
-     * @param version the version to compare
-     * @return true if the current version is greater than or equal to the provided version
+     * @param version version to compare
+     * @return {@code true} if the current version is greater than or equal to the provided version, {@code false} otherwise
+     * @see #isLowerThan(String)
      */
     public boolean isGreaterThanOrEqualTo(Semver version) {
         return compareTo(version) >= 0;
     }
 
     /**
-     * @param version the version to compare
-     * @return true if the current version is lower than the provided version
+     * Checks if the version is lower than another version.
+     *
+     * @param version version to compare
+     * @return {@code true} if the current version is lower than the provided version, {@code false} otherwise
      * @see #isLowerThan(Semver)
      */
     public boolean isLowerThan(String version) {
@@ -320,18 +334,21 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Checks if the version is lower than another version
+     * Checks if the version is lower than another version.
      *
-     * @param version the version to compare
-     * @return true if the current version is lower than the provided version
+     * @param version version to compare
+     * @return {@code true} if the current version is lower than the provided version, {@code false} otherwise
+     * @see #isLowerThan(String)
      */
     public boolean isLowerThan(Semver version) {
         return compareTo(version) < 0;
     }
 
     /**
-     * @param version the version to compare
-     * @return true if the current version is lower than or equal to the provided version
+     * Checks if the version is lower than or equal to another version.
+     *
+     * @param version version to compare
+     * @return {@code true} if the current version is lower than or equal to the provided version, {@code false} otherwise
      * @see #isLowerThanOrEqualTo(Semver)
      */
     public boolean isLowerThanOrEqualTo(String version) {
@@ -339,10 +356,11 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Checks if the version is lower than or equal to another version
+     * Checks if the version is lower than or equal to another version.
      *
-     * @param version the version to compare
-     * @return true if the current version is lower than or equal to the provided version
+     * @param version version to compare
+     * @return {@code true} if the current version is lower than or equal to the provided version, {@code false} otherwise
+     * @see #isLowerThanOrEqualTo(String)
      */
     public boolean isLowerThanOrEqualTo(Semver version) {
         return compareTo(version) <= 0;
