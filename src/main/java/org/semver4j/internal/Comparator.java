@@ -81,6 +81,17 @@ public class Comparator implements Comparable<Semver> {
             //ignore
         }
 
+        if (isBothContainsDigits(a, b)) {
+            String digitsExtract = "(?<=\\D)(?=\\d)";
+            String[] tokenArr1 = a.split(digitsExtract);
+            String[] tokenArr2 = b.split(digitsExtract);
+            if (tokenArr1[0].equals(tokenArr2[0])) {
+                int digitA = Integer.parseInt(tokenArr1[1]);
+                int digitB = Integer.parseInt(tokenArr2[1]);
+                return compareIdentifiers(digitA, digitB);
+            }
+        }
+
         int i = a.compareTo(b);
         if (i > 0) {
             return 1;
@@ -92,6 +103,10 @@ public class Comparator implements Comparable<Semver> {
 
     private int compareIdentifiers(int a, int b) {
         return Integer.compare(a, b);
+    }
+
+    private boolean isBothContainsDigits(String a, String b) {
+        return a.matches(".*\\d.*") && b.matches(".*\\d.*");
     }
 
     private String getString(int i, List<String> list) {
