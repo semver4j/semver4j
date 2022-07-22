@@ -759,11 +759,37 @@ class SemverTest {
         );
     }
 
+    @Test
+    void shouldCreateSemverWithHyphenInBuildSection() {
+        //when
+        Semver semver = new Semver("1.2.3+123-abc");
+
+        //then
+        assertThat(semver.getMajor()).isEqualTo(1);
+        assertThat(semver.getMinor()).isEqualTo(2);
+        assertThat(semver.getPatch()).isEqualTo(3);
+        assertThat(semver.getPreRelease()).isEmpty();
+        assertThat(semver.getBuild()).containsExactly("123-abc");
+    }
+
+    @Test
+    void shouldCreateSemverWithHyphenInPreReleaseSection() {
+        //when
+        Semver semver = new Semver("1.2.3-alpha-abc+123");
+
+        //then
+        assertThat(semver.getMajor()).isEqualTo(1);
+        assertThat(semver.getMinor()).isEqualTo(2);
+        assertThat(semver.getPatch()).isEqualTo(3);
+        assertThat(semver.getPreRelease()).containsExactly("alpha-abc");
+        assertThat(semver.getBuild()).containsExactly("123");
+    }
+
     private static String repeat(String s, int n) {
         return join("", nCopies(n, s));
     }
 
-//    @Test
+    //    @Test
 //    public void statisfies_calls_the_requirement() {
 //        Requirement req = mock(Requirement.class);
 //        Semver semver = new Semver("1.2.2");
