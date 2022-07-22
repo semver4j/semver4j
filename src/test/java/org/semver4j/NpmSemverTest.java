@@ -84,6 +84,7 @@ public class NpmSemverTest {
                 arguments("2.0.0", "~1", false),
                 arguments("0.0.0", "~1", false),
                 arguments("1.2.3-beta.1", "~1.2.3-beta.2", false),
+                arguments("0.0.7", "~1.9.1-6", false),
 
                 // Caret ranges:
                 arguments("16.14.0", "^16.0.0-0", true),
@@ -151,7 +152,9 @@ public class NpmSemverTest {
                 arguments("1.9.9", ">=2.0.0", false),
                 arguments("1.9.9", ">=2.0", false),
                 arguments("1.9.9", ">=2", false),
+                arguments("3.3.1-alpha", ">=2.4.x", false),
 
+                arguments("3.3.1", ">=2.4.x", true),
                 arguments("1.9.9", "<=2.0.0", true),
                 arguments("2.0.0", "<=2.0.0", true),
                 arguments("1.9.9", "<=2.0", true),
