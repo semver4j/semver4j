@@ -607,6 +607,7 @@ class SemverTest {
                 arguments("1.0.0", "1.2.0", false),
                 arguments("1.0.0", "1.0.2", false),
 
+                arguments("2021.1.6", "2021.1.6", true),
                 arguments("1.0.0", "1.0.0", true),
                 arguments("1.0.0-alpha.12", "1.0.0-alpha.12", true),
                 arguments("1.0.0-alpha.12.x-yz", "1.0.0-alpha.12.x-yz", true),
