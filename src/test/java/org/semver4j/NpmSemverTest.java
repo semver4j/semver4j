@@ -211,6 +211,7 @@ public class NpmSemverTest {
                 arguments("1.1.0", "1.2 <1.2.8 || >2.0.0", false),
                 arguments("1.2.9", "1.2 <1.2.8 || >2.0.0", false),
                 arguments("2.0.0", "1.2 <1.2.8 || >2.0.0", false),
+                arguments("2.6.9", "<= 2.6.8 || >= 3.0.0 <= 3.0.1", false),
 
                 arguments("1.2.2", " ~> 1.2.3 ", false),
                 arguments("1.2.3", " ~> 1.2.3 ", true),
