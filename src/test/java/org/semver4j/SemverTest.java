@@ -786,6 +786,20 @@ class SemverTest {
         assertThat(semver.getBuild()).containsExactly("123");
     }
 
+    @Test
+    void shouldSemverBeSymmetric() {
+        //given
+        Semver version1 = new Semver("2.10.1");
+        Semver version2 = coerce("2.99");
+
+        //when
+        boolean equalTo1 = version1.isEqualTo(version2);
+        boolean equalTo2 = version2.isEqualTo(version1);
+
+        //then
+        assertThat(equalTo1).isEqualTo(equalTo2);
+    }
+
     private static String repeat(String s, int n) {
         return join("", nCopies(n, s));
     }
