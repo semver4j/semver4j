@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.semver4j.Semver.VersionDiff.*;
 import static org.semver4j.Semver.coerce;
+import static org.semver4j.Semver.isValid;
 
 class SemverTest {
     @ParameterizedTest
@@ -1114,6 +1115,30 @@ class SemverTest {
 
                 arguments("0.0.0", "latest.integration", true)
         );
+    }
+
+    @Test
+    void shouldReturnTrueIfVersionIsValid() {
+        //given
+        String version = "1.2.3-alpha.1+sha.1234";
+
+        //when
+        boolean valid = isValid(version);
+
+        //then
+        assertThat(valid).isTrue();
+    }
+
+    @Test
+    void shouldReturnFalseIfVersionIsValid() {
+        //given
+        String version = "1.2alpha.1+sha.1234";
+
+        //when
+        boolean valid = isValid(version);
+
+        //then
+        assertThat(valid).isFalse();
     }
 
     private static String repeat(String s, int n) {
