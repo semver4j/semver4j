@@ -69,6 +69,16 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
+     * Checks is given string version is valid.
+     *
+     * @param version version to check
+     * @return {@code true} if is valid version, {@code false} otherwise
+     */
+    public static boolean isValid(String version) {
+        return parse(version) != null;
+    }
+
+    /**
      * Returns the version.
      *
      * @return version
