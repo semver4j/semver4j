@@ -192,3 +192,8 @@ You can also use built-in versioning methods such as:
 
 Any pull request or bug report is welcome!
 If you have any suggestion about new features, you can **open an issue**.
+
+## Thanks
+
+Logo created by Tomek Babik [@tomekbbk](https://github.com/tomekbbk).
+
