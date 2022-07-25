@@ -68,8 +68,8 @@ Semver version=new Semver("1.2.3-beta.4+sha899d8g79f87");
 #### Using `Semver.parse()` method
 
 ```java
-Semver version=Semver.parse("1.2.3-beta.4+sha899d8g79f87"); // returns correct Semver object
-        Semver version=Semver.parse("invalid"); // returns null, cannot parse this version
+Semver version = Semver.parse("1.2.3-beta.4+sha899d8g79f87"); // returns correct Semver object
+Semver version = Semver.parse("invalid"); // returns null, cannot parse this version
 ```
 
 #### Using `Semver.coerce()` method
@@ -78,7 +78,7 @@ Library can help you to create valid `Semver` object when the version is not val
 translation from not-semver into semver.
 
 ```java
-Semver version=Semver.coerce("..1"); // it produces the same result as new Semver("1.0.0)
+Semver version = Semver.coerce("..1"); // it produces the same result as new Semver("1.0.0)
 ```
 
 If the version is invalid, a `SemverException` will be thrown.
@@ -94,12 +94,12 @@ Examples:
 ```java
 // true
 new Semver("1.2.3").isStable(); // major is > 0 and has no pre-release version
-        new Semver("1.2.3+sHa.0nSFGKjkjsdf").isStable(); // major is > 0 and has only build metadata without pre-release version
+new Semver("1.2.3+sHa.0nSFGKjkjsdf").isStable(); // major is > 0 and has only build metadata without pre-release version
 
 // false
-        new Semver("0.1.2").isStable()); // major is < 1
-        new Semver("0.1.2+sHa.0nSFGKjkjsdf").isStable(); // major is < 1
-        new Semver("1.2.3-BETA.11+sHa.0nSFGKjkjsdf").isStable(); // major is > 0 but has pre-release version BETA.11
+new Semver("0.1.2").isStable()); // major is < 1
+new Semver("0.1.2+sHa.0nSFGKjkjsdf").isStable(); // major is < 1
+new Semver("1.2.3-BETA.11+sHa.0nSFGKjkjsdf").isStable(); // major is > 0 but has pre-release version BETA.11
 ```
 
 ### Comparing the versions
@@ -107,35 +107,35 @@ new Semver("1.2.3").isStable(); // major is > 0 and has no pre-release version
 - `isGreaterThan()` returns true if the version is strictly greater than the other one.
 
 ```java
-Semver version=new Semver("1.2.3");
-        version.isGreaterThan("1.2.2"); // true
-        version.isGreaterThan("1.2.4"); // false
-        version.isGreaterThan("1.2.3"); // false
+Semver version = new Semver("1.2.3");
+version.isGreaterThan("1.2.2"); // true
+version.isGreaterThan("1.2.4"); // false
+version.isGreaterThan("1.2.3"); // false
 ```
 
 - `isLowerThan()` returns true if the version is strictly lower than the other one.
 
 ```java
-Semver version=new versionver("1.2.3");
-        version.isLowerThan("1.2.2"); // false
-        version.isLowerThan("1.2.4"); // true
-        version.isLowerThan("1.2.3"); // false
+Semver version = new versionver("1.2.3");
+version.isLowerThan("1.2.2"); // false
+version.isLowerThan("1.2.4"); // true
+version.isLowerThan("1.2.3"); // false
 ```
 
 - `isEqualTo()` returns true if the versions are exactly the same.
 
 ```java
-Semver version=new Semver("1.2.3+sha123456789");
-        version.isEqualTo("1.2.3+sha123456789"); // true
-        version.isEqualTo("1.2.3+shaABCDEFGHI"); // false
+Semver version = new Semver("1.2.3+sha123456789");
+version.isEqualTo("1.2.3+sha123456789"); // true
+version.isEqualTo("1.2.3+shaABCDEFGHI"); // false
 ```
 
 - `isEquivalentTo()` returns true if the versions are the same (does not take the build metadata into account).
 
 ```java
-Semver version=new Semver("1.2.3+sha123456789");
-        version.isEquivalentTo("1.2.3+sha123456789"); // true
-        version.isEquivalentTo("1.2.3+shaABCDEFGHI"); // true
+Semver version = new Semver("1.2.3+sha123456789");
+version.isEquivalentTo("1.2.3+sha123456789"); // true
+version.isEquivalentTo("1.2.3+shaABCDEFGHI"); // true
 ```
 
 ### Versions diffs
@@ -146,13 +146,13 @@ It will return a `VersionDiff` enum value among: `NONE`, `MAJOR`, `MINOR`, `PATC
 _It will always return the biggest difference._
 
 ```java
-Semver version=new Semver("1.2.3-beta.4+sha899d8g79f87");
-        version.diff("1.2.3-beta.4+sha899d8g79f87"); // NONE
-        version.diff("2.3.4-alpha.5+sha32iddfu987"); // MAJOR
-        version.diff("1.3.4-alpha.5+sha32iddfu987"); // MINOR
-        version.diff("1.2.4-alpha.5+sha32iddfu987"); // PATCH
-        version.diff("1.2.3-alpha.5+sha32iddfu987"); // SUFFIX
-        version.diff("1.2.3-beta.4+sha32iddfu987");  // BUILD
+Semver version = new Semver("1.2.3-beta.4+sha899d8g79f87");
+version.diff("1.2.3-beta.4+sha899d8g79f87"); // NONE
+version.diff("2.3.4-alpha.5+sha32iddfu987"); // MAJOR
+version.diff("1.3.4-alpha.5+sha32iddfu987"); // MINOR
+version.diff("1.2.4-alpha.5+sha32iddfu987"); // PATCH
+version.diff("1.2.3-alpha.5+sha32iddfu987"); // SUFFIX
+version.diff("1.2.3-beta.4+sha32iddfu987");  // BUILD
 ```
 
 ### Ranges
