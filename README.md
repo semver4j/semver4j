@@ -62,7 +62,7 @@ You can create `Semver` object in number of ways.
 #### Using constructor
 
 ```java
-Semver version=new Semver("1.2.3-beta.4+sha899d8g79f87");
+Semver version = new Semver("1.2.3-beta.4+sha899d8g79f87");
 ```
 
 #### Using `Semver.parse()` method
