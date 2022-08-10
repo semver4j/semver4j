@@ -170,7 +170,7 @@ If you want to check if a version satisfies a range, use the `satisfies()` metho
 - [CocaPods](https://guides.cocoapods.org/using/the-podfile.html)
   - [Optimistic operator](https://guides.cocoapods.org/using/the-podfile.html#specifying-pod-versions) `~> 1.0`
 - [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html)
-  - Version Range Matcher `1.0,2.0]`, `[1.0,2.0[`, `]1.0,2.0]`, `]1.0,2.0[`, `[1.0,)`, `]1.0,)`, `(,2.0]` and `(,2.0[`
+  - Version Range Matcher `[1.0,2.0]`, `[1.0,2.0[`, `]1.0,2.0]`, `]1.0,2.0[`, `[1.0,)`, `]1.0,)`, `(,2.0]` and `(,2.0[`
 
 ### Modifying the version
 
