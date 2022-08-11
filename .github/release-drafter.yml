@@ -9,6 +9,8 @@ categories:
     label: 'bug'
   - title: '🚀 Features'
     label: 'enhancement'
+  - title: '🛠 Refactor'
+    label: 'refactor'
   - title: '📝 Documentation'
     label: 'documentation'
   - title: '📦 Dependency Updates'
