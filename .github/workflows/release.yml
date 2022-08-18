@@ -18,10 +18,7 @@ jobs:
             const version = tagName.replace('v', '')
             core.setOutput('version', version)
 
-      - name: Build with Apache Maven
-        run: mvn --batch-mode package
-
-      - name: Set up Apache Maven Central
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: 8
@@ -32,8 +29,14 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
+      - name: Build with Apache Maven
+        run: mvn --batch-mode package
+
+      - name: Set artifact version
+        run: mvn --batch-mode versions:set -DnewVersion=${{ steps.set_version.outputs.version }}
+
       - name: Publish package to Apache Maven Central
-        run: mvn --batch-mode deploy -Drevision=${{ steps.set_version.outputs.version }}
+        run: mvn --batch-mode deploy
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
