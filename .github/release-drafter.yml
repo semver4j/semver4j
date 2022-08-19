@@ -22,4 +22,4 @@ exclude-labels:
   - 'invalid'
   - 'question'
   - 'wontfix'
-  
+  - 'skip-changelog'
