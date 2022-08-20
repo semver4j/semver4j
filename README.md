@@ -16,8 +16,8 @@
 **Semver4j** is a lightweight Java library that helps you to handle versions.
 It follows the rules of the [semantic versioning](http://semver.org) specification.
 
-It also provides several range checking support: [node-semver](https://github.com/npm/node-semver)
-, [CocoaPods](https://guides.cocoapods.org/using/the-podfile.html)
+It also provides several range checking support: [node-semver](https://github.com/npm/node-semver),
+[CocoaPods](https://guides.cocoapods.org/using/the-podfile.html)
 and [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html).
 
 ## Installation
