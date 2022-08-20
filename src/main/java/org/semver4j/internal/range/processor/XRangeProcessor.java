@@ -7,14 +7,18 @@ import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 import static java.lang.String.join;
-import static org.semver4j.Range.RangeOperator.GTE;
-import static org.semver4j.Range.RangeOperator.LT;
-import static org.semver4j.internal.range.processor.RangesUtils.isX;
-import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
+import static java.util.regex.Pattern.compile;
+import static org.semver4j.Range.RangeOperator.*;
+import static org.semver4j.internal.Tokenizers.XRANGE;
+import static org.semver4j.internal.range.processor.RangesUtils.*;
 
+/**
+ * <p>Processor for translate <a href="https://github.com/npm/node-semver#x-ranges-12x-1x-12-">X-Ranges</a> into classic
+ * range.</p>
+ * <br>
+ */
 public class XRangeProcessor implements Processor {
-    private static final String R = "^((?:<|>)?=?)\\s*[v=\\s]*(0|[1-9]\\d*|x|X|\\+|\\*)(?:\\.(0|[1-9]\\d*|x|X|\\+|\\*)(?:\\.(0|[1-9]\\d*|x|X|\\+|\\*)(?:(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][a-zA-Z0-9-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][a-zA-Z0-9-]*))*)))?(?:\\+([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?)?)?$";
-    private static final Pattern pattern = Pattern.compile(R);
+    private static final Pattern pattern = compile(XRANGE);
 
     @Override
     public String process(String range) {
@@ -25,17 +29,20 @@ public class XRangeProcessor implements Processor {
             Matcher matcher = pattern.matcher(rangeVersion);
 
             if (matcher.matches()) {
-                String fullVersion = matcher.group(0);
+                // Left unused variables for brevity.
+
+                String fullRange = matcher.group(0);
+
                 String compareSign = matcher.group(1);
 
-                Integer major = parseIntWithXSupport(matcher.group(2));
-                Integer minor = parseIntWithXSupport(matcher.group(3));
-                Integer patch = parseIntWithXSupport(matcher.group(4));
+                int major = parseIntWithXSupport(matcher.group(2));
+                int minor = parseIntWithXSupport(matcher.group(3));
+                int patch = parseIntWithXSupport(matcher.group(4));
                 String preRelease = matcher.group(5);
                 String build = matcher.group(6);
 
-                if (compareSign.equals("=") && isX(patch)) {
-                    compareSign = "";
+                if (compareSign.equals(EQ.asString()) && isX(patch)) {
+                    compareSign = EMPTY;
                 }
 
                 if (!compareSign.isEmpty() && isX(patch)) {
@@ -43,19 +50,17 @@ public class XRangeProcessor implements Processor {
                         minor = 0;
                     }
                     patch = 0;
-                    if (compareSign.equals(">")) {
-                        compareSign = ">=";
+                    if (compareSign.equals(GT.asString())) {
+                        compareSign = GTE.asString();
 
                         if (isX(minor)) {
                             major = major + 1;
                             minor = 0;
-                            patch = 0;
                         } else {
                             minor = minor + 1;
-                            patch = 0;
                         }
-                    } else if (compareSign.equals("<=")) {
-                        compareSign = "<";
+                    } else if (compareSign.equals(LTE.asString())) {
+                        compareSign = LT.asString();
                         if (isX(minor)) {
                             major = major + 1;
                         } else {
@@ -76,7 +81,7 @@ public class XRangeProcessor implements Processor {
                     objects.add(from);
                     objects.add(to);
                 } else {
-                    objects.add(fullVersion);
+                    objects.add(fullRange);
                 }
             }
         }
@@ -85,6 +90,6 @@ public class XRangeProcessor implements Processor {
             return range;
         }
 
-        return join(" ", objects);
+        return join(SPACE, objects);
     }
 }

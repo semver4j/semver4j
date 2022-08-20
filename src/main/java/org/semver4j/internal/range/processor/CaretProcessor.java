@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.String.format;
+import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.GTE;
 import static org.semver4j.Range.RangeOperator.LT;
 import static org.semver4j.internal.Tokenizers.CARET;
@@ -15,12 +16,12 @@ import static org.semver4j.internal.range.processor.RangesUtils.*;
  * <br>
  * Translates:
  * <ul>
- *     <li>{@code ^1.2.3} to {@code &gt;=1.2.3 &lt;2.0.0}</li>
- *     <li>{@code ^0.2.3} to {@code &gt;=0.2.3 &lt;0.3.0}</li>
+ *     <li>{@code ^1.2.3} to {@code ≥1.2.3 <2.0.0}</li>
+ *     <li>{@code ^0.2.3} to {@code ≥0.2.3 <0.3.0}</li>
  * </ul>
  */
 public class CaretProcessor implements Processor {
-    private static final Pattern pattern = Pattern.compile(CARET);
+    private static final Pattern pattern = compile(CARET);
 
     @Override
     public String process(String range) {
@@ -32,11 +33,11 @@ public class CaretProcessor implements Processor {
 
         // Left unused variables for brevity.
 
-        String fullVersion = matcher.group(0);
+        String fullRange = matcher.group(0);
 
-        Integer major = parseIntWithXSupport(matcher.group(1));
-        Integer minor = parseIntWithXSupport(matcher.group(2));
-        Integer path = parseIntWithXSupport(matcher.group(3));
+        int major = parseIntWithXSupport(matcher.group(1));
+        int minor = parseIntWithXSupport(matcher.group(2));
+        int path = parseIntWithXSupport(matcher.group(3));
         String preRelease = matcher.group(4);
         String build = matcher.group(5);
 

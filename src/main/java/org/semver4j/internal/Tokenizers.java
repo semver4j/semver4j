@@ -51,7 +51,11 @@ public class Tokenizers {
      */
     public static final String STRICT = format("^%s$", STRICT_PLAIN);
 
-    private static final String XRANGE_IDENTIFIER = format("%s|x|x|\\*", NUMERIC_IDENTIFIER);
+    /**
+     * <p>{@code x}, {@code X} and {@code *} are for X-Ranges.</p>
+     * <p>{@code +} is for Ivy ranges.</p>
+     */
+    private static final String XRANGE_IDENTIFIER = format("%s|x|X|\\*|\\+", NUMERIC_IDENTIFIER);
 
     private static final String XRANGE_PLAIN = format("[v=\\s]*(%s)(?:\\.(%s)(?:\\.(%s)(?:%s)?%s?)?)?", XRANGE_IDENTIFIER, XRANGE_IDENTIFIER, XRANGE_IDENTIFIER, PRERELEASE, BUILD);
 
@@ -59,7 +63,15 @@ public class Tokenizers {
 
     public static final String CARET = format("^%s%s$", LONE_CARET, XRANGE_PLAIN);
 
+    public static final String HYPHEN = format("^\\s*(%s)\\s+-\\s+(%s)\\s*$", XRANGE_PLAIN, XRANGE_PLAIN);
+
+    public static final String IVY = "^(\\[|\\]|\\()([0-9]+)?\\.?([0-9]+)?\\,([0-9]+)?\\.?([0-9]+)?(\\]|\\[|\\))$";
+
+    public static final String TILDE = format("^(?:~>?)%s$", XRANGE_PLAIN);
+
     private static final String GLTL = "((?:<|>)?=?)";
+
+    public static final String XRANGE = format("^%s\\s*%s$", GLTL, XRANGE_PLAIN);
 
     public static final String COMPARATOR = format("^%s\\s*(%s)$|^$", GLTL, STRICT_PLAIN);
 
