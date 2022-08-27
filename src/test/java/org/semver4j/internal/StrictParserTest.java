@@ -1,5 +1,6 @@
 package org.semver4j.internal;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -77,6 +78,17 @@ class StrictParserTest {
                 .hasMessage(format("Version [%s] is not valid semver.", version));
     }
 
+    @Test
+    void shouldParseInvalidVersions() {
+        //given
+        StrictParser strictParser = new StrictParser();
+
+        //when/then
+        assertThatThrownBy(() -> strictParser.parse("99999999999999999999999.999999999999999999.99999999999999999"))
+                .isInstanceOf(SemverException.class)
+                .hasMessage(format("Value [%s] is too big.", "99999999999999999999999"));
+    }
+
     static Stream<Arguments> invalidStrictSemver() {
         return Stream.of(
                 arguments("1"),
@@ -120,6 +132,7 @@ class StrictParserTest {
                 arguments("9.8.7-whatever+meta+meta"),
                 arguments("99999999999999999999999.999999999999999999.99999999999999999----RC-SNAPSHOT.12.09.1--------------------------------..12"),
                 arguments("1.1.1.1")
+
         );
     }
 }
