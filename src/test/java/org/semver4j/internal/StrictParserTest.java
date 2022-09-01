@@ -132,7 +132,6 @@ class StrictParserTest {
                 arguments("9.8.7-whatever+meta+meta"),
                 arguments("99999999999999999999999.999999999999999999.99999999999999999----RC-SNAPSHOT.12.09.1--------------------------------..12"),
                 arguments("1.1.1.1")
-
         );
     }
 }
