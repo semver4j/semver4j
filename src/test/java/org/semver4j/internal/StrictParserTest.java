@@ -1,5 +1,6 @@
 package org.semver4j.internal;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -75,6 +76,17 @@ class StrictParserTest {
         assertThatThrownBy(() -> strictParser.parse(version))
                 .isInstanceOf(SemverException.class)
                 .hasMessage(format("Version [%s] is not valid semver.", version));
+    }
+
+    @Test
+    void shouldParseInvalidVersions() {
+        //given
+        StrictParser strictParser = new StrictParser();
+
+        //when/then
+        assertThatThrownBy(() -> strictParser.parse("99999999999999999999999.999999999999999999.99999999999999999"))
+                .isInstanceOf(SemverException.class)
+                .hasMessage(format("Value [%s] is too big.", "99999999999999999999999"));
     }
 
     static Stream<Arguments> invalidStrictSemver() {
