@@ -35,9 +35,9 @@ public class StrictParser {
         return new Version(major, minor, patch, preRelease, build);
     }
 
-    private int parseInt(String maybeInt){
+    private int parseInt(String maybeInt) {
         BigInteger secureNumber = new BigInteger(maybeInt);
-        if(maxInt.compareTo(secureNumber) < 0){
+        if (maxInt.compareTo(secureNumber) < 0) {
             throw new SemverException(format("Value [%s] is too big.", maybeInt));
         }
         return secureNumber.intValueExact();
