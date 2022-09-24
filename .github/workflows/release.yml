@@ -30,13 +30,13 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Build with Apache Maven
-        run: mvn --batch-mode package
+        run: ./mvnw --batch-mode package
 
       - name: Set artifact version
-        run: mvn --batch-mode versions:set -DnewVersion=${{ steps.set_version.outputs.version }}
+        run: ./mvnw --batch-mode versions:set -DnewVersion=${{ steps.set_version.outputs.version }}
 
       - name: Publish package to Apache Maven Central
-        run: mvn --batch-mode deploy
+        run: ./mvnw --batch-mode deploy
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
