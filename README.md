@@ -31,14 +31,14 @@ Add the dependency to your project:
 <dependency>
   <groupId>org.semver4j</groupId>
   <artifactId>semver4j</artifactId>
-  <version>2.1.0</version>
+  <version>2.1.1</version>
 </dependency>
 ```
 
 ### Using Gradle
 
 ```
-implementation 'org.semver4j:semver4j:2.1.0'
+implementation 'org.semver4j:semver4j:2.1.1'
 ```
 
 ###### Version `v1.0.x` references to original library version `v3.1.0` in [source repository](https://github.com/vdurmont/semver4j).
@@ -190,7 +190,7 @@ You can also use built-in versioning methods such as:
 
 ## Contributing
 
-Any pull request or bug report is welcome!
+Any pull request or bug report are welcome!
 If you have any suggestion about new features, you can **open an issue**.
 
 ## Thanks
