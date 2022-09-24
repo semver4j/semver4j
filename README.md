@@ -10,7 +10,7 @@
 ---
 
 > ### This is an active copy of great [semver4j](https://github.com/vdurmont/semver4j) library created by [@vdurmont](https://github.com/vdurmont), which is no longer maintained 😭
- 
+
 ---
 
 **Semver4j** is a lightweight Java library that helps you to handle versions.
@@ -29,9 +29,9 @@ Add the dependency to your project:
 ```xml
 
 <dependency>
-  <groupId>org.semver4j</groupId>
-  <artifactId>semver4j</artifactId>
-  <version>2.1.1</version>
+    <groupId>org.semver4j</groupId>
+    <artifactId>semver4j</artifactId>
+    <version>2.1.1</version>
 </dependency>
 ```
 
@@ -162,15 +162,16 @@ If you want to check if a version satisfies a range, use the `satisfies()` metho
 `Semver4j` can interpret following range implementations:
 
 - [NPM](https://github.com/npm/node-semver)
-  - [Primitive ranges](https://github.com/npm/node-semver#ranges) `<`, `<=`, `>`, `>=` and `=`
-  - [Hyphen ranges](https://github.com/npm/node-semver#hyphen-ranges-xyz---abc) `X.Y.Z - A.B.C`
-  - [X-Ranges](https://github.com/npm/node-semver#x-ranges-12x-1x-12-) `1.2.x`, `1.X`, `1.2.*` and `*`
-  - [Tilde ranges](https://github.com/npm/node-semver#tilde-ranges-123-12-1) `~1.2.3`, `~1.2` and `~1`
-  - [Caret ranges](https://github.com/npm/node-semver#caret-ranges-123-025-004) `^1.2.3`, `^0.2.5` and `^0.0.4`
+    - [Primitive ranges](https://github.com/npm/node-semver#ranges) `<`, `<=`, `>`, `>=` and `=`
+    - [Hyphen ranges](https://github.com/npm/node-semver#hyphen-ranges-xyz---abc) `X.Y.Z - A.B.C`
+    - [X-Ranges](https://github.com/npm/node-semver#x-ranges-12x-1x-12-) `1.2.x`, `1.X`, `1.2.*` and `*`
+    - [Tilde ranges](https://github.com/npm/node-semver#tilde-ranges-123-12-1) `~1.2.3`, `~1.2` and `~1`
+    - [Caret ranges](https://github.com/npm/node-semver#caret-ranges-123-025-004) `^1.2.3`, `^0.2.5` and `^0.0.4`
 - [CocaPods](https://guides.cocoapods.org/using/the-podfile.html)
-  - [Optimistic operator](https://guides.cocoapods.org/using/the-podfile.html#specifying-pod-versions) `~> 1.0`
+    - [Optimistic operator](https://guides.cocoapods.org/using/the-podfile.html#specifying-pod-versions) `~> 1.0`
 - [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html)
-  - Version Range Matcher `[1.0,2.0]`, `[1.0,2.0[`, `]1.0,2.0]`, `]1.0,2.0[`, `[1.0,)`, `]1.0,)`, `(,2.0]` and `(,2.0[`
+    - Version Range Matcher `[1.0,2.0]`, `[1.0,2.0[`, `]1.0,2.0]`, `]1.0,2.0[`, `[1.0,)`, `]1.0,)`, `(,2.0]`
+      and `(,2.0[`
 
 ### Modifying the version
 
