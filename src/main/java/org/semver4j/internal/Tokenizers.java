@@ -5,6 +5,7 @@ import static java.lang.String.format;
 /**
  * List of regexp that helps with tokenizing and parsing <a href="https://semver.org">semver</a> strings.
  */
+@SuppressWarnings("checkstyle:DeclarationOrder")
 public class Tokenizers {
     private Tokenizers() {
     }

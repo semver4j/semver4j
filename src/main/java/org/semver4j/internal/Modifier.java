@@ -106,8 +106,8 @@ public class Modifier {
             stringBuilder.append("-");
             for (String s : preRelease) {
                 stringBuilder
-                        .append(s)
-                        .append(".");
+                    .append(s)
+                    .append(".");
             }
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
@@ -116,8 +116,8 @@ public class Modifier {
             stringBuilder.append("+");
             for (String s : build) {
                 stringBuilder
-                        .append(s)
-                        .append(".");
+                    .append(s)
+                    .append(".");
             }
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
