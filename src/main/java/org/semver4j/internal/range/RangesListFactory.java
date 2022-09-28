@@ -34,12 +34,12 @@ public class RangesListFactory {
 
     private static String applyProcessors(String range) {
         return startWith(new GreaterThanOrEqualZeroProcessor())
-                .addProcessor(new IvyProcessor())
-                .addProcessor(new HyphenProcessor())
-                .addProcessor(new CaretProcessor())
-                .addProcessor(new TildeProcessor())
-                .addProcessor(new XRangeProcessor())
-                .process(range);
+            .addProcessor(new IvyProcessor())
+            .addProcessor(new HyphenProcessor())
+            .addProcessor(new CaretProcessor())
+            .addProcessor(new TildeProcessor())
+            .addProcessor(new XRangeProcessor())
+            .process(range);
     }
 
     private static List<Range> addRanges(String range) {

@@ -129,9 +129,9 @@ public class Range {
                 return EQ;
             }
             return stream(values())
-                    .filter(rangeOperator -> rangeOperator.asString().equals(string))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException(format("Range operator for '%s' not found", string)));
+                .filter(rangeOperator -> rangeOperator.asString().equals(string))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(format("Range operator for '%s' not found", string)));
         }
     }
 }

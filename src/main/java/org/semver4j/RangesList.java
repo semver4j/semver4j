@@ -46,14 +46,14 @@ public class RangesList {
 
     public boolean isSatisfiedBy(Semver version) {
         return rangesList.stream()
-                .anyMatch(ranges -> isSingleSetOfRangesIsSatisfied(ranges, version));
+            .anyMatch(ranges -> isSingleSetOfRangesIsSatisfied(ranges, version));
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", RangesList.class.getSimpleName() + "[", "]")
-                .add("rangesList=" + rangesList)
-                .toString();
+            .add("rangesList=" + rangesList)
+            .toString();
     }
 
     private boolean isSingleSetOfRangesIsSatisfied(List<Range> ranges, Semver version) {
@@ -69,8 +69,8 @@ public class RangesList {
                 List<String> preRelease = rangeSemver.getPreRelease();
                 if (preRelease.size() > 0) {
                     if (version.getMajor() == rangeSemver.getMajor() &&
-                            version.getMinor() == rangeSemver.getMinor() &&
-                            version.getPatch() == rangeSemver.getPatch()) {
+                        version.getMinor() == rangeSemver.getMinor() &&
+                        version.getPatch() == rangeSemver.getPatch()) {
                         return true;
                     }
                 }

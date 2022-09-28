@@ -98,10 +98,10 @@ public class StrictParser {
 
             Version that = (Version) o;
             return major == that.major &&
-                    Objects.equals(minor, that.minor) &&
-                    Objects.equals(patch, that.patch) &&
-                    Objects.equals(preRelease, that.preRelease) &&
-                    Objects.equals(build, that.build);
+                Objects.equals(minor, that.minor) &&
+                Objects.equals(patch, that.patch) &&
+                Objects.equals(preRelease, that.preRelease) &&
+                Objects.equals(build, that.build);
         }
 
         @Override
@@ -112,12 +112,12 @@ public class StrictParser {
         @Override
         public String toString() {
             return new StringJoiner(", ", Version.class.getSimpleName() + "[", "]")
-                    .add("major=" + major)
-                    .add("minor=" + minor)
-                    .add("patch=" + patch)
-                    .add("preRelease=" + preRelease)
-                    .add("build=" + build)
-                    .toString();
+                .add("major=" + major)
+                .add("minor=" + minor)
+                .add("patch=" + patch)
+                .add("preRelease=" + preRelease)
+                .add("build=" + build)
+                .toString();
         }
     }
 }

@@ -713,7 +713,7 @@ class SemverTest {
         assertThat(semver.toString()).isEqualTo(expected);
     }
 
-    public static Stream<Arguments> coerceVersions() {
+    static Stream<Arguments> coerceVersions() {
         return Stream.of(
                 arguments(".1", "1.0.0"),
                 arguments(".1.", "1.0.0"),
@@ -835,7 +835,7 @@ class SemverTest {
 
     @ParameterizedTest
     @MethodSource("getParameters")
-    public void shouldCheckSatisfies(String version, String range, boolean expected) {
+    void shouldCheckSatisfies(String version, String range, boolean expected) {
         //given
         Semver semver = new Semver(version);
 
@@ -846,7 +846,7 @@ class SemverTest {
         assertThat(satisfies).isEqualTo(expected);
     }
 
-    public static Stream<Arguments> getParameters() {
+    static Stream<Arguments> getParameters() {
         return Stream.of(
                 // Fully-qualified versions:
                 arguments("1.0.0", "1.0.0", true),

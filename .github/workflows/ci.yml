@@ -27,16 +27,24 @@ jobs:
       - name: Build with Apache Maven
         run: ./mvnw clean package
 
+      - name: Run checkstyle
+        uses: nikitasavinov/checkstyle-action@0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          checkstyle_config: config/checkstyle/checkstyle.xml
+          fail_on_error: true
+          reporter: github-pr-review
+
       - name: Report code coverage
         run: |
           curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import # One-time step
-          
+
           curl -Os https://uploader.codecov.io/latest/linux/codecov
           curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
           curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
 
           gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
           shasum -a 256 -c codecov.SHA256SUM
-          
+
           chmod +x codecov
           ./codecov
