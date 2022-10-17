@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.semver4j.Semver.VersionDiff;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
@@ -29,7 +30,7 @@ class SemverTest {
         //when/then
         assertThatThrownBy(() -> new Semver(version))
                 .isInstanceOf(SemverException.class)
-                .hasMessage(format("Version [%s] is not valid semver.", version));
+                .hasMessage(format(Locale.ROOT, "Version [%s] is not valid semver.", version));
     }
 
     @Test
@@ -758,13 +759,13 @@ class SemverTest {
                 arguments("v2", "2.0.0"),
                 arguments("v3.4 replaces v3.3.1", "3.4.0"),
                 arguments("4.6.3.9.2-alpha2", "4.6.3"),
-                arguments(format("%s.2", repeat("1", 17)), "2.0.0"),
-                arguments(format("%s.2.3", repeat("1", 17)), "2.3.0"),
-                arguments(format("1.%s.3", repeat("2", 17)), "1.0.0"),
-                arguments(format("1.2.%s", repeat("3", 17)), "1.2.0"),
-                arguments(format("%s.2.3.4", repeat("1", 17)), "2.3.4"),
-                arguments(format("1.%s.3.4", repeat("2", 17)), "1.0.0"),
-                arguments(format("1.2.%s.4", repeat("3", 17)), "1.2.0"),
+                arguments(format(Locale.ROOT, "%s.2", repeat("1", 17)), "2.0.0"),
+                arguments(format(Locale.ROOT, "%s.2.3", repeat("1", 17)), "2.3.0"),
+                arguments(format(Locale.ROOT, "1.%s.3", repeat("2", 17)), "1.0.0"),
+                arguments(format(Locale.ROOT, "1.2.%s", repeat("3", 17)), "1.2.0"),
+                arguments(format(Locale.ROOT, "%s.2.3.4", repeat("1", 17)), "2.3.4"),
+                arguments(format(Locale.ROOT, "1.%s.3.4", repeat("2", 17)), "1.0.0"),
+                arguments(format(Locale.ROOT, "1.2.%s.4", repeat("3", 17)), "1.2.0"),
                 arguments("10", "10.0.0")
         );
     }

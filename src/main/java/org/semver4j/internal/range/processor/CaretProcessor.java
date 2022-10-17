@@ -1,5 +1,6 @@
 package org.semver4j.internal.range.processor;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,44 +49,44 @@ public class CaretProcessor implements Processor {
         String to;
 
         if (minorIsX) {
-            from = format("%s%d.0.0", GTE.asString(), major);
-            to = format("%s%d.0.0", LT.asString(), (major + 1));
+            from = format(Locale.ROOT, "%s%d.0.0", GTE.asString(), major);
+            to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
         } else if (patchIsX) {
             if (major == 0) {
-                from = format("%s%d.%d.0", GTE.asString(), major, minor);
-                to = format("%s%d.%d.0", LT.asString(), major, (minor + 1));
+                from = format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), major, minor);
+                to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
             } else {
-                from = format("%s%d.%d.0", GTE.asString(), major, minor);
-                to = format("%s%d.0.0", LT.asString(), (major + 1));
+                from = format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), major, minor);
+                to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
             }
         } else if (isNotBlank(preRelease)) {
             if (major == 0) {
                 if (minor == 0) {
-                    from = format("%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
-                    to = format("%s%d.%d.%d", LT.asString(), major, minor, (path + 1));
+                    from = format(Locale.ROOT, "%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
+                    to = format(Locale.ROOT, "%s%d.%d.%d", LT.asString(), major, minor, (path + 1));
                 } else {
-                    from = format("%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
-                    to = format("%s%d.%d.0", LT.asString(), major, (minor + 1));
+                    from = format(Locale.ROOT, "%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
+                    to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
                 }
             } else {
-                from = format("%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
-                to = format("%s%d.0.0", LT.asString(), (major + 1));
+                from = format(Locale.ROOT, "%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
+                to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
             }
         } else {
             if (major == 0) {
                 if (minor == 0) {
-                    from = format("%s%d.%d.%d", GTE.asString(), major, minor, path);
-                    to = format("%s%d.%d.%d", LT.asString(), major, minor, (path + 1));
+                    from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
+                    to = format(Locale.ROOT, "%s%d.%d.%d", LT.asString(), major, minor, (path + 1));
                 } else {
-                    from = format("%s%d.%d.%d", GTE.asString(), major, minor, path);
-                    to = format("%s%d.%d.0", LT.asString(), major, (minor + 1));
+                    from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
+                    to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
                 }
             } else {
-                from = format("%s%d.%d.%d", GTE.asString(), major, minor, path);
-                to = format("%s%d.0.0", LT.asString(), (major + 1));
+                from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
+                to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
             }
         }
 
-        return format("%s %s", from, to);
+        return format(Locale.ROOT, "%s %s", from, to);
     }
 }

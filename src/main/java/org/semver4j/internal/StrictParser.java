@@ -4,6 +4,7 @@ import org.semver4j.SemverException;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.regex.Matcher;
@@ -23,7 +24,7 @@ public class StrictParser {
         Matcher matcher = pattern.matcher(version);
 
         if (!matcher.matches()) {
-            throw new SemverException(format("Version [%s] is not valid semver.", version));
+            throw new SemverException(format(Locale.ROOT, "Version [%s] is not valid semver.", version));
         }
 
         int major = parseInt(matcher.group(1));
@@ -38,7 +39,7 @@ public class StrictParser {
     private int parseInt(String maybeInt) {
         BigInteger secureNumber = new BigInteger(maybeInt);
         if (maxInt.compareTo(secureNumber) < 0) {
-            throw new SemverException(format("Value [%s] is too big.", maybeInt));
+            throw new SemverException(format(Locale.ROOT, "Value [%s] is too big.", maybeInt));
         }
         return secureNumber.intValueExact();
     }

@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.semver4j.SemverException;
 import org.semver4j.internal.StrictParser.Version;
 
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
@@ -75,7 +76,7 @@ class StrictParserTest {
         //when/then
         assertThatThrownBy(() -> strictParser.parse(version))
                 .isInstanceOf(SemverException.class)
-                .hasMessage(format("Version [%s] is not valid semver.", version));
+                .hasMessage(format(Locale.ROOT, "Version [%s] is not valid semver.", version));
     }
 
     @Test
@@ -86,7 +87,7 @@ class StrictParserTest {
         //when/then
         assertThatThrownBy(() -> strictParser.parse("99999999999999999999999.999999999999999999.99999999999999999"))
                 .isInstanceOf(SemverException.class)
-                .hasMessage(format("Value [%s] is too big.", "99999999999999999999999"));
+                .hasMessage(format(Locale.ROOT, "Value [%s] is too big.", "99999999999999999999999"));
     }
 
     static Stream<Arguments> invalidStrictSemver() {
