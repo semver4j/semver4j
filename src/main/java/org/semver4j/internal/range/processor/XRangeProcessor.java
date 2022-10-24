@@ -2,6 +2,7 @@ package org.semver4j.internal.range.processor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,16 +69,16 @@ public class XRangeProcessor implements Processor {
                         }
                     }
 
-                    String from = format("%s%d.%d.%d", compareSign, major, minor, patch);
+                    String from = format(Locale.ROOT, "%s%d.%d.%d", compareSign, major, minor, patch);
                     objects.add(from);
                 } else if (isX(minor)) {
-                    String from = format("%s%d.0.0", GTE.asString(), major);
-                    String to = format("%s%d.0.0", LT.asString(), (major + 1));
+                    String from = format(Locale.ROOT, "%s%d.0.0", GTE.asString(), major);
+                    String to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
                     objects.add(from);
                     objects.add(to);
                 } else if (isX(patch)) {
-                    String from = format("%s%d.%d.0", GTE.asString(), major, minor);
-                    String to = format("%s%d.%d.0", LT.asString(), major, (minor + 1));
+                    String from = format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), major, minor);
+                    String to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
                     objects.add(from);
                     objects.add(to);
                 } else {

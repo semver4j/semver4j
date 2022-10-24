@@ -1,5 +1,6 @@
 package org.semver4j.internal.range.processor;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +37,7 @@ public class HyphenProcessor implements Processor {
         String rangeFrom = getRangeFrom(matcher);
         String rangeTo = getRangeTo(matcher);
 
-        return format("%s %s", rangeFrom, rangeTo);
+        return format(Locale.ROOT, "%s %s", rangeFrom, rangeTo);
     }
 
     private String getRangeFrom(Matcher matcher) {
@@ -54,12 +55,12 @@ public class HyphenProcessor implements Processor {
         boolean patchIsX = isX(fromPatch);
 
         if (minorIsX) {
-            return format("%s%d.0.0", GTE.asString(), fromMajor);
+            return format(Locale.ROOT, "%s%d.0.0", GTE.asString(), fromMajor);
         } else {
             if (patchIsX) {
-                return format("%s%d.%d.0", GTE.asString(), fromMajor, fromMinor);
+                return format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), fromMajor, fromMinor);
             } else {
-                return format("%s%s", GTE.asString(), from);
+                return format(Locale.ROOT, "%s%s", GTE.asString(), from);
             }
         }
     }
@@ -79,12 +80,12 @@ public class HyphenProcessor implements Processor {
         boolean patchIsX = isX(toPatch);
 
         if (minorIsX) {
-            return format("%s%d.0.0", LT.asString(), (toMajor + 1));
+            return format(Locale.ROOT, "%s%d.0.0", LT.asString(), (toMajor + 1));
         } else {
             if (patchIsX) {
-                return format("%s%d.%d.0", LT.asString(), toMajor, (toMinor + 1));
+                return format(Locale.ROOT, "%s%d.%d.0", LT.asString(), toMajor, (toMinor + 1));
             } else {
-                return format("%s%s", LTE.asString(), to);
+                return format(Locale.ROOT, "%s%s", LTE.asString(), to);
             }
         }
     }

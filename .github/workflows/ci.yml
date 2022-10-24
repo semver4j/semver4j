@@ -25,7 +25,7 @@ jobs:
           java-version: ${{ matrix.java }}
 
       - name: Build with Apache Maven
-        run: ./mvnw clean package
+        run: ./mvnw clean verify -Dgpg.skip
 
       - name: Run checkstyle
         uses: nikitasavinov/checkstyle-action@0.6.0

@@ -1,5 +1,6 @@
 package org.semver4j;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import static java.lang.String.format;
@@ -57,7 +58,7 @@ public class Range {
                 return version.isGreaterThanOrEqualTo(rangeVersion);
         }
 
-        throw new RuntimeException(format("Unknown RangeOperator: %s", rangeOperator));
+        throw new RuntimeException(format(Locale.ROOT, "Unknown RangeOperator: %s", rangeOperator));
     }
 
     @Override
@@ -131,7 +132,7 @@ public class Range {
             return stream(values())
                 .filter(rangeOperator -> rangeOperator.asString().equals(string))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(format("Range operator for '%s' not found", string)));
+                .orElseThrow(() -> new IllegalArgumentException(format(Locale.ROOT, "Range operator for '%s' not found", string)));
         }
     }
 }

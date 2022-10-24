@@ -1,5 +1,6 @@
 package org.semver4j.internal.range.processor;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,25 +63,25 @@ public class IvyProcessor implements Processor {
         boolean closeInclusive = isInclusiveRange(closeSign);
         if (openInclusive && closeInclusive) {
             if (openSign.equals("[") && closeSign.equals("]")) {
-                return format("%s%d.%d.0 %s%d.%d.0", GTE.asString(), fromMajor, fromMinor, LTE.asString(), toMajor, toMinor);
+                return format(Locale.ROOT, "%s%d.%d.0 %s%d.%d.0", GTE.asString(), fromMajor, fromMinor, LTE.asString(), toMajor, toMinor);
             } else if (openSign.equals("[") && closeSign.equals("[")) {
-                return format("%s%d.%d.0 %s%d.%d.0", GTE.asString(), fromMajor, fromMinor, LT.asString(), toMajor, toMinor);
+                return format(Locale.ROOT, "%s%d.%d.0 %s%d.%d.0", GTE.asString(), fromMajor, fromMinor, LT.asString(), toMajor, toMinor);
             } else if (openSign.equals("]") && closeSign.equals("]")) {
-                return format("%s%d.%d.0 %s%d.%d.0", GT.asString(), fromMajor, fromMinor, LTE.asString(), toMajor, toMinor);
+                return format(Locale.ROOT, "%s%d.%d.0 %s%d.%d.0", GT.asString(), fromMajor, fromMinor, LTE.asString(), toMajor, toMinor);
             } else if (openSign.equals("]") && closeSign.equals("[")) {
-                return format("%s%d.%d.0 %s%d.%d.0", GT.asString(), fromMajor, fromMinor, LT.asString(), toMajor, toMinor);
+                return format(Locale.ROOT, "%s%d.%d.0 %s%d.%d.0", GT.asString(), fromMajor, fromMinor, LT.asString(), toMajor, toMinor);
             }
         } else if (closeSign.equals(")")) {
             if (openSign.equals("[")) {
-                return format("%s%d.%d.0", GTE.asString(), fromMajor, fromMinor);
+                return format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), fromMajor, fromMinor);
             } else if (openSign.equals("]")) {
-                return format("%s%d.%d.0", GT.asString(), fromMajor, fromMinor);
+                return format(Locale.ROOT, "%s%d.%d.0", GT.asString(), fromMajor, fromMinor);
             }
         } else if (openSign.equals("(")) {
             if (closeSign.equals("]")) {
-                return format("%s%d.%d.0", LTE.asString(), toMajor, toMinor);
+                return format(Locale.ROOT, "%s%d.%d.0", LTE.asString(), toMajor, toMinor);
             } else if (closeSign.equals("[")) {
-                return format("%s%d.%d.0", LT.asString(), toMajor, toMinor);
+                return format(Locale.ROOT, "%s%d.%d.0", LT.asString(), toMajor, toMinor);
             }
         }
 

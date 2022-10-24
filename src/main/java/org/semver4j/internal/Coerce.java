@@ -1,5 +1,6 @@
 package org.semver4j.internal;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +24,7 @@ public class Coerce {
             group4 = group4 != null ? group4 : "0";
             group5 = group5 != null ? group5 : "0";
 
-            return format("%s.%s.%s", group3, group4, group5);
+            return format(Locale.ROOT, "%s.%s.%s", group3, group4, group5);
         }
 
         return null;
