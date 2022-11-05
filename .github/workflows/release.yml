@@ -1,4 +1,4 @@
-name: Publish package to the Maven Central Repository
+name: Release
 
 on:
   release:
@@ -47,8 +47,8 @@ jobs:
   update-version:
     needs: [ publish ]
     permissions:
-      contents: write
-      pull-requests: write
+      contents: write # for peter-evans/create-pull-request to create branch
+      pull-requests: write # for peter-evans/create-pull-request to create a PR
     runs-on: ubuntu-latest
     steps:
       - name: Update Maven version in README.md
