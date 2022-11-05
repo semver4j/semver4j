@@ -20,6 +20,27 @@ It also provides several range checking support: [node-semver](https://github.co
 [CocoaPods](https://guides.cocoapods.org/using/the-podfile.html)
 and [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html).
 
+## Table of Contents
+
+<!-- TOC -->
+* [Installation](#installation)
+  * [Using Maven](#using-maven)
+  * [Using Gradle](#using-gradle)
+* [Usage](#usage)
+  * [What is a version?](#what-is-a-version)
+  * [The `Semver` object](#the-semver-object)
+    * [Using constructor](#using-constructor)
+    * [Using `Semver.parse()` method](#using-semverparse-method)
+    * [Using `Semver.coerce()` method](#using-semvercoerce-method)
+  * [Is the version stable?](#is-the-version-stable)
+  * [Comparing the versions](#comparing-the-versions)
+  * [Versions diffs](#versions-diffs)
+  * [Ranges](#ranges)
+  * [Modifying the version](#modifying-the-version)
+* [Contributing](#contributing)
+* [Thanks](#thanks)
+<!-- TOC -->
+
 ## Installation
 
 Add the dependency to your project:
