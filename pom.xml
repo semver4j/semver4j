@@ -26,6 +26,11 @@
         </developer>
     </developers>
 
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/semver4j/semver4j/issues</url>
+    </issueManagement>
+
     <scm>
         <connection>scm:git:git@github.com:semver4j/semver4j.git</connection>
         <developerConnection>scm:git:git@github.com:semver4j/semver4j.git</developerConnection>
