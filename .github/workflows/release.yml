@@ -1,7 +1,9 @@
 name: Publish package to the Maven Central Repository
+
 on:
   release:
     types: [ published ]
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -41,3 +43,31 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+  update-version:
+    needs: [ publish ]
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Maven version in README.md
+        run: sed -i 's/<version>.*<\/version>/<version>${{ github.event.release.tag_name }}<\/version>/g' README.md
+
+      - name: Update Gradle version in README.md
+        run: sed -i "s/implementation 'org.semver4j:semver4j:.*/implementation 'org.semver4j:semver4j:${{ github.event.release.tag_name }}'/g" README.md
+
+      - name: Show diff
+        run: git diff
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@4.2.0
+        with:
+          commit-message: Update versions after ${{ github.event.release.tag_name }} release
+          title: Update versions after ${{ github.event.release.tag_name }} release
+          body: |
+            Update versions after ${{ github.event.release.tag_name }} release
+          branch: update-versions
+          labels: |
+            documentation
+            skip-changelog
