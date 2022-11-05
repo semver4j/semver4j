@@ -23,7 +23,7 @@ public class Differ {
             return PATCH;
         }
         if (!version.getPreRelease().equals(other.getPreRelease())) {
-            return SUFFIX;
+            return PRE_RELEASE;
         }
         if (!version.getBuild().equals(other.getBuild())) {
             return BUILD;

@@ -679,8 +679,8 @@ class SemverTest {
                 arguments("2.3.4-alpha.5+sha32iddfu987", MAJOR),
                 arguments("1.3.4-alpha.5+sha32iddfu987", MINOR),
                 arguments("1.2.4-alpha.5+sha32iddfu987", PATCH),
-                arguments("1.2.3-alpha.4+sha32iddfu987", SUFFIX),
-                arguments("1.2.3-beta.5+sha32iddfu987", SUFFIX),
+                arguments("1.2.3-alpha.4+sha32iddfu987", PRE_RELEASE),
+                arguments("1.2.3-beta.5+sha32iddfu987", PRE_RELEASE),
                 arguments("1.2.3-beta.4+sha32iddfu987", BUILD),
                 arguments("1.2.3-beta.4+sha899-d8g79f87", BUILD)
         );
