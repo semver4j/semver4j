@@ -162,7 +162,7 @@ version.isEquivalentTo("1.2.3+shaABCDEFGHI"); // true
 ### Versions diffs
 
 If you want to know what is the main difference between 2 versions, use the `diff()` method.
-It will return a `VersionDiff` enum value among: `NONE`, `MAJOR`, `MINOR`, `PATCH`, `SUFFIX`, `BUILD`.
+It will return a `VersionDiff` enum value among: `NONE`, `MAJOR`, `MINOR`, `PATCH`, `PRE_RELEASE`, `BUILD`.
 
 _It will always return the biggest difference._
 
@@ -172,7 +172,7 @@ version.diff("1.2.3-beta.4+sha899d8g79f87"); // NONE
 version.diff("2.3.4-alpha.5+sha32iddfu987"); // MAJOR
 version.diff("1.3.4-alpha.5+sha32iddfu987"); // MINOR
 version.diff("1.2.4-alpha.5+sha32iddfu987"); // PATCH
-version.diff("1.2.3-alpha.5+sha32iddfu987"); // SUFFIX
+version.diff("1.2.3-alpha.5+sha32iddfu987"); // PRE_RELEASE
 version.diff("1.2.3-beta.4+sha32iddfu987");  // BUILD
 ```
 

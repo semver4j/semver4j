@@ -125,7 +125,7 @@ public class Semver implements Comparable<Semver> {
      * Returns the pre-release of the version.
      * Example: for "1.2.3-beta.4+sha98450956" = {"beta", "4"}
      *
-     * @return the suffix of the version
+     * @return the pre-release of the version
      */
     public List<String> getPreRelease() {
         return preRelease;
@@ -499,7 +499,7 @@ public class Semver implements Comparable<Semver> {
         MAJOR,
         MINOR,
         PATCH,
-        SUFFIX,
+        PRE_RELEASE,
         BUILD,
     }
 
