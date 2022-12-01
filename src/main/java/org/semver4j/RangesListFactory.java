@@ -1,8 +1,6 @@
-package org.semver4j.internal.range;
+package org.semver4j;
 
-import org.semver4j.Range;
 import org.semver4j.Range.RangeOperator;
-import org.semver4j.RangesList;
 import org.semver4j.internal.range.processor.*;
 
 import java.util.ArrayList;
