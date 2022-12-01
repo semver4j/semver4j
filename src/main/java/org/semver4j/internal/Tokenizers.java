@@ -1,8 +1,8 @@
 package org.semver4j.internal;
 
-import static java.lang.String.format;
-
 import java.util.Locale;
+
+import static java.lang.String.format;
 
 /**
  * List of regexp that helps with tokenizing and parsing <a href="https://semver.org">semver</a> strings.
@@ -68,7 +68,7 @@ public class Tokenizers {
 
     public static final String HYPHEN = format(Locale.ROOT, "^\\s*(%s)\\s+-\\s+(%s)\\s*$", XRANGE_PLAIN, XRANGE_PLAIN);
 
-    public static final String IVY = "^(\\[|\\]|\\()([0-9]+)?\\.?([0-9]+)?\\,([0-9]+)?\\.?([0-9]+)?(\\]|\\[|\\))$";
+    public static final String IVY = "^(\\[|\\]|\\()([0-9]+)?\\.?([0-9]+)?\\.?([0-9]+)?\\,([0-9]+)?\\.?([0-9]+)?\\.?([0-9]+)?(\\]|\\[|\\))$";
 
     public static final String TILDE = format(Locale.ROOT, "^(?:~>?)%s$", XRANGE_PLAIN);
 
