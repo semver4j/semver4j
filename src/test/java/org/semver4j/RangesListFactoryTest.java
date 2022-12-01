@@ -1,9 +1,7 @@
-package org.semver4j.internal.range;
+package org.semver4j;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.semver4j.RangesList;
-import org.semver4j.Semver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

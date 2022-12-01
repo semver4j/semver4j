@@ -2,7 +2,6 @@ package org.semver4j;
 
 import org.semver4j.internal.*;
 import org.semver4j.internal.StrictParser.Version;
-import org.semver4j.internal.range.RangesListFactory;
 
 import java.util.List;
 import java.util.Objects;
