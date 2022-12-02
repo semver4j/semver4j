@@ -27,6 +27,15 @@ public class Range {
     }
 
     /**
+     * Check whether this range is satisfied by any version.
+     *
+     * @return {@code true} if this range is satisfied by any version, {@code false} otherwise
+     */
+    public boolean isSatisfiedByAny() {
+        return rangeVersion.isEqualTo(Semver.ZERO) && rangeOperator == RangeOperator.GTE;
+    }
+
+    /**
      * Check is range is satisfied by given version.
      *
      * @param version version to check

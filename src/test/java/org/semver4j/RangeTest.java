@@ -15,6 +15,15 @@ import static org.semver4j.Range.RangeOperator.*;
 
 class RangeTest {
     @Test
+    void shouldCheckSatisfiedByAny() {
+        //given
+        Range range = new Range(Semver.ZERO, GTE);
+
+        //when/then
+        assertThat(range.isSatisfiedByAny()).isTrue();
+    }
+
+    @Test
     void shouldCheckSatisfiedByForEqual() {
         //given
         Range range = new Range("1.2.3", EQ);
