@@ -44,6 +44,17 @@ public class RangesList {
         return this;
     }
 
+    /**
+     * Check whether this ranges list is satisfied by any version.
+     *
+     * @return {@code true} if this ranges list is satisfied by any version, {@code false} otherwise
+     */
+    public boolean isSatisfiedByAny() {
+        return rangesList.stream()
+            .flatMap(List::stream)
+            .allMatch(Range::isSatisfiedByAny);
+    }
+
     public boolean isSatisfiedBy(Semver version) {
         return rangesList.stream()
             .anyMatch(ranges -> isSingleSetOfRangesIsSatisfied(ranges, version));
