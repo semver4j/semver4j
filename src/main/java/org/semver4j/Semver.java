@@ -16,6 +16,9 @@ import static org.semver4j.Semver.SemverType.STRICT;
 public class Semver implements Comparable<Semver> {
     private static final StrictParser STRICT_PARSER = new StrictParser();
 
+    // This must come after STRICT_PARSER as otherwise the Semver construction will cause an NPE.
+    public static final Semver ZERO = new Semver("0.0.0");
+
     private final String version;
     private final SemverType type;
 
