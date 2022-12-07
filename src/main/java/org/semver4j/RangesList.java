@@ -25,14 +25,14 @@ import java.util.StringJoiner;
  * ]
  * </pre>
  * <p>
- * That means, one of ranges {@code [=2.6.8]} or {@code [=3.0.0, =3.0.1]} must by full applied.<br>
+ * That means, one of ranges {@code [>=2.6.8]} or {@code [>=3.0.0, <=3.0.1]} must by full applied.<br>
  * So that example allows pass following version:
  * <ul>
- *     <li>{@code 2.6.8} - because of range {@code [=2.6.8]}</li>
- *     <li>{@code 3.0.0} - because of range {@code [=3.0.0, =3.0.1]}</li>
- *     <li>{@code 3.0.1} - because of range {@code [=3.0.0, =3.0.1]}</li>
+ *     <li>{@code 2.6.8} - because of range {@code [>=2.6.8]}</li>
+ *     <li>{@code 3.0.0} - because of range {@code [>=3.0.0, <=3.0.1]}</li>
+ *     <li>{@code 3.0.1} - because of range {@code [>=3.0.0, <=3.0.1]}</li>
  * </ul>
- * Any other versions not satisfied this range.
+ * Any other versions <b>not satisfied</b> this range.
  */
 public class RangesList {
     private final List<List<Range>> rangesList = new ArrayList<>();
