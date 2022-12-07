@@ -45,6 +45,13 @@ public class RangesList {
     }
 
     /**
+     * Return the list of range lists.
+     */
+    public List<List<Range>> get() {
+        return rangesList;
+    }
+
+    /**
      * Check whether this ranges list is satisfied by any version.
      *
      * @return {@code true} if this ranges list is satisfied by any version, {@code false} otherwise
