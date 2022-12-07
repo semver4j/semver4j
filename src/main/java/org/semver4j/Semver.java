@@ -7,20 +7,15 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.util.Objects.hash;
-import static org.semver4j.Semver.SemverType.STRICT;
 
 /**
  * Semver is a tool that provides useful methods to manipulate versions that follow the "semantic versioning"
  * specification (see <a href="http://semver.org">semver.org</a>).
  */
 public class Semver implements Comparable<Semver> {
-    private static final StrictParser STRICT_PARSER = new StrictParser();
-
-    // This must come after STRICT_PARSER as otherwise the Semver construction will cause an NPE.
     public static final Semver ZERO = new Semver("0.0.0");
 
     private final String version;
-    private final SemverType type;
 
     private final int major;
     private final int minor;
@@ -29,14 +24,9 @@ public class Semver implements Comparable<Semver> {
     private final List<String> build;
 
     public Semver(String version) {
-        this(version, STRICT);
-    }
-
-    public Semver(String version, SemverType type) {
         this.version = version.trim();
-        this.type = type;
 
-        Version parsedVersion = STRICT_PARSER.parse(this.version);
+        Version parsedVersion = new StrictParser().parse(this.version);
 
         major = parsedVersion.getMajor();
         minor = parsedVersion.getMinor();
@@ -87,10 +77,6 @@ public class Semver implements Comparable<Semver> {
      */
     public String getVersion() {
         return version;
-    }
-
-    public SemverType getType() {
-        return type;
     }
 
     /**
@@ -342,7 +328,7 @@ public class Semver implements Comparable<Semver> {
      * @see #isLowerThan(Semver)
      */
     public boolean isLowerThan(String version) {
-        return isLowerThan(new Semver(version, this.type));
+        return isLowerThan(new Semver(version));
     }
 
     /**
@@ -503,17 +489,5 @@ public class Semver implements Comparable<Semver> {
         PATCH,
         PRE_RELEASE,
         BUILD,
-    }
-
-    /**
-     * The different types of supported version systems.
-     */
-    public enum SemverType {
-        /**
-         * <p>The default type of version.</p>
-         * Interpret version strictly.
-         * Format must be valid due to <a href="https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions">specification</a>.
-         */
-        STRICT,
     }
 }
