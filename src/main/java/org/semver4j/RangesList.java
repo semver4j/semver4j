@@ -11,7 +11,7 @@ import java.util.StringJoiner;
  * Following range:
  *
  * <pre>
- * &lt;= 2.6.8 || &gt;= 3.0.0 &lt;= 3.0.1
+ * &lt;=2.6.8 || &gt;=3.0.0 &lt;=3.0.1
  * </pre>
  * <p>
  * is parsed into:
@@ -19,8 +19,8 @@ import java.util.StringJoiner;
  * <pre>
  * RangesList[
  *      rangesList=[
- *          [=2.6.8],
- *          [=3.0.0, =3.0.1]
+ *          [<=2.6.8],
+ *          [>=3.0.0, <=3.0.1]
  *      ]
  * ]
  * </pre>
