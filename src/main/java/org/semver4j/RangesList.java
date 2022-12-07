@@ -2,7 +2,8 @@ package org.semver4j;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * <p>Represents set of single {@link Range}'s.</p>
@@ -69,9 +70,21 @@ public class RangesList {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", RangesList.class.getSimpleName() + "[", "]")
-            .add("rangesList=" + rangesList)
-            .toString();
+        return rangesList.stream()
+            .map(RangesList::formatRanges)
+            .collect(joining(" or "));
+    }
+
+    private static String formatRanges(List<Range> ranges) {
+        String representation = ranges.stream()
+            .map(Range::toString)
+            .collect(joining(" and "));
+
+        if (ranges.size() < 2) {
+            return representation;
+        }
+
+        return "(" + representation + ")";
     }
 
     private static boolean isSingleSetOfRangesIsSatisfied(List<Range> ranges, Semver version) {
