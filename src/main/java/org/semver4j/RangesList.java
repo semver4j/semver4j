@@ -74,7 +74,7 @@ public class RangesList {
             .toString();
     }
 
-    private boolean isSingleSetOfRangesIsSatisfied(List<Range> ranges, Semver version) {
+    private static boolean isSingleSetOfRangesIsSatisfied(List<Range> ranges, Semver version) {
         for (Range range : ranges) {
             if (!range.isSatisfiedBy(version)) {
                 return false;
