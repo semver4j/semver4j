@@ -93,7 +93,7 @@ public class RangesList {
             return representation;
         }
 
-        return format(Locale.ROOT, "(%s) ", representation);
+        return format(Locale.ROOT, "(%s)", representation);
     }
 
     private static boolean isSingleSetOfRangesIsSatisfied(List<Range> ranges, Semver version) {
