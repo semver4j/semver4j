@@ -2,6 +2,7 @@ package org.semver4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
@@ -92,7 +93,7 @@ public class RangesList {
             return representation;
         }
 
-        return format("(%s)", representation);
+        return format(Locale.ROOT, "(%s) ", representation);
     }
 
     private static boolean isSingleSetOfRangesIsSatisfied(List<Range> ranges, Semver version) {
