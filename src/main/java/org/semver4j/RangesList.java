@@ -3,6 +3,7 @@ package org.semver4j;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -36,8 +37,14 @@ import static java.util.stream.Collectors.joining;
  * Any other versions <b>not satisfied</b> this range.
  */
 public class RangesList {
+    private static final String OR_JOINER = " or ";
+    private static final String AND_JOINER = " and ";
+
     private final List<List<Range>> rangesList = new ArrayList<>();
 
+    /**
+     * Add ranges to ranges list.
+     */
     public RangesList add(List<Range> ranges) {
         if (!ranges.isEmpty()) {
             rangesList.add(ranges);
@@ -54,8 +61,6 @@ public class RangesList {
 
     /**
      * Check whether this ranges list is satisfied by any version.
-     *
-     * @return {@code true} if this ranges list is satisfied by any version, {@code false} otherwise
      */
     public boolean isSatisfiedByAny() {
         return rangesList.stream()
@@ -63,6 +68,9 @@ public class RangesList {
             .allMatch(Range::isSatisfiedByAny);
     }
 
+    /**
+     * Check whether this ranges list is satisfied by version.
+     */
     public boolean isSatisfiedBy(Semver version) {
         return rangesList.stream()
             .anyMatch(ranges -> isSingleSetOfRangesIsSatisfied(ranges, version));
@@ -72,19 +80,19 @@ public class RangesList {
     public String toString() {
         return rangesList.stream()
             .map(RangesList::formatRanges)
-            .collect(joining(" or "));
+            .collect(joining(OR_JOINER));
     }
 
     private static String formatRanges(List<Range> ranges) {
         String representation = ranges.stream()
             .map(Range::toString)
-            .collect(joining(" and "));
+            .collect(joining(AND_JOINER));
 
         if (ranges.size() < 2) {
             return representation;
         }
 
-        return "(" + representation + ")";
+        return format("(%s)", representation);
     }
 
     private static boolean isSingleSetOfRangesIsSatisfied(List<Range> ranges, Semver version) {
