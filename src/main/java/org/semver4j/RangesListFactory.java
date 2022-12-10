@@ -19,8 +19,11 @@ public class RangesListFactory {
         range = range.trim();
         RangesList rangesList = new RangesList();
 
+        Pattern compile = compile("(\\s*)((?:<|>)?=?)\\s*");
+
         String[] rangeSections = range.split("\\|\\|");
         for (String rangeSection : rangeSections) {
+            rangeSection = stripWhitespacesBetweenRangeOperator(compile, rangeSection);
             rangeSection = applyProcessors(rangeSection);
 
             List<Range> ranges = addRanges(rangeSection);
@@ -28,6 +31,11 @@ public class RangesListFactory {
         }
 
         return rangesList;
+    }
+
+    private static String stripWhitespacesBetweenRangeOperator(Pattern compile, String rangeSection) {
+        Matcher matcher = compile.matcher(rangeSection);
+        return matcher.replaceAll("$1$2");
     }
 
     private static String applyProcessors(String range) {
