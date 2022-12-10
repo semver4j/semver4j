@@ -31,4 +31,16 @@ class RangesListFactoryTest {
         //then
         assertThat(satisfiedBy).isTrue();
     }
+
+    @Test
+    void shouldStripWhitespacesBetweenRangeOperator() {
+        //given
+        RangesList rangesList = RangesListFactory.create("<=   2.6.8 ||    >= 3.0.0 <= 3.0.1 || >5.0.0");
+
+        //when
+        String range = rangesList.toString();
+
+        //then
+        assertThat(range).isEqualTo("<=2.6.8 or (>=3.0.0 and <=3.0.1) or >5.0.0");
+    }
 }
