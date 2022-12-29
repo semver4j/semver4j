@@ -13,17 +13,16 @@ import static org.semver4j.internal.Tokenizers.COMPARATOR;
 import static org.semver4j.internal.range.RangeProcessorPipeline.startWith;
 
 public class RangesListFactory {
-    private static final Pattern pattern = compile(COMPARATOR);
+    private static final Pattern splitterPattern = compile("(\\s*)((?:<|>)?=?)\\s*");
+    private static final Pattern comparatorPattern = compile(COMPARATOR);
 
     public static RangesList create(String range) {
         range = range.trim();
         RangesList rangesList = new RangesList();
 
-        Pattern compile = compile("(\\s*)((?:<|>)?=?)\\s*");
-
         String[] rangeSections = range.split("\\|\\|");
         for (String rangeSection : rangeSections) {
-            rangeSection = stripWhitespacesBetweenRangeOperator(compile, rangeSection);
+            rangeSection = stripWhitespacesBetweenRangeOperator(rangeSection);
             rangeSection = applyProcessors(rangeSection);
 
             List<Range> ranges = addRanges(rangeSection);
@@ -33,9 +32,9 @@ public class RangesListFactory {
         return rangesList;
     }
 
-    private static String stripWhitespacesBetweenRangeOperator(Pattern compile, String rangeSection) {
-        Matcher matcher = compile.matcher(rangeSection);
-        return matcher.replaceAll("$1$2");
+    private static String stripWhitespacesBetweenRangeOperator(String rangeSection) {
+        Matcher matcher = splitterPattern.matcher(rangeSection);
+        return matcher.replaceAll("$1$2").trim();
     }
 
     private static String applyProcessors(String range) {
@@ -53,7 +52,7 @@ public class RangesListFactory {
 
         String[] parsedRanges = range.split("\\s+");
         for (String parsedRange : parsedRanges) {
-            Matcher matcher = pattern.matcher(parsedRange);
+            Matcher matcher = comparatorPattern.matcher(parsedRange);
             if (matcher.matches()) {
                 String rangeOperator = matcher.group(1);
                 String version = matcher.group(2);
