@@ -43,4 +43,16 @@ class RangesListFactoryTest {
         //then
         assertThat(range).isEqualTo("<=2.6.8 or (>=3.0.0 and <=3.0.1) or >5.0.0");
     }
+
+    @Test
+    void shouldCorrectParseCaretRangesWithSpace() {
+        //given
+        RangesList rangesList = RangesListFactory.create("^14.14.20 || ^16.0.0");
+
+        //when
+        String range = rangesList.toString();
+
+        //then
+        assertThat(range).isEqualTo("(>=14.14.20 and <15.0.0) or (>=16.0.0 and <17.0.0)");
+    }
 }

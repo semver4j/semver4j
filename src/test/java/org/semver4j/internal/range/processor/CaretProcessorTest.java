@@ -35,6 +35,15 @@ class CaretProcessorTest {
     }
 
     @Test
+    void shouldParseRangeWhenHasAllVersionNumbers() {
+        //when
+        String range = processor.process("^14.14.20");
+
+        //then
+        assertThat(range).isEqualTo(">=14.14.20 <15.0.0");
+    }
+
+    @Test
     void shouldParseRangeWhenPreReleaseIsSetMajorIsZero() {
         //when
         String range = processor.process("^0.1.0-alpha.1");
