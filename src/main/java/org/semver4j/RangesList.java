@@ -81,7 +81,8 @@ public class RangesList {
     public String toString() {
         return rangesList.stream()
             .map(RangesList::formatRanges)
-            .collect(joining(OR_JOINER));
+            .collect(joining(OR_JOINER))
+            .replaceAll("^\\(([^()]+)\\)$", "$1");
     }
 
     private static String formatRanges(List<Range> ranges) {
