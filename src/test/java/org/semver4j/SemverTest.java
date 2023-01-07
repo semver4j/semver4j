@@ -1142,6 +1142,21 @@ class SemverTest {
         assertThat(valid).isFalse();
     }
 
+    @Test
+    void shouldSatisfiesVersionUsingExpression() {
+        //given
+        Semver semver = new Semver("1.1.1");
+
+        RangesExpression expression = RangesExpression.less("1.0.0")
+            .or(RangesExpression.greater("10.0.1").or(RangesExpression.equal("1.1.1")));
+
+        //when
+        boolean satisfies = semver.satisfies(expression);
+
+        //then
+        assertThat(satisfies).isTrue();
+    }
+
     private static String repeat(String s, int n) {
         return join("", nCopies(n, s));
     }

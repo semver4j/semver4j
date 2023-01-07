@@ -23,22 +23,26 @@ and [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-m
 ## Table of Contents
 
 <!-- TOC -->
+
 * [Installation](#installation)
-  * [Using Maven](#using-maven)
-  * [Using Gradle](#using-gradle)
+    * [Using Maven](#using-maven)
+    * [Using Gradle](#using-gradle)
 * [Usage](#usage)
-  * [What is a version?](#what-is-a-version)
-  * [The `Semver` object](#the-semver-object)
-    * [Using constructor](#using-constructor)
-    * [Using `Semver.parse()` method](#using-semverparse-method)
-    * [Using `Semver.coerce()` method](#using-semvercoerce-method)
-  * [Is the version stable?](#is-the-version-stable)
-  * [Comparing the versions](#comparing-the-versions)
-  * [Versions diffs](#versions-diffs)
-  * [Ranges](#ranges)
-  * [Modifying the version](#modifying-the-version)
+    * [What is a version?](#what-is-a-version)
+    * [The `Semver` object](#the-semver-object)
+        * [Using constructor](#using-constructor)
+        * [Using `Semver.parse()` method](#using-semverparse-method)
+        * [Using `Semver.coerce()` method](#using-semvercoerce-method)
+    * [Is the version stable?](#is-the-version-stable)
+    * [Comparing the versions](#comparing-the-versions)
+    * [Versions diffs](#versions-diffs)
+    * [Ranges](#ranges)
+        * [External](#external)
+        * [Internal](#internal)
+    * [Modifying the version](#modifying-the-version)
 * [Contributing](#contributing)
 * [Thanks](#thanks)
+
 <!-- TOC -->
 
 ## Installation
@@ -178,6 +182,8 @@ version.diff("1.2.3-beta.4+sha32iddfu987");  // BUILD
 
 ### Ranges
 
+#### External
+
 If you want to check if a version satisfies a range, use the `satisfies()` method.
 
 `Semver4j` can interpret following range implementations:
@@ -193,6 +199,16 @@ If you want to check if a version satisfies a range, use the `satisfies()` metho
 - [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html)
     - Version Range Matcher `[1.0,2.0]`, `[1.0,2.0[`, `]1.0,2.0]`, `]1.0,2.0[`, `[1.0,)`, `]1.0,)`, `(,2.0]`
       and `(,2.0[`
+
+#### Internal
+
+The internal ranges builds ranges using fluent interface.
+
+```java
+RangesExpression rangesExpression=equal("1.0.0")
+    .and(less("2.0.0"))
+    .or(greaterOrEqual("3.0.0")); // (=1.0.0 and <2.0.0) or >=3.0.0
+```
 
 ### Modifying the version
 
