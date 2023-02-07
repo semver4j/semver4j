@@ -150,7 +150,7 @@ public class Semver implements Comparable<Semver> {
     /**
      * Determines if the current version is stable or not.
      * Stable version have a major version number <a href="https://semver.org/#spec-item-4">strictly positive</a>
-     * and no <a href="https://semver.org/#spec-item-9">prerelease tokens</a>.
+     * and no <a href="https://semver.org/#spec-item-9">pre-release tokens</a>.
      *
      * @return true if the current version is stable
      */
@@ -458,9 +458,25 @@ public class Semver implements Comparable<Semver> {
      * @param range range
      * @return {@code true} if the version satisfies the range, {@code false} otherwise
      * @see #satisfies(RangesList)
+     * @see #satisfies(RangesExpression)
      */
     public boolean satisfies(String range) {
         RangesList rangesList = RangesListFactory.create(range);
+        return satisfies(rangesList);
+    }
+
+    /**
+     * Check if the version build by expressions satisfies a range.
+     *
+     * @param rangesExpression build via internal expressions mechanism
+     * @return {@code true} if the version satisfies the range, {@code false} otherwise
+     * @see RangesExpression
+     * @see #satisfies(String)
+     * @see #satisfies(RangesList)
+     * @since 4.2.0
+     */
+    public boolean satisfies(RangesExpression rangesExpression) {
+        RangesList rangesList = RangesListFactory.create(rangesExpression);
         return satisfies(rangesList);
     }
 
@@ -470,6 +486,7 @@ public class Semver implements Comparable<Semver> {
      * @param rangesList list with the ranges
      * @return {@code true} if the version satisfies the ranges list, {@code false} otherwise
      * @see #satisfies(String)
+     * @see #satisfies(RangesExpression)
      */
     public boolean satisfies(RangesList rangesList) {
         return rangesList.isSatisfiedBy(this);
