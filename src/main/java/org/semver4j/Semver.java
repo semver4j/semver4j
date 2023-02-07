@@ -4,8 +4,11 @@ import org.semver4j.internal.*;
 import org.semver4j.internal.StrictParser.Version;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
+import static java.lang.String.format;
+import static java.lang.String.join;
 import static java.util.Objects.hash;
 
 /**
@@ -15,7 +18,7 @@ import static java.util.Objects.hash;
 public class Semver implements Comparable<Semver> {
     public static final Semver ZERO = new Semver("0.0.0");
 
-    private final String version;
+    private final String originalVersion;
 
     private final int major;
     private final int minor;
@@ -23,16 +26,27 @@ public class Semver implements Comparable<Semver> {
     private final List<String> preRelease;
     private final List<String> build;
 
-    public Semver(String version) {
-        this.version = version.trim();
+    private final String version;
 
-        Version parsedVersion = new StrictParser().parse(this.version);
+    public Semver(String version) {
+        this.originalVersion = version.trim();
+
+        Version parsedVersion = new StrictParser().parse(this.originalVersion);
 
         major = parsedVersion.getMajor();
         minor = parsedVersion.getMinor();
         patch = parsedVersion.getPatch();
         preRelease = parsedVersion.getPreRelease();
         build = parsedVersion.getBuild();
+
+        String resultVersion = format(Locale.ROOT, "%d.%d.%d", major, minor, patch);
+        if (!preRelease.isEmpty()) {
+            resultVersion += "-" + join(".", preRelease);
+        }
+        if (!build.isEmpty()) {
+            resultVersion += "+" + join(".", build);
+        }
+        this.version = resultVersion;
     }
 
     /**
@@ -56,6 +70,10 @@ public class Semver implements Comparable<Semver> {
      * @return {@link Semver} if can coerce version, {@code null} otherwise
      */
     public static Semver coerce(String version) {
+        Semver semver = parse(version);
+        if (semver != null) {
+            return semver;
+        }
         String coerce = Coerce.coerce(version);
         return parse(coerce);
     }
@@ -466,12 +484,12 @@ public class Semver implements Comparable<Semver> {
             return false;
         }
         Semver semver = (Semver) o;
-        return Objects.equals(version, semver.version);
+        return Objects.equals(originalVersion, semver.originalVersion);
     }
 
     @Override
     public int hashCode() {
-        return hash(version);
+        return hash(originalVersion);
     }
 
     @Override

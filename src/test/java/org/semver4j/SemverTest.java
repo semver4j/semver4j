@@ -766,7 +766,8 @@ class SemverTest {
                 arguments(format(Locale.ROOT, "%s.2.3.4", repeat("1", 17)), "2.3.4"),
                 arguments(format(Locale.ROOT, "1.%s.3.4", repeat("2", 17)), "1.0.0"),
                 arguments(format(Locale.ROOT, "1.2.%s.4", repeat("3", 17)), "1.2.0"),
-                arguments("10", "10.0.0")
+                arguments("10", "10.0.0"),
+                arguments("3.2.1-rc.2", "3.2.1-rc.2")
         );
     }
 
