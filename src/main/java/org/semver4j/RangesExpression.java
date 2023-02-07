@@ -23,6 +23,7 @@ import static org.semver4j.Range.RangeOperator.*;
  *
  * @since 4.2.0
  */
+@SuppressWarnings("checkstyle:DeclarationOrder")
 public class RangesExpression {
     private final RangesList rangesList = new RangesList();
 
