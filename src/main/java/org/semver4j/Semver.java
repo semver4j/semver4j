@@ -4,6 +4,7 @@ import org.semver4j.internal.*;
 import org.semver4j.internal.StrictParser.Version;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import static java.lang.String.format;
@@ -38,7 +39,7 @@ public class Semver implements Comparable<Semver> {
         preRelease = parsedVersion.getPreRelease();
         build = parsedVersion.getBuild();
 
-        String resultVersion = format("%d.%d.%d", major, minor, patch);
+        String resultVersion = format(Locale.ROOT, "%d.%d.%d", major, minor, patch);
         if (!preRelease.isEmpty()) {
             resultVersion += "-" + join(".", preRelease);
         }
