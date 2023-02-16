@@ -47,9 +47,6 @@ public class XRangeProcessor implements Processor {
                 }
 
                 if (!compareSign.isEmpty() && isX(patch)) {
-                    if (isX(minor)) {
-                        minor = 0;
-                    }
                     patch = 0;
                     if (compareSign.equals(GT.asString())) {
                         compareSign = GTE.asString();
@@ -64,9 +61,12 @@ public class XRangeProcessor implements Processor {
                         compareSign = LT.asString();
                         if (isX(minor)) {
                             major = major + 1;
+                            minor = 0;
                         } else {
                             minor = minor + 1;
                         }
+                    } else if (isX(minor)) {
+                        minor = 0;
                     }
 
                     String from = format(Locale.ROOT, "%s%d.%d.%d", compareSign, major, minor, patch);
