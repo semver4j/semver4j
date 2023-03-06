@@ -437,6 +437,32 @@ class SemverTest {
     }
 
     @ParameterizedTest
+    @MethodSource("apiCompatible")
+    void shouldCheckIsApiCompatible(String version, boolean expected) {
+        //given
+        Semver semver = new Semver("1.2.3");
+
+        //when
+        boolean apiCompatible = semver.isApiCompatible(version);
+
+        //then
+        assertThat(apiCompatible).isEqualTo(expected);
+    }
+
+    static Stream<Arguments> apiCompatible() {
+        return Stream.of(
+            arguments("0.4.3", false),
+            arguments("1.1.9", true),
+            arguments("1.2.0", true),
+            arguments("1.2.3", true),
+            arguments("1.2.4", true),
+            arguments("1.4.2", true),
+            arguments("2.0.0", false),
+            arguments("2.2.3", false)
+        );
+    }
+
+    @ParameterizedTest
     @MethodSource("greaterThan")
     void shouldCheckIsVersionGreaterThan(String version1, String version2, boolean expected) {
         //given

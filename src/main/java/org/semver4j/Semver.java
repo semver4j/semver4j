@@ -295,6 +295,26 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
+     * Checks whether the given version is API compatible with this version.
+     *
+     * @param version
+     * @return
+     */
+    public boolean isApiCompatible(String version) {
+        return diff(version).ordinal() < VersionDiff.MAJOR.ordinal();
+    }
+
+    /**
+     * Checks whether the given version is API compatible with this version.
+     *
+     * @param version
+     * @return
+     */
+    public boolean isApiCompatible(Semver version) {
+        return diff(version).ordinal() < VersionDiff.MAJOR.ordinal();
+    }
+
+    /**
      * Checks if the version is greater than another version.
      *
      * @param version version to compare
