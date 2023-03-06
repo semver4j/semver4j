@@ -515,14 +515,14 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * The types of diffs between two versions.
+     * The types of diffs between two versions. The higher the ordinal value of the enum is, the greater is the diff.
      */
     public enum VersionDiff {
         NONE,
-        MAJOR,
-        MINOR,
-        PATCH,
-        PRE_RELEASE,
         BUILD,
+        PRE_RELEASE,
+        PATCH,
+        MINOR,
+        MAJOR
     }
 }
