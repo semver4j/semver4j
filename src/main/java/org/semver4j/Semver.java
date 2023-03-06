@@ -295,6 +295,26 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
+     * Checks whether the given version is API compatible with this version.
+     *
+     * @param version
+     * @return
+     */
+    public boolean isApiCompatible(String version) {
+        return diff(version).ordinal() < VersionDiff.MAJOR.ordinal();
+    }
+
+    /**
+     * Checks whether the given version is API compatible with this version.
+     *
+     * @param version
+     * @return
+     */
+    public boolean isApiCompatible(Semver version) {
+        return diff(version).ordinal() < VersionDiff.MAJOR.ordinal();
+    }
+
+    /**
      * Checks if the version is greater than another version.
      *
      * @param version version to compare
@@ -515,14 +535,14 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * The types of diffs between two versions.
+     * The types of diffs between two versions. The higher the ordinal value of the enum is, the greater is the diff.
      */
     public enum VersionDiff {
         NONE,
-        MAJOR,
-        MINOR,
-        PATCH,
-        PRE_RELEASE,
         BUILD,
+        PRE_RELEASE,
+        PATCH,
+        MINOR,
+        MAJOR
     }
 }
