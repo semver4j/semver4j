@@ -103,7 +103,7 @@ Library can help you to create valid `Semver` object when the version is not val
 translation from not-semver into semver.
 
 ```java
-Semver version = Semver.coerce("..1"); // it produces the same result as new Semver("1.0.0)
+Semver version = Semver.coerce("..1"); // it produces the same result as new Semver("1.0.0")
 ```
 
 If the version is invalid, a `SemverException` will be thrown.
