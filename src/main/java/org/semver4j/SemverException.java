@@ -1,9 +1,9 @@
 package org.semver4j;
 
 /**
- * General exception when something went wrong with semver actions.
+ * Thrown when something went wrong with parsing semver string.
  */
-public class SemverException extends RuntimeException {
+public class SemverException extends IllegalArgumentException {
     public SemverException(String message) {
         super(message);
     }
