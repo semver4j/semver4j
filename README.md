@@ -56,14 +56,14 @@ Add the dependency to your project:
 <dependency>
     <groupId>org.semver4j</groupId>
     <artifactId>semver4j</artifactId>
-    <version>4.3.0</version>
+    <version>5.0.0</version>
 </dependency>
 ```
 
 ### Using Gradle
 
 ```
-implementation 'org.semver4j:semver4j:4.3.0'
+implementation 'org.semver4j:semver4j:5.0.0'
 ```
 
 ###### Version `v1.0.x` references to original library version `v3.1.0` in [source repository](https://github.com/vdurmont/semver4j).
