@@ -41,7 +41,13 @@ public class StrictParser {
         if (maxInt.compareTo(secureNumber) < 0) {
             throw new SemverException(format(Locale.ROOT, "Value [%s] is too big.", maybeInt));
         }
-        return secureNumber.intValueExact();
+        /*
+         * Do not use BigInteger.intValueExact() because it is not available on Android with API < 31.
+         * The use of BigInteger.intValue() here is always valid since the above check guarantees that
+         * the BigInteger is not too big to fit in an int (non-negative integer <= Integer.MAX_VALUE).
+         * In other words, BigInteger.intValueExact() would never throw, meaning, it is not necessary.
+         */
+        return secureNumber.intValue();
     }
 
     private List<String> convertToList(String toList) {
