@@ -1,8 +1,11 @@
 package org.semver4j.internal.range.processor;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Processor for pipeline range translations.
  */
 public interface Processor {
-    String process(String range);
+    @NotNull
+    String process(@NotNull String range);
 }

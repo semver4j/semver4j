@@ -1,5 +1,8 @@
 package org.semver4j.internal.range.processor;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,10 +32,12 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  * </ul>
  */
 public class IvyProcessor implements Processor {
+    @NotNull
     private static final Pattern PATTERN = compile(IVY);
 
     @Override
-    public String process(String range) {
+    @NotNull
+    public String process(@NotNull final String range) {
         Matcher matcher = PATTERN.matcher(range);
 
         if (!matcher.matches()) {
@@ -97,7 +102,7 @@ public class IvyProcessor implements Processor {
         return range;
     }
 
-    private boolean isInclusiveRange(String character) {
+    private boolean isInclusiveRange(@NotNull final String character) {
         return character.equals("[") || character.equals("]");
     }
 }
