@@ -1,18 +1,21 @@
 package org.semver4j.internal;
 
+import org.jetbrains.annotations.NotNull;
 import org.semver4j.Semver;
 import org.semver4j.Semver.VersionDiff;
 
 import static org.semver4j.Semver.VersionDiff.*;
 
 public class Differ {
+    @NotNull
     private final Semver version;
 
-    public Differ(Semver version) {
+    public Differ(@NotNull final Semver version) {
         this.version = version;
     }
 
-    public VersionDiff diff(Semver other) {
+    @NotNull
+    public VersionDiff diff(@NotNull final Semver other) {
         if (version.getMajor() != other.getMajor()) {
             return MAJOR;
         }
