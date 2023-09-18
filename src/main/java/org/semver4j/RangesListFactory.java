@@ -1,17 +1,23 @@
 package org.semver4j;
 
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Class for create a {@link RangesList} object.
  */
 public class RangesListFactory {
-    public static RangesList create(String range) {
+    @NotNull
+    public static RangesList create(@NotNull final String range) {
         return new RangesString().get(range);
     }
 
     /**
      * @since 4.2.0
      */
-    public static RangesList create(RangesExpression rangeExpressions) {
+    @NotNull
+    @ApiStatus.AvailableSince("4.2.0")
+    public static RangesList create(@NotNull final RangesExpression rangeExpressions) {
         return rangeExpressions.get();
     }
 }
