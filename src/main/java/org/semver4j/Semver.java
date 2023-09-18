@@ -27,9 +27,9 @@ public class Semver implements Comparable<Semver> {
     private final int major;
     private final int minor;
     private final int patch;
-    @Nullable
+    @NotNull
     private final List<@NotNull String> preRelease;
-    @Nullable
+    @NotNull
     private final List<@NotNull String> build;
 
     @NotNull
@@ -146,7 +146,7 @@ public class Semver implements Comparable<Semver> {
      *
      * @return the pre-release of the version
      */
-    @Nullable
+    @NotNull
     public List<@NotNull String> getPreRelease() {
         return preRelease;
     }
@@ -157,7 +157,7 @@ public class Semver implements Comparable<Semver> {
      *
      * @return the build of the version
      */
-    @Nullable
+    @NotNull
     public List<@NotNull String> getBuild() {
         return build;
     }
