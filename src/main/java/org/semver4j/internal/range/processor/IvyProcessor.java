@@ -1,7 +1,6 @@
 package org.semver4j.internal.range.processor;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
