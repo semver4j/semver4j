@@ -1,5 +1,8 @@
 package org.semver4j.internal;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,9 +12,11 @@ import static java.util.regex.Pattern.compile;
 import static org.semver4j.internal.Tokenizers.COERCE;
 
 public class Coerce {
+    @NotNull
     private static final Pattern pattern = compile(COERCE);
 
-    public static String coerce(String version) {
+    @Nullable
+    public static String coerce(@NotNull final String version) {
         Matcher matcher = pattern.matcher(version);
 
         if (matcher.find()) {
