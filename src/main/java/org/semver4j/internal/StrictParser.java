@@ -1,5 +1,7 @@
 package org.semver4j.internal;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.semver4j.SemverException;
 
 import java.math.BigInteger;
@@ -17,10 +19,13 @@ import static java.util.regex.Pattern.compile;
 import static org.semver4j.internal.Tokenizers.STRICT;
 
 public class StrictParser {
+    @NotNull
     private static final Pattern pattern = compile(STRICT);
+    @NotNull
     private static final BigInteger maxInt = BigInteger.valueOf(Integer.MAX_VALUE);
 
-    public Version parse(String version) {
+    @NotNull
+    public Version parse(@NotNull final String version) {
         Matcher matcher = pattern.matcher(version);
 
         if (!matcher.matches()) {
@@ -36,7 +41,7 @@ public class StrictParser {
         return new Version(major, minor, patch, preRelease, build);
     }
 
-    private int parseInt(String maybeInt) {
+    private int parseInt(@NotNull final String maybeInt) {
         BigInteger secureNumber = new BigInteger(maybeInt);
         if (maxInt.compareTo(secureNumber) < 0) {
             throw new SemverException(format(Locale.ROOT, "Value [%s] is too big.", maybeInt));
@@ -50,7 +55,8 @@ public class StrictParser {
         return secureNumber.intValue();
     }
 
-    private List<String> convertToList(String toList) {
+    @NotNull
+    private List<@NotNull String> convertToList(@Nullable final String toList) {
         return toList == null ? emptyList() : asList(toList.split("\\."));
     }
 
@@ -58,10 +64,12 @@ public class StrictParser {
         private final int major;
         private final int minor;
         private final int patch;
-        private final List<String> preRelease;
-        private final List<String> build;
+        @NotNull
+        private final List<@NotNull String> preRelease;
+        @NotNull
+        private final List<@NotNull String> build;
 
-        Version(int major, int minor, int patch, List<String> preRelease, List<String> build) {
+        Version(final int major, final int minor, final int patch, @NotNull final List<@NotNull String> preRelease, @NotNull final List<@NotNull String> build) {
             this.major = major;
             this.minor = minor;
             this.patch = patch;
@@ -69,7 +77,7 @@ public class StrictParser {
             this.build = build;
         }
 
-        Version(int major, int minor, int patch) {
+        Version(final int major, final int minor, final int patch) {
             this(major, minor, patch, emptyList(), emptyList());
         }
 
@@ -85,16 +93,18 @@ public class StrictParser {
             return patch;
         }
 
-        public List<String> getPreRelease() {
+        @NotNull
+        public List<@NotNull String> getPreRelease() {
             return preRelease;
         }
 
-        public List<String> getBuild() {
+        @NotNull
+        public List<@NotNull String> getBuild() {
             return build;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable final Object o) {
             if (this == o) {
                 return true;
             }
@@ -117,6 +127,7 @@ public class StrictParser {
         }
 
         @Override
+        @NotNull
         public String toString() {
             return new StringJoiner(", ", Version.class.getSimpleName() + "[", "]")
                 .add("major=" + major)
