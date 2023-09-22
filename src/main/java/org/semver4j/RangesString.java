@@ -1,5 +1,7 @@
 package org.semver4j;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.semver4j.internal.range.processor.*;
 
 import java.util.ArrayList;
@@ -12,10 +14,13 @@ import static org.semver4j.internal.Tokenizers.COMPARATOR;
 import static org.semver4j.internal.range.RangeProcessorPipeline.startWith;
 
 class RangesString {
+    @NotNull
     private static final Pattern splitterPattern = compile("(\\s*)([<>]?=?)\\s*");
+    @NotNull
     private static final Pattern comparatorPattern = compile(COMPARATOR);
 
-    RangesList get(String range) {
+    @NotNull
+    RangesList get(@NotNull String range) {
         RangesList rangesList = new RangesList();
 
         range = range.trim();
@@ -31,12 +36,14 @@ class RangesString {
         return rangesList;
     }
 
-    private static String stripWhitespacesBetweenRangeOperator(String rangeSection) {
+    @NotNull
+    private static String stripWhitespacesBetweenRangeOperator(@NotNull final String rangeSection) {
         Matcher matcher = splitterPattern.matcher(rangeSection);
         return matcher.replaceAll("$1$2").trim();
     }
 
-    private static String applyProcessors(String range) {
+    @Nullable
+    private static String applyProcessors(@Nullable final String range) {
         return startWith(new GreaterThanOrEqualZeroProcessor())
             .addProcessor(new IvyProcessor())
             .addProcessor(new HyphenProcessor())
@@ -46,7 +53,8 @@ class RangesString {
             .process(range);
     }
 
-    private static List<Range> addRanges(String range) {
+    @NotNull
+    private static List<@NotNull Range> addRanges(@NotNull final String range) {
         List<Range> ranges = new ArrayList<>();
 
         String[] parsedRanges = range.split("\\s+");

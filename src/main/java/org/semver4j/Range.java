@@ -1,5 +1,8 @@
 package org.semver4j;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Locale;
 import java.util.Objects;
 
@@ -10,18 +13,21 @@ import static java.util.Arrays.stream;
  * Represents single range item.
  */
 public class Range {
+    @NotNull
     private final Semver rangeVersion;
+    @NotNull
     private final RangeOperator rangeOperator;
 
-    public Range(Semver rangeVersion, RangeOperator rangeOperator) {
+    public Range(@NotNull final Semver rangeVersion, @NotNull final RangeOperator rangeOperator) {
         this.rangeVersion = rangeVersion;
         this.rangeOperator = rangeOperator;
     }
 
-    public Range(String rangeVersion, RangeOperator rangeOperator) {
+    public Range(@NotNull final String rangeVersion, @NotNull final RangeOperator rangeOperator) {
         this(new Semver(rangeVersion), rangeOperator);
     }
 
+    @NotNull
     public Semver getRangeVersion() {
         return rangeVersion;
     }
@@ -42,7 +48,7 @@ public class Range {
      * @return {@code true} if range is satisfied by version, {@code false} otherwise
      * @see #isSatisfiedBy(Semver)
      */
-    public boolean isSatisfiedBy(String version) {
+    public boolean isSatisfiedBy(@NotNull final String version) {
         return isSatisfiedBy(new Semver(version));
     }
 
@@ -53,7 +59,7 @@ public class Range {
      * @return {@code true} if range is satisfied by version, {@code false} otherwise
      * @see #isSatisfiedBy(String)
      */
-    public boolean isSatisfiedBy(Semver version) {
+    public boolean isSatisfiedBy(@NotNull final Semver version) {
         switch (rangeOperator) {
             case EQ:
                 return version.isEquivalentTo(rangeVersion);
@@ -71,7 +77,7 @@ public class Range {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable final Object o) {
         if (this == o) {
             return true;
         }
@@ -88,6 +94,7 @@ public class Range {
     }
 
     @Override
+    @NotNull
     public String toString() {
         return rangeOperator.asString() + rangeVersion;
     }
@@ -119,9 +126,10 @@ public class Range {
         GTE(">="),
         ;
 
+        @NotNull
         private final String string;
 
-        RangeOperator(String string) {
+        RangeOperator(@NotNull final String string) {
             this.string = string;
         }
 
@@ -130,11 +138,13 @@ public class Range {
          *
          * @return range operator as string
          */
+        @NotNull
         public String asString() {
             return string;
         }
 
-        public static RangeOperator value(String string) {
+        @NotNull
+        public static RangeOperator value(@NotNull final String string) {
             if (string.isEmpty()) {
                 return EQ;
             }

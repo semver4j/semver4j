@@ -1,5 +1,6 @@
 package org.semver4j.internal;
 
+import org.jetbrains.annotations.NotNull;
 import org.semver4j.Semver;
 
 import java.util.List;
@@ -7,16 +8,18 @@ import java.util.List;
 import static java.lang.Math.max;
 
 public class Comparator implements Comparable<Semver> {
+    @NotNull
     private static final String UNDEFINED_MARKER = "undef";
 
+    @NotNull
     private final Semver version;
 
-    public Comparator(Semver version) {
+    public Comparator(@NotNull final Semver version) {
         this.version = version;
     }
 
     @Override
-    public int compareTo(Semver other) {
+    public int compareTo(@NotNull final Semver other) {
         int result = mainCompare(other);
         if (result == 0) {
             return preReleaseCompare(other);
@@ -24,7 +27,7 @@ public class Comparator implements Comparable<Semver> {
         return result;
     }
 
-    private int mainCompare(Semver other) {
+    private int mainCompare(@NotNull final Semver other) {
         int majorCompare = compareIdentifiers(version.getMajor(), other.getMajor());
         if (majorCompare == 0) {
             int minorCompare = compareIdentifiers(version.getMinor(), other.getMinor());
@@ -38,7 +41,7 @@ public class Comparator implements Comparable<Semver> {
         }
     }
 
-    private int preReleaseCompare(Semver other) {
+    private int preReleaseCompare(@NotNull final Semver other) {
         if (!version.getPreRelease().isEmpty() && other.getPreRelease().isEmpty()) {
             return -1;
         } else if (version.getPreRelease().isEmpty() && !other.getPreRelease().isEmpty()) {
@@ -72,7 +75,7 @@ public class Comparator implements Comparable<Semver> {
         return 0;
     }
 
-    private int compareIdentifiers(String a, String b) {
+    private int compareIdentifiers(@NotNull final String a, @NotNull final String b) {
         try {
             int aAsInt = Integer.parseInt(a);
             int bAsInt = Integer.parseInt(b);
@@ -105,11 +108,12 @@ public class Comparator implements Comparable<Semver> {
         return Integer.compare(a, b);
     }
 
-    private boolean isBothContainsDigits(String a, String b) {
+    private boolean isBothContainsDigits(@NotNull final String a, @NotNull final String b) {
         return a.matches(".*\\d.*") && b.matches(".*\\d.*");
     }
 
-    private String getString(int i, List<String> list) {
+    @NotNull
+    private String getString(final int i, @NotNull final List<@NotNull String> list) {
         try {
             return list.get(i);
         } catch (IndexOutOfBoundsException e) {

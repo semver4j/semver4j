@@ -1,23 +1,28 @@
 package org.semver4j.internal.range;
 
+import org.jetbrains.annotations.NotNull;
 import org.semver4j.internal.range.processor.Processor;
 
 public class RangeProcessorPipeline {
+    @NotNull
     private final Processor currentProcessor;
 
-    public RangeProcessorPipeline(Processor currentProcessor) {
+    public RangeProcessorPipeline(@NotNull final Processor currentProcessor) {
         this.currentProcessor = currentProcessor;
     }
 
-    public RangeProcessorPipeline addProcessor(Processor processor) {
+    @NotNull
+    public RangeProcessorPipeline addProcessor(@NotNull final Processor processor) {
         return new RangeProcessorPipeline(version -> processor.process(currentProcessor.process(version)));
     }
 
-    public String process(String range) {
+    @NotNull
+    public String process(@NotNull final String range) {
         return currentProcessor.process(range);
     }
 
-    public static RangeProcessorPipeline startWith(Processor processor) {
+    @NotNull
+    public static RangeProcessorPipeline startWith(@NotNull final Processor processor) {
         return new RangeProcessorPipeline(processor);
     }
 }

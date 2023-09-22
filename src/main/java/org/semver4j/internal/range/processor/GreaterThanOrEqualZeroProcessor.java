@@ -1,5 +1,6 @@
 package org.semver4j.internal.range.processor;
 
+import org.jetbrains.annotations.NotNull;
 import org.semver4j.Semver;
 
 import static java.lang.String.format;
@@ -17,7 +18,8 @@ import java.util.Locale;
  */
 public class GreaterThanOrEqualZeroProcessor implements Processor {
     @Override
-    public String process(String range) {
+    @NotNull
+    public String process(@NotNull final String range) {
         if (range.equals("latest") || range.equals("latest.integration") || range.equals("*") || range.isEmpty()) {
             return format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
         }

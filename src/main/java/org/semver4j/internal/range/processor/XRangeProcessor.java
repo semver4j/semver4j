@@ -1,5 +1,7 @@
 package org.semver4j.internal.range.processor;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -19,10 +21,12 @@ import static org.semver4j.internal.range.processor.RangesUtils.*;
  * <br>
  */
 public class XRangeProcessor implements Processor {
+    @NotNull
     private static final Pattern pattern = compile(XRANGE);
 
     @Override
-    public String process(String range) {
+    @NotNull
+    public String process(@NotNull final String range) {
         String[] rangeVersions = range.split("\\s+");
 
         List<String> objects = new ArrayList<>();

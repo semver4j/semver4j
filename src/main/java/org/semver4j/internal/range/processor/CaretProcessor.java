@@ -1,5 +1,7 @@
 package org.semver4j.internal.range.processor;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,10 +24,12 @@ import static org.semver4j.internal.range.processor.RangesUtils.*;
  * </ul>
  */
 public class CaretProcessor implements Processor {
+    @NotNull
     private static final Pattern pattern = compile(CARET);
 
     @Override
-    public String process(String range) {
+    @NotNull
+    public String process(@NotNull final String range) {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {

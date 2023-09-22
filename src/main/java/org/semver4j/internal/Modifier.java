@@ -1,5 +1,6 @@
 package org.semver4j.internal;
 
+import org.jetbrains.annotations.NotNull;
 import org.semver4j.Semver;
 
 import java.util.List;
@@ -10,12 +11,14 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 public class Modifier {
+    @NotNull
     private final Semver version;
 
-    public Modifier(Semver version) {
+    public Modifier(@NotNull final Semver version) {
         this.version = version;
     }
 
+    @NotNull
     public Semver nextMajor() {
         int nextMajor = version.getMajor();
 
@@ -28,11 +31,13 @@ public class Modifier {
         return new Semver(version);
     }
 
+    @NotNull
     public Semver withIncMajor(int number) {
         String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", (this.version.getMajor() + number), this.version.getMinor(), this.version.getPatch()), this.version.getPreRelease());
         return new Semver(version);
     }
 
+    @NotNull
     public Semver nextMinor() {
         int nextMinor = version.getMinor();
 
@@ -45,11 +50,13 @@ public class Modifier {
         return new Semver(version);
     }
 
+    @NotNull
     public Semver withIncMinor(int number) {
         String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), (this.version.getMinor() + number), this.version.getPatch()), this.version.getPreRelease());
         return new Semver(version);
     }
 
+    @NotNull
     public Semver nextPatch() {
         int newPatch = version.getPatch();
 
@@ -62,45 +69,53 @@ public class Modifier {
         return new Semver(version);
     }
 
+    @NotNull
     public Semver withIncPatch(int number) {
         String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), (this.version.getPatch() + number)), this.version.getPreRelease());
         return new Semver(version);
     }
 
-    public Semver withPreRelease(String preRelease) {
+    @NotNull
+    public Semver withPreRelease(@NotNull final String preRelease) {
         List<String> newPreRelease = asList(preRelease.split("\\."));
 
         String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), this.version.getPatch()), newPreRelease);
         return new Semver(version);
     }
 
-    public Semver withBuild(String build) {
+    @NotNull
+    public Semver withBuild(@NotNull final String build) {
         List<String> newBuild = asList(build.split("\\."));
 
         String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), this.version.getPatch()), this.version.getPreRelease(), newBuild);
         return new Semver(version);
     }
 
+    @NotNull
     public Semver withClearedPreRelease() {
         String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), this.version.getPatch()), emptyList());
         return new Semver(version);
     }
 
+    @NotNull
     public Semver withClearedBuild() {
         String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), this.version.getPatch()), this.version.getPreRelease(), emptyList());
         return new Semver(version);
     }
 
+    @NotNull
     public Semver withClearedPreReleaseAndBuild() {
         String version = format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), this.version.getPatch());
         return new Semver(version);
     }
 
-    private String createFullVersion(String main, List<String> preRelease) {
+    @NotNull
+    private String createFullVersion(@NotNull final String main, @NotNull final List<@NotNull String> preRelease) {
         return createFullVersion(main, preRelease, version.getBuild());
     }
 
-    private String createFullVersion(String main, List<String> preRelease, List<String> build) {
+    @NotNull
+    private String createFullVersion(@NotNull final String main, @NotNull final List<@NotNull String> preRelease, @NotNull final List<@NotNull String> build) {
         StringBuilder stringBuilder = new StringBuilder(main);
 
         if (!preRelease.isEmpty()) {
