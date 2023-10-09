@@ -82,10 +82,15 @@ public class Semver implements Comparable<Semver> {
      */
     @Nullable
     public static Semver coerce(@Nullable final String version) {
+        if (version == null) {
+            return null;
+        }
+
         Semver semver = parse(version);
         if (semver != null) {
             return semver;
         }
+
         String coerce = Coerce.coerce(version);
         return parse(coerce);
     }
