@@ -798,6 +798,15 @@ class SemverTest {
     }
 
     @Test
+    void shouldReturnNullWhenTryCoerceNullableVersion() {
+        //when
+        Semver semver = coerce(null);
+
+        //then
+        assertThat(semver).isNull();
+    }
+
+    @Test
     void shouldCreateSemverWithHyphenInBuildSection() {
         //when
         Semver semver = new Semver("1.2.3+123-abc");
