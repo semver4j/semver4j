@@ -104,9 +104,8 @@ translation from not-semver into semver.
 
 ```java
 Semver version = Semver.coerce("..1"); // it produces the same result as new Semver("1.0.0")
+Semver version = Semver.coerce("invalid"); // returns null, cannot coerce this version
 ```
-
-If the version is invalid, a `SemverException` will be thrown.
 
 ### Is the version stable?
 
