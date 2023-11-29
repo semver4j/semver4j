@@ -807,6 +807,18 @@ class SemverTest {
     }
 
     @Test
+    void shouldReturnNullWhenVersionHasInvalidString() {
+        //given
+        String invalid = "broken-version";
+
+        //when
+        Semver semver = coerce(invalid);
+
+        //then
+        assertThat(semver).isNull();
+    }
+
+    @Test
     void shouldCreateSemverWithHyphenInBuildSection() {
         //when
         Semver semver = new Semver("1.2.3+123-abc");
