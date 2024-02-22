@@ -62,8 +62,16 @@ Add the dependency to your project:
 
 ### Using Gradle
 
+Groovy
+
 ```
 implementation 'org.semver4j:semver4j:5.2.2'
+```
+
+Kotlin
+
+```
+implementation("org.semver4j:semver4j:5.2.2")
 ```
 
 ###### Version `v1.0.x` references to original library version `v3.1.0` in [source repository](https://github.com/vdurmont/semver4j).
