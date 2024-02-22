@@ -62,8 +62,11 @@ jobs:
       - name: Update Maven version in README.md
         run: sed -i 's/<version>.*<\/version>/<version>${{ needs.publish.outputs.version }}<\/version>/g' README.md
 
-      - name: Update Gradle version in README.md
+      - name: Update Gradle Groovy version in README.md
         run: sed -i "s/implementation 'org.semver4j:semver4j:.*/implementation 'org.semver4j:semver4j:${{ needs.publish.outputs.version }}'/g" README.md
+
+      - name: Update Gradle Kotlin version in README.md
+        run: sed -i "s/implementation(\"org.semver4j:semver4j:.*/implementation(\"org.semver4j:semver4j:${{ needs.publish.outputs.version }}\")/g" README.md
 
       - name: Show diff
         run: git diff
