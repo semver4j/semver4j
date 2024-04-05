@@ -77,9 +77,9 @@ public class Comparator implements Comparable<Semver> {
 
     private int compareIdentifiers(@NotNull final String a, @NotNull final String b) {
         try {
-            int aAsInt = Integer.parseInt(a);
-            int bAsInt = Integer.parseInt(b);
-            return compareIdentifiers(aAsInt, bAsInt);
+            long aAsLong = Long.parseLong(a);
+            long bAsLong = Long.parseLong(b);
+            return compareIdentifiers(aAsLong, bAsLong);
         } catch (NumberFormatException e) {
             //ignore
         }
@@ -89,8 +89,8 @@ public class Comparator implements Comparable<Semver> {
             String[] tokenArr1 = a.split(digitsExtract);
             String[] tokenArr2 = b.split(digitsExtract);
             if (tokenArr1[0].equals(tokenArr2[0])) {
-                int digitA = Integer.parseInt(tokenArr1[1]);
-                int digitB = Integer.parseInt(tokenArr2[1]);
+                long digitA = Long.parseLong(tokenArr1[1]);
+                long digitB = Long.parseLong(tokenArr2[1]);
                 return compareIdentifiers(digitA, digitB);
             }
         }
@@ -104,8 +104,8 @@ public class Comparator implements Comparable<Semver> {
         return 0;
     }
 
-    private int compareIdentifiers(int a, int b) {
-        return Integer.compare(a, b);
+    private int compareIdentifiers(long a, long b) {
+        return Long.compare(a, b);
     }
 
     private boolean isBothContainsDigits(@NotNull final String a, @NotNull final String b) {
