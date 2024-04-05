@@ -487,6 +487,7 @@ class SemverTest {
                 arguments("1.0.0-rc11", "1.0.0-rc3", true),
                 arguments("1.0.0-beta11", "1.0.0-beta3", true),
                 arguments("1.0.0-rc.3.x-13", "1.0.0-rc.3.x-3", true),
+                arguments("1.24.1-A-20240111143214", "1.24.1-A-20240111143213", true),
 
                 arguments("1.0.0-alpha", "1.0.0-alpha.1", false),
                 arguments("1.0.0-alpha.1", "1.0.0-alpha.beta", false),
@@ -500,7 +501,8 @@ class SemverTest {
                 arguments("0.0.1", "5.0.0", false),
                 arguments("1.0.0-alpha.12.ab-c", "1.0.0-alpha.12.ab-c", false),
                 arguments("1.0.0-rc3", "1.0.0-rc11", false),
-                arguments("1.0.0-beta11", "1.0.0-rc3", false)
+                arguments("1.0.0-beta11", "1.0.0-rc3", false),
+                arguments("1.24.1-A-20240111143213", "1.24.1-A-20240111143214", false)
         );
     }
 
