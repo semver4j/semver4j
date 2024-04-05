@@ -56,7 +56,7 @@ Add the dependency to your project:
 <dependency>
     <groupId>org.semver4j</groupId>
     <artifactId>semver4j</artifactId>
-    <version>5.2.2</version>
+    <version>5.2.3</version>
 </dependency>
 ```
 
@@ -65,13 +65,13 @@ Add the dependency to your project:
 Groovy
 
 ```
-implementation 'org.semver4j:semver4j:5.2.2'
+implementation 'org.semver4j:semver4j:5.2.3'
 ```
 
 Kotlin
 
 ```
-implementation("org.semver4j:semver4j:5.2.2")
+implementation("org.semver4j:semver4j:5.2.3")
 ```
 
 ###### Version `v1.0.x` references to original library version `v3.1.0` in [source repository](https://github.com/vdurmont/semver4j).
