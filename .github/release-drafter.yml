@@ -1,6 +1,6 @@
 template: |
   ## What's Changed
-  
+
   $CHANGES
 categories:
   - title: '💥 Breaking'
@@ -11,6 +11,8 @@ categories:
     label: 'enhancement'
   - title: '🛠 Refactor'
     label: 'refactor'
+  - title: '🧹 Housekeeping'
+    label: 'housekeeping'
   - title: '📝 Documentation'
     label: 'documentation'
   - title: '📦 Dependency Updates'
