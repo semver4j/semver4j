@@ -2,16 +2,17 @@ package org.semver4j;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.semver4j.internal.Comparator;
 import org.semver4j.internal.*;
 import org.semver4j.internal.StrictParser.Version;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.lang.String.join;
+import static java.util.Collections.emptyList;
 import static java.util.Objects.hash;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Semver is a tool that provides useful methods to manipulate versions that follow the "semantic versioning"
@@ -46,14 +47,13 @@ public class Semver implements Comparable<Semver> {
         preRelease = parsedVersion.getPreRelease();
         build = parsedVersion.getBuild();
 
-        String resultVersion = format(Locale.ROOT, "%d.%d.%d", major, minor, patch);
-        if (!preRelease.isEmpty()) {
-            resultVersion += "-" + join(".", preRelease);
-        }
-        if (!build.isEmpty()) {
-            resultVersion += "+" + join(".", build);
-        }
-        this.version = resultVersion;
+        this.version = new Builder()
+            .withMajor(major)
+            .withMinor(minor)
+            .withPatch(patch)
+            .withPreReleases(preRelease)
+            .withBuilds(build)
+            .toVersion();
     }
 
     /**
@@ -103,6 +103,15 @@ public class Semver implements Comparable<Semver> {
      */
     public static boolean isValid(@Nullable final String version) {
         return parse(version) != null;
+    }
+
+    /**
+     * Returns builder instance to create semver.
+     *
+     * @since 5.3.0
+     */
+    public static Builder of() {
+        return new Builder();
     }
 
     /**
@@ -575,5 +584,94 @@ public class Semver implements Comparable<Semver> {
         PATCH,
         MINOR,
         MAJOR
+    }
+
+    /**
+     * A builder for creating a {@link Semver}.<br>
+     * It also provides a string representation of the version through {@link Builder#toVersion()}.
+     *
+     * @since 5.3.0
+     */
+    public static class Builder {
+        private int major;
+        private int minor;
+        private int patch;
+        private List<String> preRelease = emptyList();
+        private List<String> build = emptyList();
+
+        public Builder withMajor(int major) {
+            this.major = major;
+            return this;
+        }
+
+        public Builder withMinor(int minor) {
+            this.minor = minor;
+            return this;
+        }
+
+        public Builder withPatch(int patch) {
+            this.patch = patch;
+            return this;
+        }
+
+        public Builder withPreRelease(@NotNull String preRelease) {
+            requireNonNull(preRelease, "preRelease cannot be null");
+            return withPreReleases(new String[]{preRelease});
+        }
+
+        public Builder withPreReleases(@NotNull Collection<String> preReleases) {
+            requireNonNull(preReleases, "preRelease cannot be null");
+            this.preRelease = new ArrayList<>(preReleases);
+            return this;
+        }
+
+        public Builder withPreReleases(@NotNull String[] preReleases) {
+            requireNonNull(preReleases, "preRelease cannot be null");
+            this.preRelease = Arrays.asList(preReleases);
+            return this;
+        }
+
+        public Builder withBuild(@NotNull String build) {
+            requireNonNull(build, "build cannot be null");
+            return withBuilds(new String[]{build});
+        }
+
+        public Builder withBuilds(@NotNull Collection<String> builds) {
+            requireNonNull(builds, "builds cannot be null");
+            this.build = new ArrayList<>(builds);
+            return this;
+        }
+
+        public Builder withBuilds(@NotNull String[] builds) {
+            requireNonNull(builds, "builds cannot be null");
+            this.build = Arrays.asList(builds);
+            return this;
+        }
+
+        /**
+         * Build a {@link Semver} object.
+         */
+        @NotNull
+        public Semver toSemver() {
+            String version = toVersion();
+            return new Semver(version);
+        }
+
+        /**
+         * Build a string representation of the version.<p>
+         * It follows a semver specification which results in:
+         * {@code 1.2.3-alpha+5bb76cdb}
+         */
+        @NotNull
+        public String toVersion() {
+            String resultVersion = format(Locale.ROOT, "%d.%d.%d", major, minor, patch);
+            if (!preRelease.isEmpty()) {
+                resultVersion += "-" + join(".", preRelease);
+            }
+            if (!build.isEmpty()) {
+                resultVersion += "+" + join(".", build);
+            }
+            return resultVersion;
+        }
     }
 }

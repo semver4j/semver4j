@@ -451,14 +451,14 @@ class SemverTest {
 
     static Stream<Arguments> apiCompatible() {
         return Stream.of(
-            arguments("0.4.3", false),
-            arguments("1.1.9", true),
-            arguments("1.2.0", true),
-            arguments("1.2.3", true),
-            arguments("1.2.4", true),
-            arguments("1.4.2", true),
-            arguments("2.0.0", false),
-            arguments("2.2.3", false)
+                arguments("0.4.3", false),
+                arguments("1.1.9", true),
+                arguments("1.2.0", true),
+                arguments("1.2.3", true),
+                arguments("1.2.4", true),
+                arguments("1.4.2", true),
+                arguments("2.0.0", false),
+                arguments("2.2.3", false)
         );
     }
 
@@ -1200,7 +1200,7 @@ class SemverTest {
         Semver semver = new Semver("1.1.1");
 
         RangesExpression expression = RangesExpression.less("1.0.0")
-            .or(RangesExpression.greater("10.0.1").or(RangesExpression.equal("1.1.1")));
+                .or(RangesExpression.greater("10.0.1").or(RangesExpression.equal("1.1.1")));
 
         //when
         boolean satisfies = semver.satisfies(expression);
@@ -1211,5 +1211,17 @@ class SemverTest {
 
     private static String repeat(String s, int n) {
         return join("", nCopies(n, s));
+    }
+
+    @Test
+    void shouldBuildDefaultSemverUsingBuilder() {
+        //given
+        Semver.Builder builder = new Semver.Builder();
+
+        //when
+        Semver semver = builder.toSemver();
+
+        //then
+        assertThat(semver.getVersion()).isEqualTo("0.0.0");
     }
 }
