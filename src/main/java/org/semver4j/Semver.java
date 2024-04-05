@@ -330,9 +330,6 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Checks whether the given version is API compatible with this version.
-     *
-     * @param version
-     * @return
      */
     public boolean isApiCompatible(@NotNull final String version) {
         return diff(version).ordinal() < VersionDiff.MAJOR.ordinal();
@@ -340,9 +337,6 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Checks whether the given version is API compatible with this version.
-     *
-     * @param version
-     * @return
      */
     public boolean isApiCompatible(@NotNull final Semver version) {
         return diff(version).ordinal() < VersionDiff.MAJOR.ordinal();
