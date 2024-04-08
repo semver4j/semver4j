@@ -40,6 +40,7 @@ and [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-m
         * [External](#external)
         * [Internal](#internal)
     * [Modifying the version](#modifying-the-version)
+    * [Builder](#builder)
 * [Contributing](#contributing)
 * [Thanks](#thanks)
 
@@ -212,9 +213,9 @@ If you want to check if a version satisfies a range, use the `satisfies()` metho
 The internal ranges builds ranges using fluent interface.
 
 ```java
-RangesExpression rangesExpression=equal("1.0.0")
-    .and(less("2.0.0"))
-    .or(greaterOrEqual("3.0.0")); // (=1.0.0 and <2.0.0) or >=3.0.0
+RangesExpression rangesExpression = equal("1.0.0")
+        .and(less("2.0.0"))
+        .or(greaterOrEqual("3.0.0")); // (=1.0.0 and <2.0.0) or >=3.0.0
 ```
 
 ### Modifying the version
@@ -232,6 +233,26 @@ You can also use built-in versioning methods such as:
 - `nextMajor()`: `1.2.3-beta.4+sha32iddfu987 => 2.0.0`
 - `nextMinor()`: `1.2.3-beta.4+sha32iddfu987 => 1.3.0`
 - `nextPatch()`: `1.2.3-beta.4+sha32iddfu987 => 1.2.4`
+
+### Builder
+
+`Semver4j` provides an API for programmatically creating `Semver` object.
+
+The newly introduced API looks like:
+
+```java
+Semver semver = Semver.of()
+        .withMajor(1)
+        .withMinor(2)
+        .withBuild("5bb76cdb")
+        .toSemver();
+```
+
+And is an equivalent of:
+
+```java
+Semver semver = new Semver("1.2.0+5bb76cdb");
+```
 
 ## Contributing
 
