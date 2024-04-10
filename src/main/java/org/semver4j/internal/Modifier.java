@@ -11,9 +11,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 public class Modifier {
-    private static final String FULL_FORMAT = "%d.%d.%d";
-    private static final String MAJOR_FORMAT = "%d.0.0";
-    private static final String MAJOR_MINOR_FORMAT = "%d.%d.0";
 
     private Modifier() {
     }
@@ -27,7 +24,7 @@ public class Modifier {
             nextMajor = nextMajor + 1;
         }
 
-        return new Semver(createFullVersion(version, format(Locale.ROOT, MAJOR_FORMAT, nextMajor), emptyList()));
+        return new Semver(createFullVersion(version, format(Locale.ROOT, "%d.0.0", nextMajor), emptyList()));
     }
 
     @NotNull
@@ -37,7 +34,7 @@ public class Modifier {
                         version,
                         format(
                                 Locale.ROOT,
-                                FULL_FORMAT,
+                                "%d.%d.%d",
                                 (version.getMajor() + number),
                                 version.getMinor(),
                                 version.getPatch()
@@ -58,7 +55,7 @@ public class Modifier {
         return new Semver(
                 createFullVersion(
                         version,
-                        format(Locale.ROOT, MAJOR_MINOR_FORMAT, version.getMajor(), nextMinor),
+                        format(Locale.ROOT, "%d.%d.0", version.getMajor(), nextMinor),
                         emptyList()
                 )
         );
@@ -71,7 +68,7 @@ public class Modifier {
                         version,
                         format(
                                 Locale.ROOT,
-                                FULL_FORMAT,
+                                "%d.%d.%d",
                                 version.getMajor(),
                                 (version.getMinor() + number),
                                 version.getPatch()
@@ -93,7 +90,7 @@ public class Modifier {
         return new Semver(
                 createFullVersion(
                         version,
-                        format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), newPatch),
+                        format(Locale.ROOT, "%d.%d.%d", version.getMajor(), version.getMinor(), newPatch),
                         emptyList()
                 )
         );
@@ -106,7 +103,7 @@ public class Modifier {
                         version,
                         format(
                                 Locale.ROOT,
-                                FULL_FORMAT,
+                                "%d.%d.%d",
                                 version.getMajor(),
                                 version.getMinor(),
                                 (version.getPatch() + number)
@@ -123,7 +120,7 @@ public class Modifier {
         return new Semver(
                 createFullVersion(
                         version,
-                        format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()),
+                        format(Locale.ROOT, "%d.%d.%d", version.getMajor(), version.getMinor(), version.getPatch()),
                         newPreRelease
                 )
         );
@@ -135,7 +132,7 @@ public class Modifier {
 
         return new Semver(
                 createFullVersion(
-                        format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()),
+                        format(Locale.ROOT, "%d.%d.%d", version.getMajor(), version.getMinor(), version.getPatch()),
                         version.getPreRelease(),
                         newBuild
                 )
@@ -147,7 +144,7 @@ public class Modifier {
         return new Semver(
                 createFullVersion(
                         version,
-                        format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()),
+                        format(Locale.ROOT, "%d.%d.%d", version.getMajor(), version.getMinor(), version.getPatch()),
                         emptyList()
                 )
         );
@@ -157,7 +154,7 @@ public class Modifier {
     public static Semver withClearedBuild(@NotNull final Semver version) {
         return new Semver(
                 createFullVersion(
-                        format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()),
+                        format(Locale.ROOT, "%d.%d.%d", version.getMajor(), version.getMinor(), version.getPatch()),
                         version.getPreRelease(),
                         emptyList()
                 )
@@ -166,7 +163,7 @@ public class Modifier {
 
     @NotNull
     public static Semver withClearedPreReleaseAndBuild(@NotNull final Semver version) {
-        return new Semver(format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()));
+        return new Semver(format(Locale.ROOT, "%d.%d.%d", version.getMajor(), version.getMinor(), version.getPatch()));
     }
 
     @NotNull

@@ -25,11 +25,11 @@ public class Coerce {
         Matcher matcher = PATTERN.matcher(version);
 
         if (matcher.find()) {
-            String group3 = matcher.group(2);
-            String group4 = Optional.ofNullable(matcher.group(3)).orElse("0");
-            String group5 = Optional.ofNullable(matcher.group(4)).orElse("0");
+            String coercedMajor = matcher.group(2);
+            String coercedMinor = Optional.ofNullable(matcher.group(3)).orElse("0");
+            String coercedPath = Optional.ofNullable(matcher.group(4)).orElse("0");
 
-            return format(Locale.ROOT, "%s.%s.%s", group3, group4, group5);
+            return format(Locale.ROOT, "%s.%s.%s", coercedMajor, coercedMinor, coercedPath);
         }
 
         return null;
