@@ -8,6 +8,11 @@ import java.util.List;
 import static java.lang.Math.max;
 
 public class Comparator implements Comparable<Semver> {
+    private static final String ALL_DIGITS = "^\\d+$";
+    private static final String CONTAINS_DIGITS = ".*\\d.*";
+    private static final String TRAILING_DIGITS_EXTRACT = "(?<=\\D)(?=\\d)";
+    private static final String LEADING_DIGITS_EXTRACT = "(?<=\\d)(?=\\D)";
+
     @NotNull
     private static final String UNDEFINED_MARKER = "undef";
 
@@ -28,11 +33,11 @@ public class Comparator implements Comparable<Semver> {
     }
 
     private int mainCompare(@NotNull final Semver other) {
-        int majorCompare = compareIdentifiers(version.getMajor(), other.getMajor());
+        int majorCompare = Long.compare(version.getMajor(), other.getMajor());
         if (majorCompare == 0) {
-            int minorCompare = compareIdentifiers(version.getMinor(), other.getMinor());
+            int minorCompare = Long.compare(version.getMinor(), other.getMinor());
             if (minorCompare == 0) {
-                return compareIdentifiers(version.getPatch(), other.getPatch());
+                return Long.compare(version.getPatch(), other.getPatch());
             } else {
                 return minorCompare;
             }
@@ -76,22 +81,30 @@ public class Comparator implements Comparable<Semver> {
     }
 
     private int compareIdentifiers(@NotNull final String a, @NotNull final String b) {
-        try {
+        // Only attempt to parse fully-numeric string sequences so that we can avoid
+        // raising a costly exception
+        if (a.matches(ALL_DIGITS) && b.matches(ALL_DIGITS)) {
             long aAsLong = Long.parseLong(a);
             long bAsLong = Long.parseLong(b);
-            return compareIdentifiers(aAsLong, bAsLong);
-        } catch (NumberFormatException e) {
-            //ignore
+            return Long.compare(aAsLong, bAsLong);
         }
 
-        if (isBothContainsDigits(a, b)) {
-            String digitsExtract = "(?<=\\D)(?=\\d)";
-            String[] tokenArr1 = a.split(digitsExtract);
-            String[] tokenArr2 = b.split(digitsExtract);
+        if (a.matches(CONTAINS_DIGITS) && b.matches(CONTAINS_DIGITS)) {
+            String[] tokenArr1 = a.split(TRAILING_DIGITS_EXTRACT);
+            String[] tokenArr2 = b.split(TRAILING_DIGITS_EXTRACT);
             if (tokenArr1[0].equals(tokenArr2[0])) {
-                long digitA = Long.parseLong(tokenArr1[1]);
-                long digitB = Long.parseLong(tokenArr2[1]);
-                return compareIdentifiers(digitA, digitB);
+                String[] leadingDigitsArrA = tokenArr1[1].split(LEADING_DIGITS_EXTRACT);
+                String[] leadingDigitsArrB = tokenArr2[1].split(LEADING_DIGITS_EXTRACT);
+                long digitA = Long.parseLong(leadingDigitsArrA[0]);
+                long digitB = Long.parseLong(leadingDigitsArrB[0]);
+                int digitComparison = Long.compare(digitA, digitB);
+                if (digitComparison != 0) {
+                    return digitComparison;
+                } else if (leadingDigitsArrA.length != leadingDigitsArrB.length) {
+                    return leadingDigitsArrA.length - leadingDigitsArrB.length;
+                } else {
+                    return compareIdentifiers(leadingDigitsArrA[1], leadingDigitsArrB[1]);
+                }
             }
         }
 
@@ -104,19 +117,11 @@ public class Comparator implements Comparable<Semver> {
         return 0;
     }
 
-    private int compareIdentifiers(long a, long b) {
-        return Long.compare(a, b);
-    }
-
-    private boolean isBothContainsDigits(@NotNull final String a, @NotNull final String b) {
-        return a.matches(".*\\d.*") && b.matches(".*\\d.*");
-    }
-
     @NotNull
     private String getString(final int i, @NotNull final List<@NotNull String> list) {
-        try {
+        if (list.size() > i) {
             return list.get(i);
-        } catch (IndexOutOfBoundsException e) {
+        } else {
             return UNDEFINED_MARKER;
         }
     }
