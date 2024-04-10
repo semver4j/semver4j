@@ -1227,4 +1227,13 @@ class SemverTest {
         //then
         assertThat(semver.getVersion()).isEqualTo("0.0.0");
     }
+
+    @Test
+    void shouldBuildBasicSemver() {
+        //when
+        Semver semver = Semver.of(1, 2, 3);
+
+        //then
+        assertThat(semver.getVersion()).isEqualTo("1.2.3");
+    }
 }
