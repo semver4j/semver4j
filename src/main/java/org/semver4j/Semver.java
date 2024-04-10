@@ -48,12 +48,12 @@ public class Semver implements Comparable<Semver> {
         build = parsedVersion.getBuild();
 
         this.version = new Builder()
-            .withMajor(major)
-            .withMinor(minor)
-            .withPatch(patch)
-            .withPreReleases(preRelease)
-            .withBuilds(build)
-            .toVersion();
+                .withMajor(major)
+                .withMinor(minor)
+                .withPatch(patch)
+                .withPreReleases(preRelease)
+                .withBuilds(build)
+                .toVersion();
     }
 
     /**
@@ -112,6 +112,24 @@ public class Semver implements Comparable<Semver> {
      */
     public static Builder of() {
         return new Builder();
+    }
+
+    /**
+     * Returns a programmatically created basic {@link Semver} object.
+     *
+     * @param major version to set
+     * @param minor version to set
+     * @param patch version to set
+     * @return basic {@link Semver} object
+     * @since 5.3.0
+     */
+    @NotNull
+    public static Semver of(int major, int minor, int patch) {
+        return new Builder()
+                .withMajor(major)
+                .withMinor(minor)
+                .withPatch(patch)
+                .toSemver();
     }
 
     /**

@@ -488,6 +488,9 @@ class SemverTest {
                 arguments("1.0.0-beta11", "1.0.0-beta3", true),
                 arguments("1.0.0-rc.3.x-13", "1.0.0-rc.3.x-3", true),
                 arguments("1.24.1-A-20240111143214", "1.24.1-A-20240111143213", true),
+                arguments("1.0.0-beta1a", "1.0.0-beta1", true),
+                arguments("1.0.0-beta1b", "1.0.0-beta1a", true),
+                arguments("1.0.16-lp-zc1-bate+fix-zc1", "1.0.16-lp-zc1", true),
 
                 arguments("1.0.0-alpha", "1.0.0-alpha.1", false),
                 arguments("1.0.0-alpha.1", "1.0.0-alpha.beta", false),
@@ -1223,5 +1226,14 @@ class SemverTest {
 
         //then
         assertThat(semver.getVersion()).isEqualTo("0.0.0");
+    }
+
+    @Test
+    void shouldBuildBasicSemver() {
+        //when
+        Semver semver = Semver.of(1, 2, 3);
+
+        //then
+        assertThat(semver.getVersion()).isEqualTo("1.2.3");
     }
 }
