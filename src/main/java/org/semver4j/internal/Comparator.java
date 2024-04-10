@@ -7,27 +7,22 @@ import java.util.List;
 
 import static java.lang.Math.max;
 
-public class Comparator implements Comparable<Semver> {
+public class Comparator {
     @NotNull
     private static final String UNDEFINED_MARKER = "undef";
 
-    @NotNull
-    private final Semver version;
-
-    public Comparator(@NotNull final Semver version) {
-        this.version = version;
+    private Comparator() {
     }
 
-    @Override
-    public int compareTo(@NotNull final Semver other) {
-        int result = mainCompare(other);
+    public static int compareTo(@NotNull final Semver version, @NotNull final Semver other) {
+        int result = mainCompare(version, other);
         if (result == 0) {
-            return preReleaseCompare(other);
+            return preReleaseCompare(version, other);
         }
         return result;
     }
 
-    private int mainCompare(@NotNull final Semver other) {
+    private static int mainCompare(@NotNull final Semver version, @NotNull final Semver other) {
         int majorCompare = compareIdentifiers(version.getMajor(), other.getMajor());
         if (majorCompare == 0) {
             int minorCompare = compareIdentifiers(version.getMinor(), other.getMinor());
@@ -41,7 +36,7 @@ public class Comparator implements Comparable<Semver> {
         }
     }
 
-    private int preReleaseCompare(@NotNull final Semver other) {
+    private static int preReleaseCompare(@NotNull final Semver version, @NotNull final Semver other) {
         if (!version.getPreRelease().isEmpty() && other.getPreRelease().isEmpty()) {
             return -1;
         } else if (version.getPreRelease().isEmpty() && !other.getPreRelease().isEmpty()) {
@@ -75,7 +70,7 @@ public class Comparator implements Comparable<Semver> {
         return 0;
     }
 
-    private int compareIdentifiers(@NotNull final String a, @NotNull final String b) {
+    private static int compareIdentifiers(@NotNull final String a, @NotNull final String b) {
         try {
             long aAsLong = Long.parseLong(a);
             long bAsLong = Long.parseLong(b);
@@ -104,16 +99,16 @@ public class Comparator implements Comparable<Semver> {
         return 0;
     }
 
-    private int compareIdentifiers(long a, long b) {
+    private static int compareIdentifiers(long a, long b) {
         return Long.compare(a, b);
     }
 
-    private boolean isBothContainsDigits(@NotNull final String a, @NotNull final String b) {
+    private static boolean isBothContainsDigits(@NotNull final String a, @NotNull final String b) {
         return a.matches(".*\\d.*") && b.matches(".*\\d.*");
     }
 
     @NotNull
-    private String getString(final int i, @NotNull final List<@NotNull String> list) {
+    private static String getString(final int i, @NotNull final List<@NotNull String> list) {
         try {
             return list.get(i);
         } catch (IndexOutOfBoundsException e) {

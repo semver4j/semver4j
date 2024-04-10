@@ -7,15 +7,11 @@ import org.semver4j.Semver.VersionDiff;
 import static org.semver4j.Semver.VersionDiff.*;
 
 public class Differ {
-    @NotNull
-    private final Semver version;
-
-    public Differ(@NotNull final Semver version) {
-        this.version = version;
+    private Differ() {
     }
 
     @NotNull
-    public VersionDiff diff(@NotNull final Semver other) {
+    public static VersionDiff diff(@NotNull final Semver version, @NotNull final Semver other) {
         if (version.getMajor() != other.getMajor()) {
             return MAJOR;
         }

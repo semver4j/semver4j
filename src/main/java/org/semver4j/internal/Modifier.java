@@ -11,15 +11,15 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 public class Modifier {
-    @NotNull
-    private final Semver version;
+    private static final String FULL_FORMAT = "%d.%d.%d";
+    private static final String MAJOR_FORMAT = "%d.0.0";
+    private static final String MAJOR_MINOR_FORMAT = "%d.%d.0";
 
-    public Modifier(@NotNull final Semver version) {
-        this.version = version;
+    private Modifier() {
     }
 
     @NotNull
-    public Semver nextMajor() {
+    public static Semver nextMajor(@NotNull final Semver version) {
         int nextMajor = version.getMajor();
 
         // Prerelease version 1.0.0-5 bumps to 1.0.0
@@ -27,18 +27,27 @@ public class Modifier {
             nextMajor = nextMajor + 1;
         }
 
-        String version = createFullVersion(format(Locale.ROOT, "%d.0.0", nextMajor), emptyList());
-        return new Semver(version);
+        return new Semver(createFullVersion(version, format(Locale.ROOT, MAJOR_FORMAT, nextMajor), emptyList()));
     }
 
     @NotNull
-    public Semver withIncMajor(int number) {
-        String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", (this.version.getMajor() + number), this.version.getMinor(), this.version.getPatch()), this.version.getPreRelease());
-        return new Semver(version);
+    public static Semver withIncMajor(@NotNull final Semver version, int number) {
+        return new Semver(
+                createFullVersion(
+                        version,
+                        format(
+                                Locale.ROOT,
+                                FULL_FORMAT,
+                                (version.getMajor() + number),
+                                version.getMinor(),
+                                version.getPatch()
+                        ),
+                        version.getPreRelease())
+        );
     }
 
     @NotNull
-    public Semver nextMinor() {
+    public static Semver nextMinor(@NotNull final Semver version) {
         int nextMinor = version.getMinor();
 
         // Prerelease version 1.2.0-5 bumps to 1.2.0
@@ -46,18 +55,34 @@ public class Modifier {
             nextMinor = nextMinor + 1;
         }
 
-        String version = createFullVersion(format(Locale.ROOT, "%d.%d.0", this.version.getMajor(), nextMinor), emptyList());
-        return new Semver(version);
+        return new Semver(
+                createFullVersion(
+                        version,
+                        format(Locale.ROOT, MAJOR_MINOR_FORMAT, version.getMajor(), nextMinor),
+                        emptyList()
+                )
+        );
     }
 
     @NotNull
-    public Semver withIncMinor(int number) {
-        String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), (this.version.getMinor() + number), this.version.getPatch()), this.version.getPreRelease());
-        return new Semver(version);
+    public static Semver withIncMinor(@NotNull final Semver version, int number) {
+        return new Semver(
+                createFullVersion(
+                        version,
+                        format(
+                                Locale.ROOT,
+                                FULL_FORMAT,
+                                version.getMajor(),
+                                (version.getMinor() + number),
+                                version.getPatch()
+                        ),
+                        version.getPreRelease()
+                )
+        );
     }
 
     @NotNull
-    public Semver nextPatch() {
+    public static Semver nextPatch(@NotNull final Semver version) {
         int newPatch = version.getPatch();
 
         // Prerelease version 1.2.0-5 bumps to 1.2.0
@@ -65,57 +90,100 @@ public class Modifier {
             newPatch = newPatch + 1;
         }
 
-        String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), newPatch), emptyList());
-        return new Semver(version);
+        return new Semver(
+                createFullVersion(
+                        version,
+                        format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), newPatch),
+                        emptyList()
+                )
+        );
     }
 
     @NotNull
-    public Semver withIncPatch(int number) {
-        String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), (this.version.getPatch() + number)), this.version.getPreRelease());
-        return new Semver(version);
+    public static Semver withIncPatch(@NotNull final Semver version, int number) {
+        return new Semver(
+                createFullVersion(
+                        version,
+                        format(
+                                Locale.ROOT,
+                                FULL_FORMAT,
+                                version.getMajor(),
+                                version.getMinor(),
+                                (version.getPatch() + number)
+                        ),
+                        version.getPreRelease()
+                )
+        );
     }
 
     @NotNull
-    public Semver withPreRelease(@NotNull final String preRelease) {
+    public static Semver withPreRelease(@NotNull final Semver version, @NotNull final String preRelease) {
         List<String> newPreRelease = asList(preRelease.split("\\."));
 
-        String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), this.version.getPatch()), newPreRelease);
-        return new Semver(version);
+        return new Semver(
+                createFullVersion(
+                        version,
+                        format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()),
+                        newPreRelease
+                )
+        );
     }
 
     @NotNull
-    public Semver withBuild(@NotNull final String build) {
+    public static Semver withBuild(@NotNull final Semver version, @NotNull final String build) {
         List<String> newBuild = asList(build.split("\\."));
 
-        String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), this.version.getPatch()), this.version.getPreRelease(), newBuild);
-        return new Semver(version);
+        return new Semver(
+                createFullVersion(
+                        format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()),
+                        version.getPreRelease(),
+                        newBuild
+                )
+        );
     }
 
     @NotNull
-    public Semver withClearedPreRelease() {
-        String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), this.version.getPatch()), emptyList());
-        return new Semver(version);
+    public static Semver withClearedPreRelease(@NotNull final Semver version) {
+        return new Semver(
+                createFullVersion(
+                        version,
+                        format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()),
+                        emptyList()
+                )
+        );
     }
 
     @NotNull
-    public Semver withClearedBuild() {
-        String version = createFullVersion(format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), this.version.getPatch()), this.version.getPreRelease(), emptyList());
-        return new Semver(version);
+    public static Semver withClearedBuild(@NotNull final Semver version) {
+        return new Semver(
+                createFullVersion(
+                        format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()),
+                        version.getPreRelease(),
+                        emptyList()
+                )
+        );
     }
 
     @NotNull
-    public Semver withClearedPreReleaseAndBuild() {
-        String version = format(Locale.ROOT, "%d.%d.%d", this.version.getMajor(), this.version.getMinor(), this.version.getPatch());
-        return new Semver(version);
+    public static Semver withClearedPreReleaseAndBuild(@NotNull final Semver version) {
+        return new Semver(format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()));
     }
 
     @NotNull
-    private String createFullVersion(@NotNull final String main, @NotNull final List<@NotNull String> preRelease) {
+    private static String createFullVersion(
+            @NotNull final Semver version,
+            @NotNull final String main,
+            @NotNull final List<@NotNull String> preRelease
+    ) {
         return createFullVersion(main, preRelease, version.getBuild());
     }
 
     @NotNull
-    private String createFullVersion(@NotNull final String main, @NotNull final List<@NotNull String> preRelease, @NotNull final List<@NotNull String> build) {
+    private static String createFullVersion(
+            @NotNull final String main,
+            @NotNull final List<@NotNull String> preRelease,
+            @NotNull final List<@NotNull String> build
+    ) {
         StringBuilder stringBuilder = new StringBuilder(main);
 
         if (!preRelease.isEmpty()) {
