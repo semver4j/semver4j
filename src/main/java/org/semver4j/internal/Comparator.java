@@ -92,7 +92,9 @@ public class Comparator implements Comparable<Semver> {
 
         if (a.matches(CONTAINS_DIGITS) && b.matches(CONTAINS_DIGITS)) {
             Integer alphaNumericComparison = checkAlphanumericPrerelease(a, b);
-            if (alphaNumericComparison != null) return alphaNumericComparison;
+            if (alphaNumericComparison != null) {
+                return alphaNumericComparison;
+            }
         }
 
         int i = a.compareTo(b);
