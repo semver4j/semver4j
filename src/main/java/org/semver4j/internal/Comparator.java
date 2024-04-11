@@ -1,6 +1,7 @@
 package org.semver4j.internal;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.semver4j.Semver;
 
 import java.util.List;
@@ -90,22 +91,8 @@ public class Comparator implements Comparable<Semver> {
         }
 
         if (a.matches(CONTAINS_DIGITS) && b.matches(CONTAINS_DIGITS)) {
-            String[] tokenArr1 = a.split(TRAILING_DIGITS_EXTRACT);
-            String[] tokenArr2 = b.split(TRAILING_DIGITS_EXTRACT);
-            if (tokenArr1[0].equals(tokenArr2[0])) {
-                String[] leadingDigitsArrA = tokenArr1[1].split(LEADING_DIGITS_EXTRACT);
-                String[] leadingDigitsArrB = tokenArr2[1].split(LEADING_DIGITS_EXTRACT);
-                long digitA = Long.parseLong(leadingDigitsArrA[0]);
-                long digitB = Long.parseLong(leadingDigitsArrB[0]);
-                int digitComparison = Long.compare(digitA, digitB);
-                if (digitComparison != 0) {
-                    return digitComparison;
-                } else if (leadingDigitsArrA.length != leadingDigitsArrB.length) {
-                    return leadingDigitsArrA.length - leadingDigitsArrB.length;
-                } else {
-                    return compareIdentifiers(leadingDigitsArrA[1], leadingDigitsArrB[1]);
-                }
-            }
+            Integer alphaNumericComparison = checkAlphanumericPrerelease(a, b);
+            if (alphaNumericComparison != null) return alphaNumericComparison;
         }
 
         int i = a.compareTo(b);
@@ -115,6 +102,30 @@ public class Comparator implements Comparable<Semver> {
             return -1;
         }
         return 0;
+    }
+
+    @Nullable
+    private Integer checkAlphanumericPrerelease(@NotNull final String a, @NotNull final String b) {
+        String[] tokenArrA = a.split(TRAILING_DIGITS_EXTRACT);
+        String[] tokenArrB = b.split(TRAILING_DIGITS_EXTRACT);
+        if (tokenArrA[0].equals(tokenArrB[0])) {
+            String[] leadingDigitsArrA = tokenArrA[1].split(LEADING_DIGITS_EXTRACT);
+            String[] leadingDigitsArrB = tokenArrB[1].split(LEADING_DIGITS_EXTRACT);
+            long digitA = Long.parseLong(leadingDigitsArrA[0]);
+            long digitB = Long.parseLong(leadingDigitsArrB[0]);
+            int digitComparison = Long.compare(digitA, digitB);
+            if (digitComparison != 0) {
+                return digitComparison;
+            } else if (leadingDigitsArrA.length != leadingDigitsArrB.length) {
+                return leadingDigitsArrA.length - leadingDigitsArrB.length;
+            } else {
+                return compareIdentifiers(
+                        a.substring(a.indexOf(leadingDigitsArrA[0]) + 1),
+                        b.substring(b.indexOf(leadingDigitsArrB[0]) + 1)
+                );
+            }
+        }
+        return null;
     }
 
     @NotNull
