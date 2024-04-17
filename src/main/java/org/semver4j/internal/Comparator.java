@@ -8,7 +8,7 @@ import java.util.List;
 
 import static java.lang.Math.max;
 
-public class Comparator implements Comparable<Semver> {
+public class Comparator {
     private static final String ALL_DIGITS = "^\\d+$";
     private static final String CONTAINS_DIGITS = ".*\\d.*";
     private static final String TRAILING_DIGITS_EXTRACT = "(?<=\\D)(?=\\d)";
@@ -17,23 +17,18 @@ public class Comparator implements Comparable<Semver> {
     @NotNull
     private static final String UNDEFINED_MARKER = "undef";
 
-    @NotNull
-    private final Semver version;
-
-    public Comparator(@NotNull final Semver version) {
-        this.version = version;
+    private Comparator() {
     }
 
-    @Override
-    public int compareTo(@NotNull final Semver other) {
-        int result = mainCompare(other);
+    public static int compareTo(@NotNull final Semver version, @NotNull final Semver other) {
+        int result = mainCompare(version, other);
         if (result == 0) {
-            return preReleaseCompare(other);
+            return preReleaseCompare(version, other);
         }
         return result;
     }
 
-    private int mainCompare(@NotNull final Semver other) {
+    private static int mainCompare(@NotNull final Semver version, @NotNull final Semver other) {
         int majorCompare = Long.compare(version.getMajor(), other.getMajor());
         if (majorCompare == 0) {
             int minorCompare = Long.compare(version.getMinor(), other.getMinor());
@@ -47,7 +42,7 @@ public class Comparator implements Comparable<Semver> {
         }
     }
 
-    private int preReleaseCompare(@NotNull final Semver other) {
+    private static int preReleaseCompare(@NotNull final Semver version, @NotNull final Semver other) {
         if (!version.getPreRelease().isEmpty() && other.getPreRelease().isEmpty()) {
             return -1;
         } else if (version.getPreRelease().isEmpty() && !other.getPreRelease().isEmpty()) {
@@ -81,7 +76,7 @@ public class Comparator implements Comparable<Semver> {
         return 0;
     }
 
-    private int compareIdentifiers(@NotNull final String a, @NotNull final String b) {
+    private static int compareIdentifiers(@NotNull final String a, @NotNull final String b) {
         // Only attempt to parse fully-numeric string sequences so that we can avoid
         // raising a costly exception
         if (a.matches(ALL_DIGITS) && b.matches(ALL_DIGITS)) {
@@ -131,7 +126,7 @@ public class Comparator implements Comparable<Semver> {
     }
 
     @NotNull
-    private String getString(final int i, @NotNull final List<@NotNull String> list) {
+    private static String getString(final int i, @NotNull final List<@NotNull String> list) {
         if (list.size() > i) {
             return list.get(i);
         } else {

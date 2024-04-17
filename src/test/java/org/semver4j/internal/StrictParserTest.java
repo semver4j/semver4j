@@ -23,11 +23,8 @@ class StrictParserTest {
     @ParameterizedTest
     @MethodSource("validStrictSemver")
     void shouldParseValidVersions(String version, Version expected) {
-        //given
-        StrictParser strictParser = new StrictParser();
-
         //when
-        Version actual = strictParser.parse(version);
+        Version actual = StrictParser.parse(version);
 
         //then
         assertThat(actual).isEqualTo(expected);
@@ -71,22 +68,16 @@ class StrictParserTest {
     @ParameterizedTest
     @MethodSource("invalidStrictSemver")
     void shouldParseInvalidVersions(String version) {
-        //given
-        StrictParser strictParser = new StrictParser();
-
         //when/then
-        assertThatThrownBy(() -> strictParser.parse(version))
+        assertThatThrownBy(() -> StrictParser.parse(version))
             .isInstanceOf(SemverException.class)
             .hasMessage(format(Locale.ROOT, "Version [%s] is not valid semver.", version));
     }
 
     @Test
     void shouldParseInvalidVersions() {
-        //given
-        StrictParser strictParser = new StrictParser();
-
         //when/then
-        assertThatThrownBy(() -> strictParser.parse("99999999999999999999999.999999999999999999.99999999999999999"))
+        assertThatThrownBy(() -> StrictParser.parse("99999999999999999999999.999999999999999999.99999999999999999"))
             .isInstanceOf(SemverException.class)
             .hasMessage(format(Locale.ROOT, "Value [%s] is too big.", "99999999999999999999999"));
     }
@@ -140,11 +131,8 @@ class StrictParserTest {
     @ParameterizedTest
     @ValueSource(strings = {"1", "99999999999999999999999.999999999999999999.99999999999999999"})
     void shouldThrowSemverExceptionWhichExtendsIllegalArgumentException(String version) {
-        //given
-        StrictParser strictParser = new StrictParser();
-
         //when/then
-        assertThatThrownBy(() -> strictParser.parse(version))
+        assertThatThrownBy(() -> StrictParser.parse(version))
             .isInstanceOf(IllegalArgumentException.class);
     }
 }

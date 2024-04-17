@@ -98,7 +98,4 @@ public class Tokenizers {
 
     @NotNull
     public static final String COMPARATOR = format(Locale.ROOT, "^%s\\s*(%s)$|^$", GLTL, STRICT_PLAIN);
-
-    @NotNull
-    public static final String COERCE = "(^|[^\\d])(\\d{1,16})(?:\\.(\\d{1,16}))?(?:\\.(\\d{1,16}))?(?:$|[^\\d])";
 }

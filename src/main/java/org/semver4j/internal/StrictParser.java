@@ -24,8 +24,11 @@ public class StrictParser {
     @NotNull
     private static final BigInteger maxInt = BigInteger.valueOf(Integer.MAX_VALUE);
 
+    private StrictParser() {
+    }
+
     @NotNull
-    public Version parse(@NotNull final String version) {
+    public static Version parse(@NotNull final String version) {
         Matcher matcher = pattern.matcher(version);
 
         if (!matcher.matches()) {
@@ -41,7 +44,7 @@ public class StrictParser {
         return new Version(major, minor, patch, preRelease, build);
     }
 
-    private int parseInt(@NotNull final String maybeInt) {
+    private static int parseInt(@NotNull final String maybeInt) {
         BigInteger secureNumber = new BigInteger(maybeInt);
         if (maxInt.compareTo(secureNumber) < 0) {
             throw new SemverException(format(Locale.ROOT, "Value [%s] is too big.", maybeInt));
@@ -56,7 +59,7 @@ public class StrictParser {
     }
 
     @NotNull
-    private List<@NotNull String> convertToList(@Nullable final String toList) {
+    private static List<@NotNull String> convertToList(@Nullable final String toList) {
         return toList == null ? emptyList() : asList(toList.split("\\."));
     }
 

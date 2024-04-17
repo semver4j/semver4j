@@ -39,7 +39,7 @@ public class Semver implements Comparable<Semver> {
     public Semver(@NotNull final String version) {
         this.originalVersion = version.trim();
 
-        Version parsedVersion = new StrictParser().parse(this.originalVersion);
+        Version parsedVersion = StrictParser.parse(this.originalVersion);
 
         major = parsedVersion.getMajor();
         minor = parsedVersion.getMinor();
@@ -212,7 +212,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public Semver nextMajor() {
-        return new Modifier(this).nextMajor();
+        return Modifier.nextMajor(this);
     }
 
     /**
@@ -233,7 +233,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public Semver withIncMajor(int number) {
-        return new Modifier(this).withIncMajor(number);
+        return Modifier.withIncMajor(this, number);
     }
 
     /**
@@ -243,7 +243,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public Semver nextMinor() {
-        return new Modifier(this).nextMinor();
+        return Modifier.nextMinor(this);
     }
 
     /**
@@ -264,7 +264,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public Semver withIncMinor(int number) {
-        return new Modifier(this).withIncMinor(number);
+        return Modifier.withIncMinor(this, number);
     }
 
     /**
@@ -274,7 +274,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public Semver nextPatch() {
-        return new Modifier(this).nextPatch();
+        return Modifier.nextPatch(this);
     }
 
     /**
@@ -295,7 +295,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public Semver withIncPatch(int number) {
-        return new Modifier(this).withIncPatch(number);
+        return Modifier.withIncPatch(this, number);
     }
 
     /**
@@ -306,7 +306,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public Semver withPreRelease(@NotNull final String preRelease) {
-        return new Modifier(this).withPreRelease(preRelease);
+        return Modifier.withPreRelease(this, preRelease);
     }
 
     /**
@@ -317,7 +317,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public Semver withBuild(@NotNull final String build) {
-        return new Modifier(this).withBuild(build);
+        return Modifier.withBuild(this, build);
     }
 
     /**
@@ -327,7 +327,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public Semver withClearedPreRelease() {
-        return new Modifier(this).withClearedPreRelease();
+        return Modifier.withClearedPreRelease(this);
     }
 
     /**
@@ -337,7 +337,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public Semver withClearedBuild() {
-        return new Modifier(this).withClearedBuild();
+        return Modifier.withClearedBuild(this);
     }
 
     /**
@@ -347,12 +347,12 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public Semver withClearedPreReleaseAndBuild() {
-        return new Modifier(this).withClearedPreReleaseAndBuild();
+        return Modifier.withClearedPreReleaseAndBuild(this);
     }
 
     @Override
     public int compareTo(@NotNull final Semver other) {
-        return new Comparator(this).compareTo(other);
+        return Comparator.compareTo(this, other);
     }
 
     /**
@@ -365,6 +365,7 @@ public class Semver implements Comparable<Semver> {
     /**
      * Checks whether the given version is API compatible with this version.
      */
+    @SuppressWarnings("unused")
     public boolean isApiCompatible(@NotNull final Semver version) {
         return diff(version).ordinal() < VersionDiff.MAJOR.ordinal();
     }
@@ -526,7 +527,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public VersionDiff diff(@NotNull final Semver version) {
-        return new Differ(this).diff(version);
+        return Differ.diff(this, version);
     }
 
     /**
@@ -632,6 +633,7 @@ public class Semver implements Comparable<Semver> {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder withPreRelease(@NotNull String preRelease) {
             requireNonNull(preRelease, "preRelease cannot be null");
             return withPreReleases(new String[]{preRelease});
@@ -649,6 +651,7 @@ public class Semver implements Comparable<Semver> {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder withBuild(@NotNull String build) {
             requireNonNull(build, "build cannot be null");
             return withBuilds(new String[]{build});
