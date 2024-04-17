@@ -491,6 +491,7 @@ class SemverTest {
                 arguments("1.0.0-beta1a", "1.0.0-beta1", true),
                 arguments("1.0.0-beta1b", "1.0.0-beta1a", true),
                 arguments("1.0.16-lp-zc1-bate+fix-zc1", "1.0.16-lp-zc1", true),
+                arguments("1.0.0-a1a1b", "1.0.0-a1a1a", true),
 
                 arguments("1.0.0-alpha", "1.0.0-alpha.1", false),
                 arguments("1.0.0-alpha.1", "1.0.0-alpha.beta", false),
