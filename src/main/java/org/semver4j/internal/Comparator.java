@@ -102,7 +102,7 @@ public class Comparator {
     }
 
     @Nullable
-    private Integer checkAlphanumericPrerelease(@NotNull final String a, @NotNull final String b) {
+    private static Integer checkAlphanumericPrerelease(@NotNull final String a, @NotNull final String b) {
         String[] tokenArrA = a.split(TRAILING_DIGITS_EXTRACT);
         String[] tokenArrB = b.split(TRAILING_DIGITS_EXTRACT);
         if (tokenArrA[0].equals(tokenArrB[0])) {
