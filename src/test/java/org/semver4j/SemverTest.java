@@ -1237,4 +1237,47 @@ class SemverTest {
         //then
         assertThat(semver.getVersion()).isEqualTo("1.2.3");
     }
+
+    @Test
+    void shouldUseCustomFormatterInBuilder() {
+        //given
+        Semver.Builder builder = Semver.of()
+                .withMajor(1)
+                .withMinor(2)
+                .withPatch(3)
+                .withPreRelease("alpha")
+                .withBuild("5bb76cdb");
+
+        //when
+        String version = builder.toVersion(semver -> {
+            String preRelease = join("&", semver.getPreRelease());
+            String build = join("&", semver.getBuild());
+            return format(Locale.ROOT, "%d:%d:%d|%s*%s", semver.getMajor(), semver.getMinor(), semver.getPatch(), preRelease, build);
+        });
+
+        //then
+        assertThat(version).isEqualTo("1:2:3|alpha*5bb76cdb");
+    }
+
+    @Test
+    void shouldUseCustomFormatter() {
+        //given
+        Semver actualSemver = Semver.of()
+                .withMajor(1)
+                .withMinor(2)
+                .withPatch(3)
+                .withPreRelease("alpha")
+                .withBuild("5bb76cdb")
+                .toSemver();
+
+        //when
+        String version = actualSemver.format(semver -> {
+            String preRelease = join("&", semver.getPreRelease());
+            String build = join("&", semver.getBuild());
+            return format(Locale.ROOT, "%d:%d:%d|%s*%s", semver.getMajor(), semver.getMinor(), semver.getPatch(), preRelease, build);
+        });
+
+        //then
+        assertThat(version).isEqualTo("1:2:3|alpha*5bb76cdb");
+    }
 }
