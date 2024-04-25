@@ -1252,7 +1252,7 @@ class SemverTest {
         String version = builder.toVersion(semver -> {
             String preRelease = join("&", semver.getPreRelease());
             String build = join("&", semver.getBuild());
-            return format("%d:%d:%d|%s*%s", semver.getMajor(), semver.getMinor(), semver.getPatch(), preRelease, build);
+            return format(Locale.ROOT, "%d:%d:%d|%s*%s", semver.getMajor(), semver.getMinor(), semver.getPatch(), preRelease, build);
         });
 
         //then
@@ -1274,7 +1274,7 @@ class SemverTest {
         String version = actualSemver.format(semver -> {
             String preRelease = join("&", semver.getPreRelease());
             String build = join("&", semver.getBuild());
-            return format("%d:%d:%d|%s*%s", semver.getMajor(), semver.getMinor(), semver.getPatch(), preRelease, build);
+            return format(Locale.ROOT, "%d:%d:%d|%s*%s", semver.getMajor(), semver.getMinor(), semver.getPatch(), preRelease, build);
         });
 
         //then
