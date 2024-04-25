@@ -7,8 +7,8 @@ import org.semver4j.internal.*;
 import org.semver4j.internal.StrictParser.Version;
 
 import java.util.*;
+import java.util.function.Function;
 
-import static java.lang.String.format;
 import static java.lang.String.join;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.hash;
@@ -570,6 +570,13 @@ public class Semver implements Comparable<Semver> {
         return rangesList.isSatisfiedBy(this);
     }
 
+    /**
+     * Format {@link Semver} object using custom formatting rules.
+     */
+    public String format(Function<Semver, String> formatter) {
+        return formatter.apply(this);
+    }
+
     @Override
     public boolean equals(@Nullable final Object o) {
         if (this == o) {
@@ -685,7 +692,7 @@ public class Semver implements Comparable<Semver> {
          */
         @NotNull
         public String toVersion() {
-            String resultVersion = format(Locale.ROOT, "%d.%d.%d", major, minor, patch);
+            String resultVersion = String.format(Locale.ROOT, "%d.%d.%d", major, minor, patch);
             if (!preRelease.isEmpty()) {
                 resultVersion += "-" + join(".", preRelease);
             }
@@ -693,6 +700,13 @@ public class Semver implements Comparable<Semver> {
                 resultVersion += "+" + join(".", build);
             }
             return resultVersion;
+        }
+
+        /**
+         * Format {@link Semver} object using custom formatting rules.
+         */
+        public String toVersion(Function<Semver, String> formatter) {
+            return formatter.apply(toSemver());
         }
     }
 }

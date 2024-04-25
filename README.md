@@ -41,6 +41,7 @@ and [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-m
         * [Internal](#internal)
     * [Modifying the version](#modifying-the-version)
     * [Builder](#builder)
+    * [Formatting](#formatting)
 * [Contributing](#contributing)
 * [Thanks](#thanks)
 
@@ -253,6 +254,19 @@ And is an equivalent of:
 ```java
 Semver semver = new Semver("1.2.0+5bb76cdb");
 ```
+
+### Formatting
+
+Sometimes you want to format `Semver` using custom formatters. You can do this using
+a `format(Function<Semver, String> formatter)` method from the `Semver` class:
+
+```java
+Semver semver = new Semver("1.2.3-alpha.1+sha.1234");
+String customVersion = semver.format(sem -> format("%d:%d:%d", sem.getMajor(), sem.getMinor(), sem.getPatch())); // 1:2:2
+```
+
+There is also a method in the `SemverBuilder` called `toVersion(Function<Semver, String> formatter)` which behaves
+exactly the same.
 
 ## Contributing
 
