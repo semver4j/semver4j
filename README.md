@@ -1,6 +1,6 @@
 # Semver4j
 
-[![CI](https://github.com/semver4j/semver4j/workflows/Java%20CI/badge.svg)](https://github.com/semver4j/semver4j/actions/workflows/ci.yml)
+[![CI](https://github.com/semver4j/semver4j/workflows/CI/badge.svg)](https://github.com/semver4j/semver4j/actions/workflows/ci.yml)
 [![Coverage Status](https://img.shields.io/codecov/c/github/semver4j/semver4j.svg)](https://codecov.io/github/semver4j/semver4j)
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/semver4j/semver4j/blob/main/LICENSE)
