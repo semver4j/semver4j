@@ -3,22 +3,29 @@ package org.semver4j.internal.range;
 import org.jetbrains.annotations.NotNull;
 import org.semver4j.internal.range.processor.Processor;
 
+import java.util.ArrayList;
+
 public class RangeProcessorPipeline {
     @NotNull
-    private final Processor currentProcessor;
+    private final ArrayList<@NotNull Processor> processors = new ArrayList<>();
 
     public RangeProcessorPipeline(@NotNull final Processor currentProcessor) {
-        this.currentProcessor = currentProcessor;
+        this.processors.add(currentProcessor);
     }
 
     @NotNull
     public RangeProcessorPipeline addProcessor(@NotNull final Processor processor) {
-        return new RangeProcessorPipeline(version -> processor.process(currentProcessor.process(version)));
+        processors.add(processor);
+        return this;
     }
 
     @NotNull
     public String process(@NotNull final String range) {
-        return currentProcessor.process(range);
+        String processedRange = range;
+        for (Processor processor : processors) {
+            processedRange = processor.process(processedRange);
+        }
+        return processedRange;
     }
 
     @NotNull
