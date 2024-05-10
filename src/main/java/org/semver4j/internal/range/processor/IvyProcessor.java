@@ -2,7 +2,6 @@ package org.semver4j.internal.range.processor;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.semver4j.Semver;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -15,6 +14,7 @@ import static org.semver4j.Range.RangeOperator.GTE;
 import static org.semver4j.Range.RangeOperator.LT;
 import static org.semver4j.Range.RangeOperator.LTE;
 import static org.semver4j.internal.Tokenizers.IVY;
+import static org.semver4j.internal.range.processor.RangesUtils.ALL_RANGE;
 import static org.semver4j.internal.range.processor.RangesUtils.isX;
 import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
 
@@ -45,7 +45,7 @@ public class IvyProcessor implements Processor {
     @Override
     public @Nullable String tryProcess(@NotNull String range) {
         if (range.equals(LATEST) || range.equals(LATEST_INTEGRATION)) {
-            return format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
+            return ALL_RANGE;
         }
 
         Matcher matcher = PATTERN.matcher(range);

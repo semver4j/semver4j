@@ -2,8 +2,13 @@ package org.semver4j.internal.range.processor;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.semver4j.Semver;
+
+import java.util.Locale;
 
 import static java.lang.Integer.parseInt;
+import static java.lang.String.format;
+import static org.semver4j.Range.RangeOperator.GTE;
 
 /**
  * Set of methods which helps ranges handling.
@@ -13,6 +18,10 @@ final class RangesUtils {
     static final String EMPTY = "";
     @NotNull
     static final String SPACE = " ";
+    @NotNull
+    static final String ASTERISK = "*";
+    @NotNull
+    static final String ALL_RANGE = format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
 
     private static final int X_RANGE_MARKER = -1;
 

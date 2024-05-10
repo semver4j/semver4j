@@ -12,6 +12,8 @@ import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.GTE;
 import static org.semver4j.Range.RangeOperator.LT;
 import static org.semver4j.internal.Tokenizers.CARET;
+import static org.semver4j.internal.range.processor.RangesUtils.ALL_RANGE;
+import static org.semver4j.internal.range.processor.RangesUtils.ASTERISK;
 import static org.semver4j.internal.range.processor.RangesUtils.isNotBlank;
 import static org.semver4j.internal.range.processor.RangesUtils.isX;
 import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
@@ -32,21 +34,20 @@ public class CaretProcessor implements Processor {
 
     @Override
     public @Nullable String tryProcess(@NotNull String range) {
+        if (range.equals(ASTERISK)) {
+            return ALL_RANGE;
+        }
+
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {
-            return range;
+            return null;
         }
-
-        // Left unused variables for brevity.
-
-        String fullRange = matcher.group(0);
 
         int major = parseIntWithXSupport(matcher.group(1));
         int minor = parseIntWithXSupport(matcher.group(2));
         int path = parseIntWithXSupport(matcher.group(3));
         String preRelease = matcher.group(4);
-        String build = matcher.group(5);
 
         boolean minorIsX = isX(minor);
         boolean patchIsX = isX(path);
