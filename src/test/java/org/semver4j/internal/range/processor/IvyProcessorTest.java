@@ -34,7 +34,9 @@ class IvyProcessorTest {
                 arguments("]1.0.1,2.0.1[", ">1.0.1 <2.0.1"),
                 arguments("[1.0,2.0.1]", ">=1.0.0 <=2.0.1"),
                 arguments("[1.0.1,2.0]", ">=1.0.1 <=2.0.0"),
-                arguments("INVALID", "INVALID")
+                arguments("latest", ">=0.0.0"),
+                arguments("latest.integration", ">=0.0.0"),
+                arguments("INVALID", null)
         );
     }
 }
