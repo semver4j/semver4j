@@ -19,8 +19,6 @@ final class RangesUtils {
     @NotNull
     static final String SPACE = " ";
     @NotNull
-    static final String ASTERISK = "*";
-    @NotNull
     static final String ALL_RANGE = format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
 
     private static final int X_RANGE_MARKER = -1;

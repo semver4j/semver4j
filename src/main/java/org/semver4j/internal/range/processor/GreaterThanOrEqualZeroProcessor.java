@@ -10,7 +10,7 @@ import static java.lang.String.format;
 import static org.semver4j.Range.RangeOperator.GTE;
 
 /**
- * <p>Processor for translate {@code latest}, {@code latest.internal} and {@code *} strings into classic range.</p>
+ * <p>Processor for translate {@code *} strings and empty strings into classic range.</p>
  * <br>
  * Translates:
  * <ul>
@@ -20,9 +20,9 @@ import static org.semver4j.Range.RangeOperator.GTE;
 public class GreaterThanOrEqualZeroProcessor implements Processor {
     @Override
     public @Nullable String tryProcess(@NotNull String range) {
-        if (range.equals("latest") || range.equals("latest.integration") || range.equals("*") || range.isEmpty()) {
+        if (range.equals("*") || range.isEmpty()) {
             return format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
         }
-        return range;
+        return null;
     }
 }
