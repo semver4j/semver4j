@@ -10,35 +10,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class IvyProcessorTest {
+    private final IvyProcessor ivyProcessor = new IvyProcessor();
+
     @ParameterizedTest
-    @MethodSource("ivy")
+    @MethodSource
     void shouldProcessIvyRanges(String range, String expected) {
-        //given
-        IvyProcessor ivyProcessor = new IvyProcessor();
-
-        //when
-        String actual = ivyProcessor.process(range);
-
-        //then
-        assertThat(actual).isEqualTo(expected);
+        assertThat(ivyProcessor.tryProcess(range)).isEqualTo(expected);
     }
 
-    static Stream<Arguments> ivy() {
+    static Stream<Arguments> shouldProcessIvyRanges() {
         return Stream.of(
-            arguments("[1.0,2.0]", ">=1.0.0 <=2.0.0"),
-            arguments("[1.0,2.0[", ">=1.0.0 <2.0.0"),
-            arguments("]1.0,2.0]", ">1.0.0 <=2.0.0"),
-            arguments("]1.0,2.0[", ">1.0.0 <2.0.0"),
-            arguments("[1.0,)", ">=1.0.0"),
-            arguments("]1.0,)", ">1.0.0"),
-            arguments("(,2.0]", "<=2.0.0"),
-            arguments("(,2.0[", "<2.0.0"),
-            arguments("[1.0.1,2.0.1]", ">=1.0.1 <=2.0.1"),
-            arguments("]1.0.1,2.0.1]", ">1.0.1 <=2.0.1"),
-            arguments("[1.0.1,2.0.1[", ">=1.0.1 <2.0.1"),
-            arguments("]1.0.1,2.0.1[", ">1.0.1 <2.0.1"),
-            arguments("[1.0,2.0.1]", ">=1.0.0 <=2.0.1"),
-            arguments("[1.0.1,2.0]", ">=1.0.1 <=2.0.0")
+                arguments("[1.0,2.0]", ">=1.0.0 <=2.0.0"),
+                arguments("[1.0,2.0[", ">=1.0.0 <2.0.0"),
+                arguments("]1.0,2.0]", ">1.0.0 <=2.0.0"),
+                arguments("]1.0,2.0[", ">1.0.0 <2.0.0"),
+                arguments("[1.0,)", ">=1.0.0"),
+                arguments("]1.0,)", ">1.0.0"),
+                arguments("(,2.0]", "<=2.0.0"),
+                arguments("(,2.0[", "<2.0.0"),
+                arguments("[1.0.1,2.0.1]", ">=1.0.1 <=2.0.1"),
+                arguments("]1.0.1,2.0.1]", ">1.0.1 <=2.0.1"),
+                arguments("[1.0.1,2.0.1[", ">=1.0.1 <2.0.1"),
+                arguments("]1.0.1,2.0.1[", ">1.0.1 <2.0.1"),
+                arguments("[1.0,2.0.1]", ">=1.0.0 <=2.0.1"),
+                arguments("[1.0.1,2.0]", ">=1.0.1 <=2.0.0"),
+                arguments("INVALID", "INVALID")
         );
     }
 }
