@@ -1,6 +1,7 @@
 package org.semver4j.internal.range.processor;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -11,7 +12,9 @@ import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.GTE;
 import static org.semver4j.Range.RangeOperator.LT;
 import static org.semver4j.internal.Tokenizers.TILDE;
-import static org.semver4j.internal.range.processor.RangesUtils.*;
+import static org.semver4j.internal.range.processor.RangesUtils.isNotBlank;
+import static org.semver4j.internal.range.processor.RangesUtils.isX;
+import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
 
 /**
  * <p>Processor for translate <a href="https://github.com/npm/node-semver#tilde-ranges-123-12-1">tilde ranges</a>
@@ -32,8 +35,7 @@ public class TildeProcessor implements Processor {
     private static final Pattern pattern = compile(TILDE);
 
     @Override
-    @NotNull
-    public String process(@NotNull final String range) {
+    public @Nullable String tryProcess(@NotNull String range) {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {

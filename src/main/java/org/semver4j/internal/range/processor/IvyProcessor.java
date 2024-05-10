@@ -1,6 +1,7 @@
 package org.semver4j.internal.range.processor;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -8,7 +9,10 @@ import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
-import static org.semver4j.Range.RangeOperator.*;
+import static org.semver4j.Range.RangeOperator.GT;
+import static org.semver4j.Range.RangeOperator.GTE;
+import static org.semver4j.Range.RangeOperator.LT;
+import static org.semver4j.Range.RangeOperator.LTE;
 import static org.semver4j.internal.Tokenizers.IVY;
 import static org.semver4j.internal.range.processor.RangesUtils.isX;
 import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
@@ -35,8 +39,7 @@ public class IvyProcessor implements Processor {
     private static final Pattern PATTERN = compile(IVY);
 
     @Override
-    @NotNull
-    public String process(@NotNull final String range) {
+    public @Nullable String tryProcess(@NotNull String range) {
         Matcher matcher = PATTERN.matcher(range);
 
         if (!matcher.matches()) {

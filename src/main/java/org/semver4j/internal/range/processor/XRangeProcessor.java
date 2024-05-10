@@ -1,6 +1,7 @@
 package org.semver4j.internal.range.processor;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +12,16 @@ import java.util.regex.Pattern;
 import static java.lang.String.format;
 import static java.lang.String.join;
 import static java.util.regex.Pattern.compile;
-import static org.semver4j.Range.RangeOperator.*;
+import static org.semver4j.Range.RangeOperator.EQ;
+import static org.semver4j.Range.RangeOperator.GT;
+import static org.semver4j.Range.RangeOperator.GTE;
+import static org.semver4j.Range.RangeOperator.LT;
+import static org.semver4j.Range.RangeOperator.LTE;
 import static org.semver4j.internal.Tokenizers.XRANGE;
-import static org.semver4j.internal.range.processor.RangesUtils.*;
+import static org.semver4j.internal.range.processor.RangesUtils.EMPTY;
+import static org.semver4j.internal.range.processor.RangesUtils.SPACE;
+import static org.semver4j.internal.range.processor.RangesUtils.isX;
+import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
 
 /**
  * <p>Processor for translate <a href="https://github.com/npm/node-semver#x-ranges-12x-1x-12-">X-Ranges</a> into classic
@@ -25,8 +33,7 @@ public class XRangeProcessor implements Processor {
     private static final Pattern pattern = compile(XRANGE);
 
     @Override
-    @NotNull
-    public String process(@NotNull final String range) {
+    public @Nullable String tryProcess(@NotNull String range) {
         String[] rangeVersions = range.split("\\s+");
 
         List<String> objects = new ArrayList<>();
