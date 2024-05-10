@@ -39,18 +39,13 @@ public class TildeProcessor implements Processor {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {
-            return range;
+            return null;
         }
-
-        // Left unused variables for brevity.
-
-        String fullRange = matcher.group(0);
 
         int major = parseIntWithXSupport(matcher.group(1));
         int minor = parseIntWithXSupport(matcher.group(2));
         int path = parseIntWithXSupport(matcher.group(3));
         String preRelease = matcher.group(4);
-        String build = matcher.group(5);
 
         String from;
         String to;

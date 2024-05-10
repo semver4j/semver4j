@@ -24,7 +24,7 @@ class TildeProcessorTest {
                 arguments("~1.2", ">=1.2.0 <1.3.0"),
                 arguments("~1", ">=1.0.0 <2.0.0"),
                 arguments("~1.2.3-alpha", ">=1.2.3-alpha <1.3.0"),
-                arguments("INVALID", "INVALID")
+                arguments("INVALID", null)
         );
     }
 }

@@ -37,7 +37,7 @@ public class HyphenProcessor implements Processor {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {
-            return range;
+            return null;
         }
 
         String rangeFrom = getRangeFrom(matcher);
@@ -48,15 +48,11 @@ public class HyphenProcessor implements Processor {
 
     @NotNull
     private String getRangeFrom(@NotNull final Matcher matcher) {
-        // Left unused variables for brevity.
-
         String from = matcher.group(1);
 
         int fromMajor = parseIntWithXSupport(matcher.group(2));
         int fromMinor = parseIntWithXSupport(matcher.group(3));
         int fromPatch = parseIntWithXSupport(matcher.group(4));
-        String fromPreRelease = matcher.group(5);
-        String fromBuild = matcher.group(6);
 
         boolean minorIsX = isX(fromMinor);
         boolean patchIsX = isX(fromPatch);
@@ -74,15 +70,11 @@ public class HyphenProcessor implements Processor {
 
     @NotNull
     private String getRangeTo(@NotNull final Matcher matcher) {
-        // Left unused variables for brevity.
-
         String to = matcher.group(7);
 
         int toMajor = parseIntWithXSupport(matcher.group(8));
         int toMinor = parseIntWithXSupport(matcher.group(9));
         int toPatch = parseIntWithXSupport(matcher.group(10));
-        String toPreRelease = matcher.group(11);
-        String toBuild = matcher.group(12);
 
         boolean minorIsX = isX(toMinor);
         boolean patchIsX = isX(toPatch);

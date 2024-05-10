@@ -25,7 +25,7 @@ class HyphenProcessorTest {
                 arguments("1 - 2.3.4", ">=1.0.0 <=2.3.4"),
                 arguments("1.2.3 - 2.3", ">=1.2.3 <2.4.0"),
                 arguments("1.2.3 - 2", ">=1.2.3 <3.0.0"),
-                arguments("INVALID", "INVALID")
+                arguments("INVALID", null)
         );
     }
 }
