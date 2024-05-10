@@ -30,7 +30,7 @@ class XRangeProcessorTest {
                 arguments("1.2.X", ">=1.2.0 <1.3.0"),
                 arguments("=1.2.X", ">=1.2.0 <1.3.0"),
                 arguments(">=1.2.3 <2.0.0", ">=1.2.3 <2.0.0"),
-                arguments("INVALID", "INVALID")
+                arguments("INVALID", null)
         );
     }
 }

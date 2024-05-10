@@ -41,8 +41,6 @@ public class XRangeProcessor implements Processor {
             Matcher matcher = pattern.matcher(rangeVersion);
 
             if (matcher.matches()) {
-                // Left unused variables for brevity.
-
                 String fullRange = matcher.group(0);
 
                 String compareSign = matcher.group(1);
@@ -50,8 +48,6 @@ public class XRangeProcessor implements Processor {
                 int major = parseIntWithXSupport(matcher.group(2));
                 int minor = parseIntWithXSupport(matcher.group(3));
                 int patch = parseIntWithXSupport(matcher.group(4));
-                String preRelease = matcher.group(5);
-                String build = matcher.group(6);
 
                 if (compareSign.equals(EQ.asString()) && isX(patch)) {
                     compareSign = EMPTY;
@@ -99,7 +95,7 @@ public class XRangeProcessor implements Processor {
         }
 
         if (objects.isEmpty()) {
-            return range;
+            return null;
         }
 
         return join(SPACE, objects);
