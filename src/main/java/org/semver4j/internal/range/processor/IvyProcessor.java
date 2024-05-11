@@ -33,6 +33,8 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  *     <li>{@code ]1.0,)} to {@code >1.0.0}</li>
  *     <li>{@code (,2.0]} to {@code ≤2.0.0}</li>
  *     <li>{@code (,2.0[} to {@code <2.0.0}</li>
+ *     <li>{@code latest} to {@code ≥0.0.0}</li>
+ *     <li>{@code latest.integration} to {@code ≥0.0.0}</li>
  * </ul>
  */
 public class IvyProcessor implements Processor {
