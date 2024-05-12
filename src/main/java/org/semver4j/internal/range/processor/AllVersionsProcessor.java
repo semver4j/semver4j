@@ -15,7 +15,7 @@ import static org.semver4j.Range.RangeOperator.GTE;
  * Translates:
  * <ul>
  *     <li>{@code *} to {@code ≥0.0.0}</li>
- *     <li>an empty string to {@code ≥0.0.0}</li>
+ *     <li>An empty string to {@code ≥0.0.0}</li>
  * </ul>
  */
 public class AllVersionsProcessor implements Processor {
