@@ -21,11 +21,13 @@ public class RangeProcessorPipeline {
 
     @NotNull
     public String process(@NotNull final String range) {
-        String processedRange = range;
         for (Processor processor : processors) {
-            processedRange = processor.process(processedRange);
+            String processedRange = processor.tryProcess(range);
+            if (processedRange != null) {
+                return processedRange;
+            }
         }
-        return processedRange;
+        return range;
     }
 
     @NotNull

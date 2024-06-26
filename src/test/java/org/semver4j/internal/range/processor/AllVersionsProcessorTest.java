@@ -9,20 +9,17 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-@SuppressWarnings("deprecation")
-class GreaterThanOrEqualZeroProcessorTest {
-    private final GreaterThanOrEqualZeroProcessor processor = new GreaterThanOrEqualZeroProcessor();
+class AllVersionsProcessorTest {
+    private final AllVersionsProcessor allVersionsProcessor = new AllVersionsProcessor();
 
     @ParameterizedTest
     @MethodSource
-    void shouldParseRanges(String range, String expectedString) {
-        assertThat(processor.tryProcess(range)).isEqualTo(expectedString);
+    void shouldParseAllVersions(String range, String expectedString) {
+        assertThat(allVersionsProcessor.tryProcess(range)).isEqualTo(expectedString);
     }
 
-    static Stream<Arguments> shouldParseRanges() {
+    static Stream<Arguments> shouldParseAllVersions() {
         return Stream.of(
-                arguments("latest", ">=0.0.0"),
-                arguments("latest.integration", ">=0.0.0"),
                 arguments("*", ">=0.0.0"),
                 arguments("", ">=0.0.0"),
                 arguments("INVALID", null)

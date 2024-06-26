@@ -1,6 +1,7 @@
 package org.semver4j.internal.range.processor;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -8,7 +9,9 @@ import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
-import static org.semver4j.Range.RangeOperator.*;
+import static org.semver4j.Range.RangeOperator.GTE;
+import static org.semver4j.Range.RangeOperator.LT;
+import static org.semver4j.Range.RangeOperator.LTE;
 import static org.semver4j.internal.Tokenizers.HYPHEN;
 import static org.semver4j.internal.range.processor.RangesUtils.isX;
 import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
@@ -30,12 +33,11 @@ public class HyphenProcessor implements Processor {
     private static final Pattern pattern = compile(HYPHEN);
 
     @Override
-    @NotNull
-    public String process(@NotNull final String range) {
+    public @Nullable String tryProcess(@NotNull String range) {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {
-            return range;
+            return null;
         }
 
         String rangeFrom = getRangeFrom(matcher);
@@ -46,15 +48,11 @@ public class HyphenProcessor implements Processor {
 
     @NotNull
     private String getRangeFrom(@NotNull final Matcher matcher) {
-        // Left unused variables for brevity.
-
         String from = matcher.group(1);
 
         int fromMajor = parseIntWithXSupport(matcher.group(2));
         int fromMinor = parseIntWithXSupport(matcher.group(3));
         int fromPatch = parseIntWithXSupport(matcher.group(4));
-        String fromPreRelease = matcher.group(5);
-        String fromBuild = matcher.group(6);
 
         boolean minorIsX = isX(fromMinor);
         boolean patchIsX = isX(fromPatch);
@@ -72,15 +70,11 @@ public class HyphenProcessor implements Processor {
 
     @NotNull
     private String getRangeTo(@NotNull final Matcher matcher) {
-        // Left unused variables for brevity.
-
         String to = matcher.group(7);
 
         int toMajor = parseIntWithXSupport(matcher.group(8));
         int toMinor = parseIntWithXSupport(matcher.group(9));
         int toPatch = parseIntWithXSupport(matcher.group(10));
-        String toPreRelease = matcher.group(11);
-        String toBuild = matcher.group(12);
 
         boolean minorIsX = isX(toMinor);
         boolean patchIsX = isX(toPatch);

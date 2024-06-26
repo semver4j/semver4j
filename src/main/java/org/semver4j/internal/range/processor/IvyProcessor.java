@@ -1,6 +1,7 @@
 package org.semver4j.internal.range.processor;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -8,8 +9,12 @@ import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
-import static org.semver4j.Range.RangeOperator.*;
+import static org.semver4j.Range.RangeOperator.GT;
+import static org.semver4j.Range.RangeOperator.GTE;
+import static org.semver4j.Range.RangeOperator.LT;
+import static org.semver4j.Range.RangeOperator.LTE;
 import static org.semver4j.internal.Tokenizers.IVY;
+import static org.semver4j.internal.range.processor.RangesUtils.ALL_RANGE;
 import static org.semver4j.internal.range.processor.RangesUtils.isX;
 import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
 
@@ -28,24 +33,28 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  *     <li>{@code ]1.0,)} to {@code >1.0.0}</li>
  *     <li>{@code (,2.0]} to {@code ≤2.0.0}</li>
  *     <li>{@code (,2.0[} to {@code <2.0.0}</li>
+ *     <li>{@code latest} to {@code ≥0.0.0}</li>
+ *     <li>{@code latest.integration} to {@code ≥0.0.0}</li>
  * </ul>
  */
 public class IvyProcessor implements Processor {
+    private static final String LATEST = "latest";
+    private static final String LATEST_INTEGRATION = LATEST + ".integration";
+
     @NotNull
     private static final Pattern PATTERN = compile(IVY);
 
     @Override
-    @NotNull
-    public String process(@NotNull final String range) {
+    public @Nullable String tryProcess(@NotNull String range) {
+        if (range.equals(LATEST) || range.equals(LATEST_INTEGRATION)) {
+            return ALL_RANGE;
+        }
+
         Matcher matcher = PATTERN.matcher(range);
 
         if (!matcher.matches()) {
-            return range;
+            return null;
         }
-
-        // Left unused variables for brevity.
-
-        String fullRange = matcher.group(0);
 
         String openSign = matcher.group(1);
 
