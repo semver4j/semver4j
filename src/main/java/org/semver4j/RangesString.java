@@ -1,8 +1,13 @@
 package org.semver4j;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.semver4j.internal.range.processor.*;
+import org.semver4j.internal.range.RangeProcessorPipeline;
+import org.semver4j.internal.range.processor.AllVersionsProcessor;
+import org.semver4j.internal.range.processor.CaretProcessor;
+import org.semver4j.internal.range.processor.HyphenProcessor;
+import org.semver4j.internal.range.processor.IvyProcessor;
+import org.semver4j.internal.range.processor.TildeProcessor;
+import org.semver4j.internal.range.processor.XRangeProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +23,13 @@ class RangesString {
     private static final Pattern splitterPattern = compile("(\\s*)([<>]?=?)\\s*");
     @NotNull
     private static final Pattern comparatorPattern = compile(COMPARATOR);
+    @NotNull
+    private static final RangeProcessorPipeline rangeProcessorPipeline = startWith(new AllVersionsProcessor())
+            .addProcessor(new IvyProcessor())
+            .addProcessor(new HyphenProcessor())
+            .addProcessor(new CaretProcessor())
+            .addProcessor(new TildeProcessor())
+            .addProcessor(new XRangeProcessor());
 
     @NotNull
     RangesList get(@NotNull String range) {
@@ -42,15 +54,9 @@ class RangesString {
         return matcher.replaceAll("$1$2").trim();
     }
 
-    @Nullable
-    private static String applyProcessors(@Nullable final String range) {
-        return startWith(new GreaterThanOrEqualZeroProcessor())
-            .addProcessor(new IvyProcessor())
-            .addProcessor(new HyphenProcessor())
-            .addProcessor(new CaretProcessor())
-            .addProcessor(new TildeProcessor())
-            .addProcessor(new XRangeProcessor())
-            .process(range);
+    @NotNull
+    private static String applyProcessors(@NotNull final String range) {
+        return rangeProcessorPipeline.process(range);
     }
 
     @NotNull

@@ -1,6 +1,7 @@
 package org.semver4j.internal.range.processor;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -11,7 +12,9 @@ import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.GTE;
 import static org.semver4j.Range.RangeOperator.LT;
 import static org.semver4j.internal.Tokenizers.CARET;
-import static org.semver4j.internal.range.processor.RangesUtils.*;
+import static org.semver4j.internal.range.processor.RangesUtils.isNotBlank;
+import static org.semver4j.internal.range.processor.RangesUtils.isX;
+import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
 
 /**
  * <p>Processor for translate <a href="https://github.com/npm/node-semver#caret-ranges-123-025-004">caret ranges</a>
@@ -28,23 +31,17 @@ public class CaretProcessor implements Processor {
     private static final Pattern pattern = compile(CARET);
 
     @Override
-    @NotNull
-    public String process(@NotNull final String range) {
+    public @Nullable String tryProcess(@NotNull String range) {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {
-            return range;
+            return null;
         }
-
-        // Left unused variables for brevity.
-
-        String fullRange = matcher.group(0);
 
         int major = parseIntWithXSupport(matcher.group(1));
         int minor = parseIntWithXSupport(matcher.group(2));
         int path = parseIntWithXSupport(matcher.group(3));
         String preRelease = matcher.group(4);
-        String build = matcher.group(5);
 
         boolean minorIsX = isX(minor);
         boolean patchIsX = isX(path);
