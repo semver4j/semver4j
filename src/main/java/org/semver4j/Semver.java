@@ -23,36 +23,19 @@ public class Semver implements Comparable<Semver> {
     public static final Semver ZERO = new Semver("0.0.0");
 
     @NotNull
-    private final String originalVersion;
-
-    private final int major;
-    private final int minor;
-    private final int patch;
-    @NotNull
-    private final List<@NotNull String> preRelease;
-    @NotNull
-    private final List<@NotNull String> build;
+    private final Version parsedVersion;
 
     @NotNull
     private final String version;
 
     public Semver(@NotNull final String version) {
-        this.originalVersion = version.trim();
-
-        Version parsedVersion = StrictParser.parse(this.originalVersion);
-
-        major = parsedVersion.getMajor();
-        minor = parsedVersion.getMinor();
-        patch = parsedVersion.getPatch();
-        preRelease = parsedVersion.getPreRelease();
-        build = parsedVersion.getBuild();
-
+        this.parsedVersion = StrictParser.parse(version.trim());
         this.version = new Builder()
-                .withMajor(major)
-                .withMinor(minor)
-                .withPatch(patch)
-                .withPreReleases(preRelease)
-                .withBuilds(build)
+                .withMajor(getMajor())
+                .withMinor(getMinor())
+                .withPatch(getPatch())
+                .withPreReleases(getPreRelease())
+                .withBuilds(getBuild())
                 .toVersion();
     }
 
@@ -149,7 +132,7 @@ public class Semver implements Comparable<Semver> {
      * @return the major part of the version
      */
     public int getMajor() {
-        return major;
+        return parsedVersion.getMajor();
     }
 
     /**
@@ -159,7 +142,7 @@ public class Semver implements Comparable<Semver> {
      * @return the minor part of the version
      */
     public int getMinor() {
-        return minor;
+        return parsedVersion.getMinor();
     }
 
     /**
@@ -169,7 +152,7 @@ public class Semver implements Comparable<Semver> {
      * @return the patch part of the version
      */
     public int getPatch() {
-        return patch;
+        return parsedVersion.getPatch();
     }
 
     /**
@@ -180,7 +163,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public List<@NotNull String> getPreRelease() {
-        return preRelease;
+        return parsedVersion.getPreRelease();
     }
 
     /**
@@ -191,7 +174,7 @@ public class Semver implements Comparable<Semver> {
      */
     @NotNull
     public List<@NotNull String> getBuild() {
-        return build;
+        return parsedVersion.getBuild();
     }
 
     /**
@@ -202,7 +185,7 @@ public class Semver implements Comparable<Semver> {
      * @return true if the current version is stable
      */
     public boolean isStable() {
-        return major > 0 && preRelease.isEmpty();
+        return getMajor() > 0 && getPreRelease().isEmpty();
     }
 
     /**
@@ -586,12 +569,12 @@ public class Semver implements Comparable<Semver> {
             return false;
         }
         Semver semver = (Semver) o;
-        return Objects.equals(originalVersion, semver.originalVersion);
+        return Objects.equals(parsedVersion, semver.parsedVersion);
     }
 
     @Override
     public int hashCode() {
-        return hash(originalVersion);
+        return hash(parsedVersion);
     }
 
     @Override
