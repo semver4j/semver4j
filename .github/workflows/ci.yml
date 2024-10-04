@@ -2,16 +2,22 @@ name: CI
 
 on:
   push:
-    branches: [ '*' ]
+    branches:
+      - '*'
   pull_request:
-    branches: [ '*' ]
+    branches:
+      - '*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 8, 11, 17 ]
+        java:
+          - 8
+          - 11
+          - 17
+          - 21
     steps:
       - name: Check out code
         uses: actions/checkout@v4
