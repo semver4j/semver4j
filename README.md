@@ -9,42 +9,43 @@
 
 ---
 
-> ### This is an active copy of great [semver4j](https://github.com/vdurmont/semver4j) library created by [@vdurmont](https://github.com/vdurmont), which is no longer maintained 😭
+> ### This is an active copy of the great [semver4j](https://github.com/vdurmont/semver4j) library created by [@vdurmont](https://github.com/vdurmont), no longer maintained 😭
 
 ---
 
 **Semver4j** is a lightweight Java library that helps you to handle versions.
 It follows the rules of the [semantic versioning](http://semver.org) specification.
 
-It also provides several range checking support: [node-semver](https://github.com/npm/node-semver),
+It also provides support for several range checking: [node-semver](https://github.com/npm/node-semver),
 [CocoaPods](https://guides.cocoapods.org/using/the-podfile.html)
 and [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html).
 
 ## Table of Contents
 
 <!-- TOC -->
-
-* [Installation](#installation)
+* [Semver4j](#semver4j)
+  * [Table of Contents](#table-of-contents)
+  * [Installation](#installation)
     * [Using Maven](#using-maven)
     * [Using Gradle](#using-gradle)
-* [Usage](#usage)
+          * [Version `v1.0.x` references to original library version `v3.1.0` in source repository.](#version-v10x-references-to-original-library-version-v310-in-source-repository)
+  * [Usage](#usage)
     * [What is a version?](#what-is-a-version)
     * [The `Semver` object](#the-semver-object)
-        * [Using constructor](#using-constructor)
-        * [Using `Semver.parse()` method](#using-semverparse-method)
-        * [Using `Semver.coerce()` method](#using-semvercoerce-method)
+      * [Using constructor](#using-constructor)
+      * [Using `Semver.parse()` method](#using-semverparse-method)
+      * [Using `Semver.coerce()` method](#using-semvercoerce-method)
     * [Is the version stable?](#is-the-version-stable)
     * [Comparing the versions](#comparing-the-versions)
     * [Versions diffs](#versions-diffs)
     * [Ranges](#ranges)
-        * [External](#external)
-        * [Internal](#internal)
+      * [External](#external)
+      * [Internal](#internal)
     * [Modifying the version](#modifying-the-version)
     * [Builder](#builder)
     * [Formatting](#formatting)
-* [Contributing](#contributing)
-* [Thanks](#thanks)
-
+  * [Contributing](#contributing)
+  * [Thanks](#thanks)
 <!-- TOC -->
 
 ## Installation
@@ -54,7 +55,6 @@ Add the dependency to your project:
 ### Using Maven
 
 ```xml
-
 <dependency>
     <groupId>org.semver4j</groupId>
     <artifactId>semver4j</artifactId>
@@ -195,7 +195,7 @@ version.diff("1.2.3-beta.4+sha32iddfu987");  // BUILD
 
 If you want to check if a version satisfies a range, use the `satisfies()` method.
 
-`Semver4j` can interpret following range implementations:
+`Semver4j` can interpret the following range implementations:
 
 - [NPM](https://github.com/npm/node-semver)
     - [Primitive ranges](https://github.com/npm/node-semver#ranges) `<`, `<=`, `>`, `>=` and `=`
@@ -276,4 +276,3 @@ If you have any suggestion about new features, you can **open an issue**.
 ## Thanks
 
 Logo created by Tomek Babik [@tomekbbk](https://github.com/tomekbbk).
-
