@@ -77,7 +77,7 @@ public class Comparator {
     }
 
     private static int compareIdentifiers(@NotNull final String a, @NotNull final String b) {
-        // Only attempt to parse fully-numeric string sequences so that we can avoid
+        // Only attempt to parse fully numeric string sequences so that we can avoid
         // raising a costly exception
         if (a.matches(ALL_DIGITS) && b.matches(ALL_DIGITS)) {
             long aAsLong = Long.parseLong(a);
@@ -105,6 +105,9 @@ public class Comparator {
     private static Integer checkAlphanumericPrerelease(@NotNull final String a, @NotNull final String b) {
         String[] tokenArrA = a.split(TRAILING_DIGITS_EXTRACT);
         String[] tokenArrB = b.split(TRAILING_DIGITS_EXTRACT);
+        if (tokenArrA.length != tokenArrB.length) {
+            return tokenArrA.length - tokenArrB.length;
+        }
         if (tokenArrA[0].equals(tokenArrB[0])) {
             String[] leadingDigitsArrA = tokenArrA[1].split(LEADING_DIGITS_EXTRACT);
             String[] leadingDigitsArrB = tokenArrB[1].split(LEADING_DIGITS_EXTRACT);
