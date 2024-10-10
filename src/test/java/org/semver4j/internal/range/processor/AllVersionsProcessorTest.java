@@ -25,4 +25,18 @@ class AllVersionsProcessorTest {
                 arguments("INVALID", null)
         );
     }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldParseAllVersionsIncludePrerelease(String range, String expectedString) {
+        assertThat(allVersionsProcessor.includePrerelease().tryProcess(range)).isEqualTo(expectedString);
+    }
+
+    static Stream<Arguments> shouldParseAllVersionsIncludePrerelease() {
+        return Stream.of(
+                arguments("*", ">=0.0.0-0"),
+                arguments("", ">=0.0.0-0"),
+                arguments("INVALID", null)
+        );
+    }
 }

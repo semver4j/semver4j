@@ -30,4 +30,23 @@ class CaretProcessorTest {
                 arguments("INVALID", null)
         );
     }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldParseCaretRangeIncludePrerelease(String range, String expectedString) {
+        assertThat(processor.includePrerelease().tryProcess(range)).isEqualTo(expectedString);
+    }
+
+    static Stream<Arguments> shouldParseCaretRangeIncludePrerelease() {
+        return Stream.of(
+                arguments("^1", ">=1.0.0-0 <2.0.0-0"),
+                arguments("^1.1", ">=1.1.0-0 <2.0.0-0"),
+                arguments("^1.1.1", ">=1.1.1-0 <2.0.0-0"),
+                arguments("^0.1", ">=0.1.0-0 <0.2.0-0"),
+                arguments("^0.0.1", ">=0.0.1-0 <0.0.2-0"),
+                arguments("^1.0.0-alpha.1", ">=1.0.0-alpha.1 <2.0.0-0"),
+                arguments("^0.1.1-alpha.1", ">=0.1.1-alpha.1 <0.2.0-0"),
+                arguments("INVALID", null)
+        );
+    }
 }

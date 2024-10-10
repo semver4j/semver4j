@@ -39,4 +39,32 @@ class IvyProcessorTest {
                 arguments("INVALID", null)
         );
     }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldProcessIvyRangesIncludePrerelease(String range, String expected) {
+        assertThat(ivyProcessor.includePrerelease().tryProcess(range)).isEqualTo(expected);
+    }
+
+    static Stream<Arguments> shouldProcessIvyRangesIncludePrerelease() {
+        return Stream.of(
+                arguments("[1.0,2.0]", ">=1.0.0 <=2.0.0"),
+                arguments("[1.0,2.0[", ">=1.0.0 <2.0.0"),
+                arguments("]1.0,2.0]", ">1.0.0 <=2.0.0"),
+                arguments("]1.0,2.0[", ">1.0.0 <2.0.0"),
+                arguments("[1.0,)", ">=1.0.0"),
+                arguments("]1.0,)", ">1.0.0"),
+                arguments("(,2.0]", "<=2.0.0"),
+                arguments("(,2.0[", "<2.0.0"),
+                arguments("[1.0.1,2.0.1]", ">=1.0.1 <=2.0.1"),
+                arguments("]1.0.1,2.0.1]", ">1.0.1 <=2.0.1"),
+                arguments("[1.0.1,2.0.1[", ">=1.0.1 <2.0.1"),
+                arguments("]1.0.1,2.0.1[", ">1.0.1 <2.0.1"),
+                arguments("[1.0,2.0.1]", ">=1.0.0 <=2.0.1"),
+                arguments("[1.0.1,2.0]", ">=1.0.1 <=2.0.0"),
+                arguments("latest", ">=0.0.0-0"),
+                arguments("latest.integration", ">=0.0.0-0"),
+                arguments("INVALID", null)
+        );
+    }
 }

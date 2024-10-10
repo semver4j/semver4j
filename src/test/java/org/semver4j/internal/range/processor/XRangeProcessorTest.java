@@ -26,9 +26,35 @@ class XRangeProcessorTest {
                 arguments("<=1.2.X", "<1.3.0"),
                 arguments(">=1.2.X", ">=1.2.0"),
                 arguments(">=1.X.X", ">=1.0.0"),
+                arguments("<1.X.X", "<1.0.0"),
+                arguments("<1.2.X", "<1.2.0"),
                 arguments("1.X", ">=1.0.0 <2.0.0"),
                 arguments("1.2.X", ">=1.2.0 <1.3.0"),
                 arguments("=1.2.X", ">=1.2.0 <1.3.0"),
+                arguments(">=1.2.3 <2.0.0", ">=1.2.3 <2.0.0"),
+                arguments("INVALID", null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldParseXRangeIncludePrerelease(String range, String expectedString) {
+        assertThat(xRangeProcessor.includePrerelease().tryProcess(range)).isEqualTo(expectedString);
+    }
+
+    static Stream<Arguments> shouldParseXRangeIncludePrerelease() {
+        return Stream.of(
+                arguments(">1.X.X", ">=2.0.0-0"),
+                arguments(">1.2.X", ">=1.3.0-0"),
+                arguments("<=1.X.X", "<2.0.0-0"),
+                arguments("<=1.2.X", "<1.3.0-0"),
+                arguments(">=1.2.X", ">=1.2.0-0"),
+                arguments(">=1.X.X", ">=1.0.0-0"),
+                arguments("<1.X.X", "<1.0.0-0"),
+                arguments("<1.2.X", "<1.2.0-0"),
+                arguments("1.X", ">=1.0.0-0 <2.0.0-0"),
+                arguments("1.2.X", ">=1.2.0-0 <1.3.0-0"),
+                arguments("=1.2.X", ">=1.2.0-0 <1.3.0-0"),
                 arguments(">=1.2.3 <2.0.0", ">=1.2.3 <2.0.0"),
                 arguments("INVALID", null)
         );

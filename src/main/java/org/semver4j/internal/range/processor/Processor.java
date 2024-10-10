@@ -8,12 +8,25 @@ import org.jspecify.annotations.Nullable;
  * Processor for pipeline range translations.
  */
 @NullMarked
-public interface Processor {
+public abstract class Processor {
+    private boolean includePrerelease = false;
+
     @Deprecated
-    default String process(String range) {
+    public String process(String range) {
         return Optional.ofNullable(tryProcess(range)).orElse(range);
     }
 
     @Nullable
-    String tryProcess(String range);
+    public abstract String tryProcess(String range);
+
+    public Processor includePrerelease() {
+        this.includePrerelease = true;
+        return this;
+    }
+
+    boolean getIncludePrerelease() {
+        return this.includePrerelease;
+    }
+
+
 }

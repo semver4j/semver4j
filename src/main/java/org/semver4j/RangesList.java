@@ -45,6 +45,8 @@ public class RangesList {
 
     private final List<List<Range>> rangesList = new ArrayList<>();
 
+    private boolean includePrerelease = false;
+
     /**
      * Add ranges to ranges list.
      */
@@ -63,6 +65,16 @@ public class RangesList {
     }
 
     /**
+     * Configures the RangesList to include always include prereleases when evaluating range satisfacion.
+     * Returns the same RangesList.
+     */
+    @NotNull
+    public RangesList includePrerelease() {
+        this.includePrerelease = true;
+        return this;
+    }
+
+    /**
      * Check whether this ranges list is satisfied by any version.
      */
     public boolean isSatisfiedByAny() {
@@ -76,7 +88,7 @@ public class RangesList {
      */
     public boolean isSatisfiedBy(final Semver version) {
         return rangesList.stream()
-            .anyMatch(ranges -> isSingleSetOfRangesIsSatisfied(ranges, version));
+                .anyMatch(ranges -> isSingleSetOfRangesIsSatisfied(ranges, version));
     }
 
     @Override
@@ -99,14 +111,14 @@ public class RangesList {
         return format(Locale.ROOT, "(%s)", representation);
     }
 
-    private static boolean isSingleSetOfRangesIsSatisfied(final List<Range> ranges, final Semver version) {
+    private boolean isSingleSetOfRangesIsSatisfied(final List<Range> ranges, final Semver version) {
         for (Range range : ranges) {
             if (!range.isSatisfiedBy(version)) {
                 return false;
             }
         }
 
-        if (!version.getPreRelease().isEmpty()) {
+        if (!version.getPreRelease().isEmpty() && !this.includePrerelease) {
             for (Range range : ranges) {
                 Semver rangeSemver = range.getRangeVersion();
                 List<String> preRelease = rangeSemver.getPreRelease();

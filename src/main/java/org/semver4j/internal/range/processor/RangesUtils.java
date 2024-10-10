@@ -19,6 +19,9 @@ final class RangesUtils {
     static final String SPACE = " ";
     static final String ALL_RANGE = format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
 
+    @NotNull
+    static final String ALL_RANGE_WITH_PRERELEASE = format(Locale.ROOT, "%s%s%s", GTE.asString(), Semver.ZERO, Semver.LOWEST_PRERELEASE);
+
     private static final int X_RANGE_MARKER = -1;
 
     private RangesUtils() {

@@ -2,6 +2,7 @@ package org.semver4j.internal.range.processor;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
+import org.semver4j.Semver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  * <br>
  */
 @NullMarked
-public class XRangeProcessor implements Processor {
+public class XRangeProcessor extends Processor {
     private static final Pattern pattern = compile(XRANGE);
 
     @Override
@@ -40,6 +41,7 @@ public class XRangeProcessor implements Processor {
         List<String> objects = new ArrayList<>();
         for (String rangeVersion : rangeVersions) {
             Matcher matcher = pattern.matcher(rangeVersion);
+            String pr = this.getIncludePrerelease() ? Semver.LOWEST_PRERELEASE : "";
 
             if (matcher.matches()) {
                 String fullRange = matcher.group(0);
@@ -77,16 +79,16 @@ public class XRangeProcessor implements Processor {
                         minor = 0;
                     }
 
-                    String from = format(Locale.ROOT, "%s%d.%d.%d", compareSign, major, minor, patch);
+                    String from = format(Locale.ROOT, "%s%d.%d.%d%s", compareSign, major, minor, patch, pr);
                     objects.add(from);
                 } else if (isX(minor)) {
-                    String from = format(Locale.ROOT, "%s%d.0.0", GTE.asString(), major);
-                    String to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
+                    String from = format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), major, pr);
+                    String to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), pr);
                     objects.add(from);
                     objects.add(to);
                 } else if (isX(patch)) {
-                    String from = format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), major, minor);
-                    String to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
+                    String from = format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), major, minor, pr);
+                    String to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), pr);
                     objects.add(from);
                     objects.add(to);
                 } else {

@@ -8,7 +8,11 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public class RangesListFactory {
     public static RangesList create(final String range) {
-        return new RangesString().get(range);
+        return create(range, false);
+    }
+
+    public static RangesList create(final String range, boolean includePrerelease) {
+        return new RangesString().get(range, includePrerelease);
     }
 
     /**

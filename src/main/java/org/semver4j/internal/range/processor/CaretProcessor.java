@@ -2,6 +2,7 @@ package org.semver4j.internal.range.processor;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
+import org.semver4j.Semver;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -27,7 +28,7 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  * </ul>
  */
 @NullMarked
-public class CaretProcessor implements Processor {
+public class CaretProcessor extends Processor {
     private static final Pattern pattern = compile(CARET);
 
     @Override
@@ -48,43 +49,44 @@ public class CaretProcessor implements Processor {
 
         String from;
         String to;
+        String pr = this.getIncludePrerelease() ? Semver.LOWEST_PRERELEASE : "";
 
         if (minorIsX) {
-            from = format(Locale.ROOT, "%s%d.0.0", GTE.asString(), major);
-            to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
+            from = format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), major, pr);
+            to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), pr);
         } else if (patchIsX) {
             if (major == 0) {
-                from = format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), major, minor);
-                to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
+                from = format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), major, minor, pr);
+                to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), pr);
             } else {
-                from = format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), major, minor);
-                to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
+                from = format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), major, minor, pr);
+                to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), pr);
             }
         } else if (isNotBlank(preRelease)) {
             if (major == 0) {
                 if (minor == 0) {
                     from = format(Locale.ROOT, "%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
-                    to = format(Locale.ROOT, "%s%d.%d.%d", LT.asString(), major, minor, (path + 1));
+                    to = format(Locale.ROOT, "%s%d.%d.%d%s", LT.asString(), major, minor, (path + 1), pr);
                 } else {
                     from = format(Locale.ROOT, "%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
-                    to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
+                    to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), pr);
                 }
             } else {
                 from = format(Locale.ROOT, "%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
-                to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
+                to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), pr);
             }
         } else {
             if (major == 0) {
                 if (minor == 0) {
-                    from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
-                    to = format(Locale.ROOT, "%s%d.%d.%d", LT.asString(), major, minor, (path + 1));
+                    from = format(Locale.ROOT, "%s%d.%d.%d%s", GTE.asString(), major, minor, path, pr);
+                    to = format(Locale.ROOT, "%s%d.%d.%d%s", LT.asString(), major, minor, (path + 1), pr);
                 } else {
-                    from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
-                    to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
+                    from = format(Locale.ROOT, "%s%d.%d.%d%s", GTE.asString(), major, minor, path, pr);
+                    to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), pr);
                 }
             } else {
-                from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
-                to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
+                from = format(Locale.ROOT, "%s%d.%d.%d%s", GTE.asString(), major, minor, path, pr);
+                to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), pr);
             }
         }
 

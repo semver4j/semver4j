@@ -29,14 +29,21 @@ class RangesString {
             .addProcessor(new TildeProcessor())
             .addProcessor(new XRangeProcessor());
 
-    RangesList get(String range) {
-        RangesList rangesList = new RangesList();
+    private static final RangeProcessorPipeline rangeProcessorPipelineWithPrerelease = startWith(new AllVersionsProcessor())
+            .addProcessor(new IvyProcessor())
+            .addProcessor(new HyphenProcessor())
+            .addProcessor(new CaretProcessor())
+            .addProcessor(new TildeProcessor())
+            .addProcessor(new XRangeProcessor())
+            .includePrerelease();
 
+    RangesList get(String range, boolean includePrerelease) {
+        RangesList rangesList = new RangesList();
         range = range.trim();
         String[] rangeSections = range.split("\\|\\|");
         for (String rangeSection : rangeSections) {
             rangeSection = stripWhitespacesBetweenRangeOperator(rangeSection);
-            rangeSection = applyProcessors(rangeSection);
+            rangeSection = includePrerelease ? rangeProcessorPipelineWithPrerelease.process(rangeSection) : rangeProcessorPipeline.process(rangeSection);
 
             List<Range> ranges = addRanges(rangeSection);
             rangesList.add(ranges);
@@ -48,10 +55,6 @@ class RangesString {
     private static String stripWhitespacesBetweenRangeOperator(final String rangeSection) {
         Matcher matcher = splitterPattern.matcher(rangeSection);
         return matcher.replaceAll("$1$2").trim();
-    }
-
-    private static String applyProcessors(final String range) {
-        return rangeProcessorPipeline.process(range);
     }
 
     private static List<Range> addRanges(final String range) {
