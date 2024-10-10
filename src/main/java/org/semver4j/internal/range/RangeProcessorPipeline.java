@@ -19,6 +19,11 @@ public class RangeProcessorPipeline {
         return this;
     }
 
+    public RangeProcessorPipeline includePrerelease() {
+        processors.forEach(Processor::includePrerelease);
+        return this;
+    }
+
     @NotNull
     public String process(@NotNull final String range) {
         for (Processor processor : processors) {

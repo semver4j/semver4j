@@ -18,11 +18,11 @@ import static org.semver4j.Range.RangeOperator.GTE;
  *     <li>An empty string to {@code ≥0.0.0}</li>
  * </ul>
  */
-public class AllVersionsProcessor implements Processor {
+public class AllVersionsProcessor extends Processor {
     @Override
     public @Nullable String tryProcess(@NotNull String range) {
         if (range.equals("*") || range.isEmpty()) {
-            return format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
+            return this.getIncludePrerelease() ? RangesUtils.ALL_RANGE_WITH_PRERELEASE : RangesUtils.ALL_RANGE;
         }
         return null;
     }

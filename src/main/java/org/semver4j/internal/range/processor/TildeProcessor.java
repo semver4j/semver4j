@@ -2,6 +2,7 @@ package org.semver4j.internal.range.processor;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.semver4j.Semver;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -30,7 +31,7 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  *     <li>{@code ~0} to {@code ≥0.0.0 <1.0.0}</li>
  * </ul>
  */
-public class TildeProcessor implements Processor {
+public class TildeProcessor extends Processor {
     @NotNull
     private static final Pattern pattern = compile(TILDE);
 
@@ -49,19 +50,20 @@ public class TildeProcessor implements Processor {
 
         String from;
         String to;
+        String pr = this.getIncludePrerelease() ? Semver.LOWEST_PRERELEASE : "";
 
         if (isX(minor)) {
-            from = format(Locale.ROOT, "%s%d.0.0", GTE.asString(), major);
-            to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
+            from = format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), major, pr);
+            to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), pr);
         } else if (isX(path)) {
-            from = format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), major, minor);
-            to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
+            from = format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), major, minor, pr);
+            to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), pr);
         } else if (isNotBlank(preRelease)) {
             from = format(Locale.ROOT, "%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
-            to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
+            to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), pr);
         } else {
-            from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
-            to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
+            from = format(Locale.ROOT, "%s%d.%d.%d%s", GTE.asString(), major, minor, path, pr);
+            to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), pr);
         }
 
         return format(Locale.ROOT, "%s %s", from, to);

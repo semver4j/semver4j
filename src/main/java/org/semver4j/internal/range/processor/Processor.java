@@ -8,13 +8,26 @@ import java.util.Optional;
 /**
  * Processor for pipeline range translations.
  */
-public interface Processor {
+public abstract class Processor {
+    private boolean includePrerelease = false;
+
     @Deprecated
     @NotNull
-    default String process(@NotNull String range) {
+    public String process(@NotNull String range) {
         return Optional.ofNullable(tryProcess(range)).orElse(range);
     };
 
     @Nullable
-    String tryProcess(@NotNull String range);
+    public abstract String tryProcess(@NotNull String range);
+
+    public Processor includePrerelease() {
+        this.includePrerelease = true;
+        return this;
+    }
+
+    boolean getIncludePrerelease() {
+        return this.includePrerelease;
+    }
+
+
 }
