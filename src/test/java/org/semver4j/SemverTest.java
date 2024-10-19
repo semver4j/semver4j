@@ -888,20 +888,124 @@ class SemverTest {
         assertThat(lowerThan1).isEqualTo(lowerThan2);
     }
 
+
     @ParameterizedTest
-    @MethodSource("getParameters")
-    void shouldCheckSatisfies(String version, String range, boolean expected) {
+    @MethodSource({"getParametersNoIncludePrerelease", "getParametersCommon"})
+    void shouldCheckSatisfiesNoIncludePrerelease(String version, String range, boolean expected) {
         //given
         Semver semver = new Semver(version);
 
         //when
-        boolean satisfies = semver.satisfies(range);
+        boolean satisfies = semver.satisfies(range, false);
 
         //then
         assertThat(satisfies).isEqualTo(expected);
     }
 
-    static Stream<Arguments> getParameters() {
+    @ParameterizedTest
+    @MethodSource({"getParametersIncludePrerelease", "getParametersCommon"})
+    void shouldCheckSatisfiesIncludePrerelease(String version, String range, boolean expected) {
+        //given
+        Semver semver = new Semver(version);
+
+        //when
+        boolean satisfies = semver.satisfies(range, true);
+
+        //then
+        assertThat(satisfies).isEqualTo(expected);
+    }
+
+    static Stream<Arguments> getParametersNoIncludePrerelease() {
+        return Stream.of(
+                // Minor versions:
+                arguments("1.0.0-beta", "1.0", false),
+
+                // Major versions:
+                arguments("1.0.0-beta", "1", false),
+
+                // Hyphen ranges:
+                arguments("1.2.4-beta+exp.sha.5114f85", "1.2.3 - 2.3.4", false),
+                arguments("1.2.4-beta+exp.sha.5114f85", "1.2.3-beta - 2.3.4", false),
+
+                // Wildcard ranges:
+                arguments("1.0.0-beta", "*", false),
+                arguments("3.1.5-beta", "3.1.x", false),
+                arguments("3.1.5-beta+exp.sha.5114f85", "3.1.x", false),
+
+                // Tilde ranges
+                arguments("1.2.4-beta", "~1.2.3", false),
+                arguments("1.2.3-beta", "~1.2.3", false),
+                arguments("1.2.4-beta+exp.sha.5114f85", "~1.2.3", false),
+                arguments("1.2.7-beta", "~1.2", false),
+                arguments("1.2.3-beta", "~1.2", false),
+                arguments("1.2.7-beta", "~1", false),
+                arguments("1.2.3-beta", "~1", false),
+
+                // Caret ranges
+                arguments("1.5.4-beta", "^1.2.3", false),
+                arguments("0.2.4-beta", "^0.2.3", false),
+                arguments("0.0.3-beta", "^0.0.3", false),
+                arguments("0.0.0-beta", "^0.0.0", false),
+
+                // Comparators
+                arguments("3.3.1-alpha", ">=2.4.x", false),
+                arguments("3.3.1-alpha", ">=3.3.x", false),
+                arguments("3.0.0-alpha", "<3.0.0", false),
+
+                // AND ranges
+                arguments("2.0.1-alpha", ">2.0.0 <3.0.0", false),
+
+                //Complex ranges
+                arguments("2.3.4-alpha", "1.x || ^2", false)
+        );
+    }
+
+    static Stream<Arguments> getParametersIncludePrerelease() {
+            return Stream.of(
+                    // Minor versions:
+                    arguments("1.0.0-beta", "1.0", true),
+
+                    // Major versions:
+                    arguments("1.0.0-beta", "1", true),
+
+                    // Hyphen ranges:
+                    arguments("1.2.4-beta+exp.sha.5114f85", "1.2.3 - 2.3.4", true),
+                    arguments("1.2.4-beta+exp.sha.5114f85", "1.2.3-beta - 2.3.4", true),
+
+                    // Wildcard ranges:
+                    arguments("1.0.0-beta", "*", true),
+                    arguments("3.1.5-beta", "3.1.x", true),
+                    arguments("3.1.5-beta+exp.sha.5114f85", "3.1.x", true),
+
+                    // Tilde ranges
+                    arguments("1.2.4-beta", "~1.2.3", true),
+                    arguments("1.2.3-beta", "~1.2.3", true),
+                    arguments("1.2.4-beta+exp.sha.5114f85", "~1.2.3", true),
+                    arguments("1.2.7-beta", "~1.2", true),
+                    arguments("1.2.3-beta", "~1.2", true),
+                    arguments("1.2.7-beta", "~1", true),
+                    arguments("1.2.3-beta", "~1", true),
+
+                    // Caret ranges
+                    arguments("1.5.4-beta", "^1.2.3", true),
+                    arguments("0.2.4-beta", "^0.2.3", true),
+                    arguments("0.0.3-beta", "^0.0.3", true),
+                    arguments("0.0.0-beta", "^0.0.0", true),
+
+                    // Comparators
+                    arguments("3.3.1-alpha", ">=2.4.x", true),
+                    arguments("3.3.1-alpha", ">=3.3.x", true),
+                    arguments("3.0.0-alpha", "<3.0.0", true),
+
+                    // AND ranges
+                    arguments("2.0.1-alpha", ">2.0.0 <3.0.0", true),
+
+                    //Complex ranges
+                    arguments("2.3.4-alpha", "1.x || ^2", true)
+            );
+    }
+
+    static Stream<Arguments> getParametersCommon() {
         return Stream.of(
                 // Fully-qualified versions:
                 arguments("1.0.0", "1.0.0", true),
@@ -919,11 +1023,9 @@ class SemverTest {
                 arguments("1.2.4", "2", false),
 
                 // Hyphen ranges:
-                arguments("1.2.4-beta+exp.sha.5114f85", "1.2.3 - 2.3.4", false),
                 arguments("1.2.4", "1.2.3 - 2.3.4", true),
                 arguments("1.2.3", "1.2.3 - 2.3.4", true),
                 arguments("2.3.4", "1.2.3 - 2.3.4", true),
-                arguments("2.3.0-alpha", "1.2.3 - 2.3.0-beta", true),
                 arguments("2.3.4", "1.2.3 - 2.3", true),
                 arguments("2.3.4", "1.2.3 - 2", true),
                 arguments("4.4.0", "3.X - 4.X", true),
@@ -937,9 +1039,6 @@ class SemverTest {
                 arguments("3.1.5", "", true),
                 arguments("3.1.5", "*", true),
                 arguments("0.0.0", "*", true),
-                arguments("1.0.0-beta", "*", false),
-                arguments("3.1.5-beta", "3.1.x", false),
-                arguments("3.1.5-beta+exp.sha.5114f85", "3.1.x", false),
                 arguments("3.1.5+exp.sha.5114f85", "3.1.x", true),
                 arguments("3.1.5", "3.1.x", true),
                 arguments("3.1.5", "3.1.X", true),
@@ -957,8 +1056,6 @@ class SemverTest {
                 arguments("2.0.0", "3", false),
 
                 // Tilde ranges:
-                arguments("1.2.4-beta", "~1.2.3", false),
-                arguments("1.2.4-beta+exp.sha.5114f85", "~1.2.3", false),
                 arguments("1.2.3", "~1.2.3", true),
                 arguments("1.2.7", "~1.2.3", true),
                 arguments("1.2.2", "~1.2", true),
@@ -1043,7 +1140,6 @@ class SemverTest {
                 arguments("1.9.9", ">=2.0.0", false),
                 arguments("1.9.9", ">=2.0", false),
                 arguments("1.9.9", ">=2", false),
-                arguments("3.3.1-alpha", ">=2.4.x", false),
 
                 arguments("3.3.1", ">=2.4.x", true),
                 arguments("1.9.9", "<=2.0.0", true),
@@ -1060,6 +1156,8 @@ class SemverTest {
                 arguments("3.0.0", "<=2.0.0", false),
                 arguments("3.0.0", "<=2.0", false),
                 arguments("3.0.0", "<=2", false),
+
+                arguments("3.0.0-alpha", ">3.0.0", false),
 
                 // AND ranges:
                 arguments("2.0.1", ">2.0.0 <3.0.0", true),
@@ -1170,8 +1268,7 @@ class SemverTest {
                 arguments("1.3.0", "1.+", true),
                 arguments("1.2.90", "1.+", true),
 
-                arguments("0.0.0", "latest.integration", true)
-        );
+                arguments("0.0.0", "latest.integration", true));
     }
 
     @Test
