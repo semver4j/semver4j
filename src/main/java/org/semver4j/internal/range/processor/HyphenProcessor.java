@@ -1,6 +1,5 @@
 package org.semver4j.internal.range.processor;
 
-import com.google.common.base.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.semver4j.Semver;
