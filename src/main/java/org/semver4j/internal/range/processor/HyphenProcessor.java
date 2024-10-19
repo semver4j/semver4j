@@ -1,6 +1,5 @@
 package org.semver4j.internal.range.processor;
 
-import com.google.common.base.Strings;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.semver4j.Semver;
@@ -11,9 +10,7 @@ import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
-import static org.semver4j.Range.RangeOperator.GTE;
-import static org.semver4j.Range.RangeOperator.LT;
-import static org.semver4j.Range.RangeOperator.LTE;
+import static org.semver4j.Range.RangeOperator.*;
 import static org.semver4j.internal.Tokenizers.HYPHEN;
 import static org.semver4j.internal.range.processor.RangesUtils.*;
 
@@ -89,7 +86,7 @@ public class HyphenProcessor extends Processor {
             if (patchIsX) {
                 return format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), toMajor, (toMinor + 1), pr);
             } else {
-                if(!isNotBlank(preRelease)) {
+                if (!isNotBlank(preRelease)) {
                     return format(Locale.ROOT, "%s%d.%d.%d%s", LT.asString(), toMajor, toMinor, (toPatch + 1), pr);
                 } else {
                     return format(Locale.ROOT, "%s%d.%d.%d%s", LTE.asString(), toMajor, toMinor, toPatch, "-" + preRelease);
