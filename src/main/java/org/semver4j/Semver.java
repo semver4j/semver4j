@@ -2,8 +2,8 @@ package org.semver4j;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
-import org.semver4j.internal.Comparator;
 import org.semver4j.internal.*;
+import org.semver4j.internal.Comparator;
 import org.semver4j.internal.StrictParser.Version;
 
 import java.util.*;
@@ -522,7 +522,7 @@ public class Semver implements Comparable<Semver> {
 
     public boolean satisfies(final String range, boolean includePrerelease) {
         RangesList rangesList = RangesListFactory.create(range, includePrerelease);
-        if(includePrerelease) {
+        if (includePrerelease) {
             rangesList.includePrerelease();
         }
         return satisfies(rangesList);

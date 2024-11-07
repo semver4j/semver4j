@@ -45,7 +45,7 @@ public class RangesList {
 
     private final List<List<Range>> rangesList = new ArrayList<>();
 
-    private boolean includePrerelease = false;
+    private boolean includePrerelease;
 
     /**
      * Add ranges to ranges list.

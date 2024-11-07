@@ -9,7 +9,7 @@ import org.jspecify.annotations.Nullable;
  */
 @NullMarked
 public abstract class Processor {
-    private boolean includePrerelease = false;
+    private boolean includePrerelease;
 
     @Deprecated
     public String process(String range) {
