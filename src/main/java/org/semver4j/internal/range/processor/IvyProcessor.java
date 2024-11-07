@@ -34,6 +34,12 @@ import static org.semver4j.internal.range.processor.RangesUtils.*;
  *     <li>{@code latest} to {@code ≥0.0.0}</li>
  *     <li>{@code latest.integration} to {@code ≥0.0.0}</li>
  * </ul>
+ *
+ * If the prerelease flag is set to true, translate the same as if the flag is not set, except for the following:
+ * <ul>
+ *     <li>{@code latest} to {@code ≥0.0.0-0}</li>
+ *     <li>{@code latest.integration} to {@code ≥0.0.0-0}</li>
+ * </ul>
  */
 @NullMarked
 public class IvyProcessor extends Processor {

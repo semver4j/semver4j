@@ -11,6 +11,12 @@ import org.jspecify.annotations.Nullable;
  *     <li>{@code *} to {@code ≥0.0.0}</li>
  *     <li>An empty string to {@code ≥0.0.0}</li>
  * </ul>
+ *
+ * If the prerelease flag is set to true, will translate:
+ * <ul>
+ *     <li>{@code *} to {@code ≥0.0.0-0}</li>
+ *     <li>An empty string to {@code ≥0.0.0-0}</li>
+ * </ul>
  */
 @NullMarked
 public class AllVersionsProcessor extends Processor {

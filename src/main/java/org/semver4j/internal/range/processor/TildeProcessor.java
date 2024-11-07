@@ -30,6 +30,16 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  *     <li>{@code ~0.2} to {@code ≥0.2.0 <0.3.0}</li>
  *     <li>{@code ~0} to {@code ≥0.0.0 <1.0.0}</li>
  * </ul>
+ *
+ * If the prerelease flag is set to true, translates:
+ * <ul>
+ *     <li>{@code ~1.2.3} to {@code ≥1.2.3 <1.3.0-0}</li>
+ *     <li>{@code ~1.2} to {@code ≥1.2.0-0 <1.3.0-0}</li>
+ *     <li>{@code ~1} to {@code ≥1.0.0-0 <2.0.0-0}</li>
+ *     <li>{@code ~0.2.3} to {@code ≥0.2.3 <0.3.0-0}</li>
+ *     <li>{@code ~0.2} to {@code ≥0.2.0-0 <0.3.0-0}</li>
+ *     <li>{@code ~0} to {@code ≥0.0.0-0 <1.0.0-0}</li>
+ * </ul>
  */
 @NullMarked
 public class TildeProcessor extends Processor {
