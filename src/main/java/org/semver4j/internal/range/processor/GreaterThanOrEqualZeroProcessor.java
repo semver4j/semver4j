@@ -20,7 +20,7 @@ import static org.semver4j.Range.RangeOperator.GTE;
  * @deprecated behavior has been split off into {@link AllVersionsProcessor} and {@link IvyProcessor}
  */
 @Deprecated
-public class GreaterThanOrEqualZeroProcessor implements Processor {
+public class GreaterThanOrEqualZeroProcessor extends Processor {
     @Override
     public @Nullable String tryProcess(@NotNull String range) {
         if (range.equals("latest") || range.equals("latest.integration") || range.equals("*") || range.isEmpty()) {
