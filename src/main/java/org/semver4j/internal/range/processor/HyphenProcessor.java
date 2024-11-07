@@ -87,7 +87,7 @@ public class HyphenProcessor extends Processor {
             if (patchIsX) {
                 return format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), toMajor, (toMinor + 1), pr);
             } else {
-                if(!isNotBlank(preRelease)) {
+                if (!isNotBlank(preRelease)) {
                     return format(Locale.ROOT, "%s%d.%d.%d%s", LT.asString(), toMajor, toMinor, (toPatch + 1), pr);
                 } else {
                     return format(Locale.ROOT, "%s%d.%d.%d%s", LTE.asString(), toMajor, toMinor, toPatch, "-" + preRelease);

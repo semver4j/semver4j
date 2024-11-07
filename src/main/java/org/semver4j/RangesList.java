@@ -48,7 +48,7 @@ public class RangesList {
     @NotNull
     private final List<@NotNull List<@NotNull Range>> rangesList = new ArrayList<>();
 
-    private boolean includePrerelease = false;
+    private boolean includePrerelease;
 
     /**
      * Add ranges to ranges list.

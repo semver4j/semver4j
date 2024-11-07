@@ -9,7 +9,7 @@ import java.util.Optional;
  * Processor for pipeline range translations.
  */
 public abstract class Processor {
-    private boolean includePrerelease = false;
+    private boolean includePrerelease;
 
     @Deprecated
     @NotNull
