@@ -36,7 +36,7 @@ class TildeProcessorTest {
 
     static Stream<Arguments> shouldParseTildeRangeIncludePrerelease() {
         return Stream.of(
-                arguments("~1.2.3", ">=1.2.3-0 <1.3.0-0"),
+                arguments("~1.2.3", ">=1.2.3 <1.3.0-0"),
                 arguments("~1.2", ">=1.2.0-0 <1.3.0-0"),
                 arguments("~1", ">=1.0.0-0 <2.0.0-0"),
                 arguments("~1.2.3-alpha", ">=1.2.3-alpha <1.3.0-0"),
