@@ -989,7 +989,7 @@ class SemverTest {
 
                     // Tilde ranges
                     arguments("1.2.4-beta", "~1.2.3", true),
-                    arguments("1.2.3-beta", "~1.2.3", true),
+                    arguments("1.2.3-beta", "~1.2.3", false),
                     arguments("1.2.4-beta+exp.sha.5114f85", "~1.2.3", true),
                     arguments("1.2.7-beta", "~1.2", true),
                     arguments("1.2.3-beta", "~1.2", true),
@@ -999,8 +999,8 @@ class SemverTest {
                     // Caret ranges
                     arguments("1.5.4-beta", "^1.2.3", true),
                     arguments("0.2.4-beta", "^0.2.3", true),
-                    arguments("0.0.3-beta", "^0.0.3", true),
-                    arguments("0.0.0-beta", "^0.0.0", true),
+                    arguments("0.0.3-beta", "^0.0.3", false),
+                    arguments("0.0.0-beta", "^0.0.0", false),
 
                     // Comparators
                     arguments("3.3.1-alpha", ">=2.4.x", true),

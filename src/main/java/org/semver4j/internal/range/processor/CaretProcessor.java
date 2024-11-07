@@ -78,14 +78,14 @@ public class CaretProcessor extends Processor {
         } else {
             if (major == 0) {
                 if (minor == 0) {
-                    from = format(Locale.ROOT, "%s%d.%d.%d%s", GTE.asString(), major, minor, path, pr);
+                    from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
                     to = format(Locale.ROOT, "%s%d.%d.%d%s", LT.asString(), major, minor, (path + 1), pr);
                 } else {
-                    from = format(Locale.ROOT, "%s%d.%d.%d%s", GTE.asString(), major, minor, path, pr);
+                    from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
                     to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), pr);
                 }
             } else {
-                from = format(Locale.ROOT, "%s%d.%d.%d%s", GTE.asString(), major, minor, path, pr);
+                from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
                 to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), pr);
             }
         }

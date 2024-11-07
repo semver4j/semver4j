@@ -63,7 +63,7 @@ public class TildeProcessor extends Processor {
             from = format(Locale.ROOT, "%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
             to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), pr);
         } else {
-            from = format(Locale.ROOT, "%s%d.%d.%d%s", GTE.asString(), major, minor, path, pr);
+            from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
             to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), pr);
         }
 
