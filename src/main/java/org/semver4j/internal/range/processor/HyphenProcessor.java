@@ -29,7 +29,7 @@ import static org.semver4j.internal.range.processor.RangesUtils.*;
  * If the prerelease flag is set to true, will translate:
  * <ul>
  *     <li>{@code 1.2.3 - 2.3.4} to {@code ≥1.2.3 <2.3.5-0}</li>
- *     <li>{@code 1.2 - 2.3.4} to {@code ≥1.2.0 <2.3.5-0}</li>
+ *     <li>{@code 1.2 - 2.3.4} to {@code ≥1.2.0-0 <2.3.5-0}</li>
  *     <li>{@code 1.2.3 - 2.3} to {@code ≥1.2.3 <2.4.0-0}</li>
  *     <li>{@code 1.2.3 - 2} to {@code ≥1.2.3 <3.0.0-0}</li>
  * </ul>
@@ -61,14 +61,16 @@ public class HyphenProcessor extends Processor {
         int fromMinor = parseIntWithXSupport(matcher.group(3));
         int fromPatch = parseIntWithXSupport(matcher.group(4));
 
+        String pr = this.getIncludePrerelease() ? Semver.LOWEST_PRERELEASE : "";
+
         boolean minorIsX = isX(fromMinor);
         boolean patchIsX = isX(fromPatch);
 
         if (minorIsX) {
-            return format(Locale.ROOT, "%s%d.0.0", GTE.asString(), fromMajor);
+            return format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), fromMajor, pr);
         } else {
             if (patchIsX) {
-                return format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), fromMajor, fromMinor);
+                return format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), fromMajor, fromMinor, pr);
             } else {
                 return format(Locale.ROOT, "%s%s", GTE.asString(), from);
             }
