@@ -1,7 +1,7 @@
 package org.semver4j.internal;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Optional;
@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
 
+@NullMarked
 public class Coerce {
-    @NotNull
     private static final Pattern PATTERN = compile(
         "(^|\\D)(\\d{1,16})(?:\\.(\\d{1,16}))?(?:\\.(\\d{1,16}))?(?:$|\\D)"
     );
@@ -20,8 +20,7 @@ public class Coerce {
     private Coerce() {
     }
 
-    @Nullable
-    public static String coerce(@NotNull final String version) {
+    public static @Nullable String coerce(final String version) {
         Matcher matcher = PATTERN.matcher(version);
 
         if (matcher.find()) {

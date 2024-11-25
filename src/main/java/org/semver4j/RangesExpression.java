@@ -1,9 +1,8 @@
 package org.semver4j;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.jspecify.annotations.NullMarked;
 
 import static org.semver4j.Range.RangeOperator.*;
 
@@ -25,29 +24,26 @@ import static org.semver4j.Range.RangeOperator.*;
  *
  * @since 4.2.0
  */
+@NullMarked
 @SuppressWarnings("checkstyle:DeclarationOrder")
 public class RangesExpression {
-    @NotNull
     private final RangesList rangesList = new RangesList();
 
-    @NotNull
-    private final List<@NotNull Range> andOperationRanges = new ArrayList<>();
+    private final List<Range> andOperationRanges = new ArrayList<>();
 
     /**
      * Expression for equal range item.
      *
      * @param version should be a valid semver string
      */
-    @NotNull
-    public static RangesExpression equal(@NotNull final String version) {
+    public static RangesExpression equal(final String version) {
         return equal(new Semver(version));
     }
 
     /**
      * Expression for equal range item.
      */
-    @NotNull
-    public static RangesExpression equal(@NotNull final Semver version) {
+    public static RangesExpression equal(final Semver version) {
         return new RangesExpression(new Range(version, EQ));
     }
 
@@ -56,16 +52,14 @@ public class RangesExpression {
      *
      * @param version should be a valid semver string
      */
-    @NotNull
-    public static RangesExpression greater(@NotNull final String version) {
+    public static RangesExpression greater(final String version) {
         return greater(new Semver(version));
     }
 
     /**
      * Expression for greater range item.
      */
-    @NotNull
-    public static RangesExpression greater(@NotNull final Semver version) {
+    public static RangesExpression greater(final Semver version) {
         return new RangesExpression(new Range(version, GT));
     }
 
@@ -74,16 +68,14 @@ public class RangesExpression {
      *
      * @param version should be a valid semver string
      */
-    @NotNull
-    public static RangesExpression greaterOrEqual(@NotNull final String version) {
+    public static RangesExpression greaterOrEqual(final String version) {
         return greaterOrEqual(new Semver(version));
     }
 
     /**
      * Expression for greater or equal range item.
      */
-    @NotNull
-    public static RangesExpression greaterOrEqual(@NotNull final Semver version) {
+    public static RangesExpression greaterOrEqual(final Semver version) {
         return new RangesExpression(new Range(version, GTE));
     }
 
@@ -92,16 +84,14 @@ public class RangesExpression {
      *
      * @param version should be a valid semver string
      */
-    @NotNull
-    public static RangesExpression less(@NotNull final String version) {
+    public static RangesExpression less(final String version) {
         return less(new Semver(version));
     }
 
     /**
      * Expression for lee range item.
      */
-    @NotNull
-    public static RangesExpression less(@NotNull final Semver version) {
+    public static RangesExpression less(final Semver version) {
         return new RangesExpression(new Range(version, LT));
     }
 
@@ -110,28 +100,25 @@ public class RangesExpression {
      *
      * @param version should be a valid semver string
      */
-    @NotNull
-    public static RangesExpression lessOrEqual(@NotNull final String version) {
+    public static RangesExpression lessOrEqual(final String version) {
         return lessOrEqual(new Semver(version));
     }
 
     /**
      * Expression for less or equal range item.
      */
-    @NotNull
-    public static RangesExpression lessOrEqual(@NotNull final Semver version) {
+    public static RangesExpression lessOrEqual(final Semver version) {
         return new RangesExpression(new Range(version, LTE));
     }
 
-    RangesExpression(@NotNull final Range range) {
+    RangesExpression(final Range range) {
         andOperationRanges.add(range);
     }
 
     /**
      * Allows to join ranges using {@code AND} operator.
      */
-    @NotNull
-    public RangesExpression and(@NotNull final RangesExpression rangeExpression) {
+    public RangesExpression and(final RangesExpression rangeExpression) {
         RangesList rangesList = rangeExpression.get();
         List<List<Range>> lists = rangesList.get();
         for (List<Range> list : lists) {
@@ -146,13 +133,11 @@ public class RangesExpression {
     /**
      * Allows to join ranges using {@code OR} operator.
      */
-    @NotNull
-    public RangesExpression or(@NotNull final RangesExpression rangeExpression) {
+    public RangesExpression or(final RangesExpression rangeExpression) {
         flushAndClearAndOperationRangesToRangesList();
         return and(rangeExpression);
     }
 
-    @NotNull
     RangesList get() {
         if (!andOperationRanges.isEmpty()) {
             flushAndClearAndOperationRangesToRangesList();
