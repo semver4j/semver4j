@@ -1,7 +1,7 @@
 package org.semver4j.internal.range.processor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -28,12 +28,12 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  *     <li>{@code 1.2.3 - 2} to {@code ≥1.2.3 <3.0.0}</li>
  * </ul>
  */
+@NullMarked
 public class HyphenProcessor implements Processor {
-    @NotNull
     private static final Pattern pattern = compile(HYPHEN);
 
     @Override
-    public @Nullable String tryProcess(@NotNull String range) {
+    public @Nullable String tryProcess(String range) {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {
@@ -46,8 +46,7 @@ public class HyphenProcessor implements Processor {
         return format(Locale.ROOT, "%s %s", rangeFrom, rangeTo);
     }
 
-    @NotNull
-    private String getRangeFrom(@NotNull final Matcher matcher) {
+    private String getRangeFrom(final Matcher matcher) {
         String from = matcher.group(1);
 
         int fromMajor = parseIntWithXSupport(matcher.group(2));
@@ -68,8 +67,7 @@ public class HyphenProcessor implements Processor {
         }
     }
 
-    @NotNull
-    private String getRangeTo(@NotNull final Matcher matcher) {
+    private String getRangeTo(final Matcher matcher) {
         String to = matcher.group(7);
 
         int toMajor = parseIntWithXSupport(matcher.group(8));

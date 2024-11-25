@@ -1,6 +1,6 @@
 package org.semver4j;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 import org.semver4j.internal.range.RangeProcessorPipeline;
 import org.semver4j.internal.range.processor.AllVersionsProcessor;
 import org.semver4j.internal.range.processor.CaretProcessor;
@@ -18,12 +18,10 @@ import static java.util.regex.Pattern.compile;
 import static org.semver4j.internal.Tokenizers.COMPARATOR;
 import static org.semver4j.internal.range.RangeProcessorPipeline.startWith;
 
+@NullMarked
 class RangesString {
-    @NotNull
     private static final Pattern splitterPattern = compile("(\\s*)([<>]?=?)\\s*");
-    @NotNull
     private static final Pattern comparatorPattern = compile(COMPARATOR);
-    @NotNull
     private static final RangeProcessorPipeline rangeProcessorPipeline = startWith(new AllVersionsProcessor())
             .addProcessor(new IvyProcessor())
             .addProcessor(new HyphenProcessor())
@@ -31,8 +29,7 @@ class RangesString {
             .addProcessor(new TildeProcessor())
             .addProcessor(new XRangeProcessor());
 
-    @NotNull
-    RangesList get(@NotNull String range) {
+    RangesList get(String range) {
         RangesList rangesList = new RangesList();
 
         range = range.trim();
@@ -48,19 +45,16 @@ class RangesString {
         return rangesList;
     }
 
-    @NotNull
-    private static String stripWhitespacesBetweenRangeOperator(@NotNull final String rangeSection) {
+    private static String stripWhitespacesBetweenRangeOperator(final String rangeSection) {
         Matcher matcher = splitterPattern.matcher(rangeSection);
         return matcher.replaceAll("$1$2").trim();
     }
 
-    @NotNull
-    private static String applyProcessors(@NotNull final String range) {
+    private static String applyProcessors(final String range) {
         return rangeProcessorPipeline.process(range);
     }
 
-    @NotNull
-    private static List<@NotNull Range> addRanges(@NotNull final String range) {
+    private static List<Range> addRanges(final String range) {
         List<Range> ranges = new ArrayList<>();
 
         String[] parsedRanges = range.split("\\s+");

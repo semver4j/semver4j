@@ -1,7 +1,7 @@
 package org.semver4j.internal.range.processor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.semver4j.Semver;
 
 import java.util.Locale;
@@ -13,12 +13,10 @@ import static org.semver4j.Range.RangeOperator.GTE;
 /**
  * Set of methods which helps ranges handling.
  */
+@NullMarked
 final class RangesUtils {
-    @NotNull
     static final String EMPTY = "";
-    @NotNull
     static final String SPACE = " ";
-    @NotNull
     static final String ALL_RANGE = format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
 
     private static final int X_RANGE_MARKER = -1;
@@ -26,7 +24,7 @@ final class RangesUtils {
     private RangesUtils() {
     }
 
-    static int parseIntWithXSupport(@Nullable final String id) {
+    static int parseIntWithXSupport(final @Nullable String id) {
         if (id == null || id.equalsIgnoreCase("x") || id.equals("*") || id.equals("+")) {
             return X_RANGE_MARKER;
         }
@@ -37,7 +35,7 @@ final class RangesUtils {
         return id == X_RANGE_MARKER;
     }
 
-    static boolean isNotBlank(@Nullable final String id) {
+    static boolean isNotBlank(final @Nullable String id) {
         return id != null && !id.isEmpty();
     }
 }
