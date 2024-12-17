@@ -23,6 +23,9 @@ public class Semver implements Comparable<Semver> {
     public static final Semver ZERO = new Semver("0.0.0");
 
     @NotNull
+    public static final String LOWEST_PRERELEASE = "-0";
+
+    @NotNull
     private final String originalVersion;
 
     private final int major;
@@ -531,7 +534,7 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Check if the version satisfies a range.
+     * Check if the version satisfies a range. Defaults to not including prereleases.
      *
      * @param range range
      * @return {@code true} if the version satisfies the range, {@code false} otherwise
@@ -539,7 +542,14 @@ public class Semver implements Comparable<Semver> {
      * @see #satisfies(RangesExpression)
      */
     public boolean satisfies(@NotNull final String range) {
-        RangesList rangesList = RangesListFactory.create(range);
+        return satisfies(range, false);
+    }
+
+    public boolean satisfies(@NotNull final String range, boolean includePrerelease) {
+        RangesList rangesList = RangesListFactory.create(range, includePrerelease);
+        if (includePrerelease) {
+            rangesList.includePrerelease();
+        }
         return satisfies(rangesList);
     }
 

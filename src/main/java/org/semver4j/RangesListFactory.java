@@ -10,7 +10,12 @@ import static org.jetbrains.annotations.ApiStatus.AvailableSince;
 public class RangesListFactory {
     @NotNull
     public static RangesList create(@NotNull final String range) {
-        return new RangesString().get(range);
+        return create(range, false);
+    }
+
+    @NotNull
+    public static RangesList create(@NotNull final String range, boolean includePrerelease) {
+        return new RangesString().get(range, includePrerelease);
     }
 
     /**
