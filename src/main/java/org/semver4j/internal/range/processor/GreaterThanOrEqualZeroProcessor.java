@@ -23,7 +23,8 @@ import static org.semver4j.Range.RangeOperator.GTE;
 @Deprecated
 public class GreaterThanOrEqualZeroProcessor implements Processor {
     @Override
-    public @Nullable String tryProcess(String range) {
+    @Nullable
+    public String tryProcess(String range) {
         if (range.equals("latest") || range.equals("latest.integration") || range.equals("*") || range.isEmpty()) {
             return format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
         }

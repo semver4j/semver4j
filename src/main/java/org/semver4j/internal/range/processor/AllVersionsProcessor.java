@@ -21,7 +21,8 @@ import static org.semver4j.Range.RangeOperator.GTE;
 @NullMarked
 public class AllVersionsProcessor implements Processor {
     @Override
-    public @Nullable String tryProcess(String range) {
+    @Nullable
+    public String tryProcess(String range) {
         if (range.equals("*") || range.isEmpty()) {
             return format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
         }

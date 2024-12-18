@@ -35,7 +35,8 @@ public class TildeProcessor implements Processor {
     private static final Pattern pattern = compile(TILDE);
 
     @Override
-    public @Nullable String tryProcess(String range) {
+    @Nullable
+    public String tryProcess(String range) {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {

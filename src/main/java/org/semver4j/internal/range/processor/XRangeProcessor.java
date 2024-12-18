@@ -33,7 +33,8 @@ public class XRangeProcessor implements Processor {
     private static final Pattern pattern = compile(XRANGE);
 
     @Override
-    public @Nullable String tryProcess(String range) {
+    @Nullable
+    public String tryProcess(String range) {
         String[] rangeVersions = range.split("\\s+");
 
         List<String> objects = new ArrayList<>();

@@ -45,7 +45,8 @@ public class IvyProcessor implements Processor {
     private static final Pattern PATTERN = compile(IVY);
 
     @Override
-    public @Nullable String tryProcess(String range) {
+    @Nullable
+    public String tryProcess(String range) {
         if (range.equals(LATEST) || range.equals(LATEST_INTEGRATION)) {
             return ALL_RANGE;
         }

@@ -20,7 +20,8 @@ public class Coerce {
     private Coerce() {
     }
 
-    public static @Nullable String coerce(final String version) {
+    @Nullable
+    public static String coerce(final String version) {
         Matcher matcher = PATTERN.matcher(version);
 
         if (matcher.find()) {

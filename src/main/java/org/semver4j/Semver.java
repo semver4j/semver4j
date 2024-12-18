@@ -58,7 +58,8 @@ public class Semver implements Comparable<Semver> {
      * @param version version string to parse
      * @return {@link Semver} when done, {@code null} otherwise
      */
-    public static @Nullable Semver parse(final @Nullable String version) {
+    @Nullable
+    public static Semver parse(final @Nullable String version) {
         if (version == null) {
             return null;
         }
@@ -75,7 +76,8 @@ public class Semver implements Comparable<Semver> {
      * @param version version to coerce
      * @return {@link Semver} if can coerce version, {@code null} otherwise
      */
-    public static @Nullable Semver coerce(final @Nullable String version) {
+    @Nullable
+    public static Semver coerce(final @Nullable String version) {
         if (version == null) {
             return null;
         }

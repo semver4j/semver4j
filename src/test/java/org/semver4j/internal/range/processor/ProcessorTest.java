@@ -11,7 +11,8 @@ class ProcessorTest {
     void nonNullProcessGetsReturned() {
         Processor nonNullResultProcessor = new Processor() {
             @Override
-            public @Nullable String tryProcess(String range) {
+            @Nullable
+            public String tryProcess(String range) {
                 return "RESULT";
             }
         };
@@ -23,7 +24,8 @@ class ProcessorTest {
     void nullProcessDoesNotGetReturned() {
         Processor nullResultProcessor = new Processor() {
             @Override
-            public @Nullable String tryProcess(String range) {
+            @Nullable
+            public String tryProcess(String range) {
                 return null;
             }
         };
