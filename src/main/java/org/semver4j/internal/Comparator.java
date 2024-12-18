@@ -1,26 +1,26 @@
 package org.semver4j.internal;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.semver4j.Semver;
 
 import java.util.List;
 
 import static java.lang.Math.max;
 
+@NullMarked
 public class Comparator {
     private static final String ALL_DIGITS = "^\\d+$";
     private static final String CONTAINS_DIGITS = ".*\\d.*";
     private static final String TRAILING_DIGITS_EXTRACT = "(?<=\\D)(?=\\d)";
     private static final String LEADING_DIGITS_EXTRACT = "(?<=\\d)(?=\\D)";
 
-    @NotNull
     private static final String UNDEFINED_MARKER = "undef";
 
     private Comparator() {
     }
 
-    public static int compareTo(@NotNull final Semver version, @NotNull final Semver other) {
+    public static int compareTo(final Semver version, final Semver other) {
         int result = mainCompare(version, other);
         if (result == 0) {
             return preReleaseCompare(version, other);
@@ -28,7 +28,7 @@ public class Comparator {
         return result;
     }
 
-    private static int mainCompare(@NotNull final Semver version, @NotNull final Semver other) {
+    private static int mainCompare(final Semver version, final Semver other) {
         int majorCompare = Long.compare(version.getMajor(), other.getMajor());
         if (majorCompare == 0) {
             int minorCompare = Long.compare(version.getMinor(), other.getMinor());
@@ -42,7 +42,7 @@ public class Comparator {
         }
     }
 
-    private static int preReleaseCompare(@NotNull final Semver version, @NotNull final Semver other) {
+    private static int preReleaseCompare(final Semver version, final Semver other) {
         if (!version.getPreRelease().isEmpty() && other.getPreRelease().isEmpty()) {
             return -1;
         } else if (version.getPreRelease().isEmpty() && !other.getPreRelease().isEmpty()) {
@@ -76,7 +76,7 @@ public class Comparator {
         return 0;
     }
 
-    private static int compareIdentifiers(@NotNull final String a, @NotNull final String b) {
+    private static int compareIdentifiers(final String a, final String b) {
         // Only attempt to parse fully numeric string sequences so that we can avoid
         // raising a costly exception
         if (a.matches(ALL_DIGITS) && b.matches(ALL_DIGITS)) {
@@ -101,8 +101,7 @@ public class Comparator {
         return 0;
     }
 
-    @Nullable
-    private static Integer checkAlphanumericPrerelease(@NotNull final String a, @NotNull final String b) {
+    private static @Nullable Integer checkAlphanumericPrerelease(final String a, final String b) {
         String[] tokenArrA = a.split(TRAILING_DIGITS_EXTRACT);
         String[] tokenArrB = b.split(TRAILING_DIGITS_EXTRACT);
         if (tokenArrA.length != tokenArrB.length) {
@@ -128,8 +127,7 @@ public class Comparator {
         return null;
     }
 
-    @NotNull
-    private static String getString(final int i, @NotNull final List<@NotNull String> list) {
+    private static String getString(final int i, final List<String> list) {
         if (list.size() > i) {
             return list.get(i);
         } else {

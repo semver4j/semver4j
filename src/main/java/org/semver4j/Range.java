@@ -1,7 +1,7 @@
 package org.semver4j;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -12,22 +12,20 @@ import static java.util.Arrays.stream;
 /**
  * Represents single range item.
  */
+@NullMarked
 public class Range {
-    @NotNull
     private final Semver rangeVersion;
-    @NotNull
     private final RangeOperator rangeOperator;
 
-    public Range(@NotNull final Semver rangeVersion, @NotNull final RangeOperator rangeOperator) {
+    public Range(final Semver rangeVersion, final RangeOperator rangeOperator) {
         this.rangeVersion = rangeVersion;
         this.rangeOperator = rangeOperator;
     }
 
-    public Range(@NotNull final String rangeVersion, @NotNull final RangeOperator rangeOperator) {
+    public Range(final String rangeVersion, final RangeOperator rangeOperator) {
         this(new Semver(rangeVersion), rangeOperator);
     }
 
-    @NotNull
     public Semver getRangeVersion() {
         return rangeVersion;
     }
@@ -48,7 +46,7 @@ public class Range {
      * @return {@code true} if range is satisfied by version, {@code false} otherwise
      * @see #isSatisfiedBy(Semver)
      */
-    public boolean isSatisfiedBy(@NotNull final String version) {
+    public boolean isSatisfiedBy(final String version) {
         return isSatisfiedBy(new Semver(version));
     }
 
@@ -59,7 +57,7 @@ public class Range {
      * @return {@code true} if range is satisfied by version, {@code false} otherwise
      * @see #isSatisfiedBy(String)
      */
-    public boolean isSatisfiedBy(@NotNull final Semver version) {
+    public boolean isSatisfiedBy(final Semver version) {
         switch (rangeOperator) {
             case EQ:
                 return version.isEquivalentTo(rangeVersion);
@@ -77,7 +75,7 @@ public class Range {
     }
 
     @Override
-    public boolean equals(@Nullable final Object o) {
+    public boolean equals(final @Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -94,7 +92,6 @@ public class Range {
     }
 
     @Override
-    @NotNull
     public String toString() {
         return rangeOperator.asString() + rangeVersion;
     }
@@ -126,10 +123,9 @@ public class Range {
         GTE(">="),
         ;
 
-        @NotNull
         private final String string;
 
-        RangeOperator(@NotNull final String string) {
+        RangeOperator(final String string) {
             this.string = string;
         }
 
@@ -138,13 +134,11 @@ public class Range {
          *
          * @return range operator as string
          */
-        @NotNull
         public String asString() {
             return string;
         }
 
-        @NotNull
-        public static RangeOperator value(@NotNull final String string) {
+        public static RangeOperator value(final String string) {
             if (string.isEmpty()) {
                 return EQ;
             }

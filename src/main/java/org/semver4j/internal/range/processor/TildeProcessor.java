@@ -1,7 +1,7 @@
 package org.semver4j.internal.range.processor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -30,12 +30,13 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  *     <li>{@code ~0} to {@code ≥0.0.0 <1.0.0}</li>
  * </ul>
  */
+@NullMarked
 public class TildeProcessor implements Processor {
-    @NotNull
     private static final Pattern pattern = compile(TILDE);
 
     @Override
-    public @Nullable String tryProcess(@NotNull String range) {
+    @Nullable
+    public String tryProcess(String range) {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {

@@ -1,7 +1,7 @@
 package org.semver4j.internal.range.processor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.semver4j.Semver;
 
 import java.util.Locale;
@@ -19,10 +19,12 @@ import static org.semver4j.Range.RangeOperator.GTE;
  *
  * @deprecated behavior has been split off into {@link AllVersionsProcessor} and {@link IvyProcessor}
  */
+@NullMarked
 @Deprecated
 public class GreaterThanOrEqualZeroProcessor implements Processor {
     @Override
-    public @Nullable String tryProcess(@NotNull String range) {
+    @Nullable
+    public String tryProcess(String range) {
         if (range.equals("latest") || range.equals("latest.integration") || range.equals("*") || range.isEmpty()) {
             return format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
         }
