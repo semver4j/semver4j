@@ -54,3 +54,22 @@ jobs:
 
           chmod +x codecov
           ./codecov
+
+  nullaway:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set Java 23
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 23
+
+      - name: Compile with Apache Maven and NullAway
+        run: |
+          cp -v .mvn/nullaway.jvm.config .mvn/jvm.config
+          ./mvnw clean compile -P nullaway
