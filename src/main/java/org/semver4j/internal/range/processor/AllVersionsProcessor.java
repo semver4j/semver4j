@@ -1,7 +1,7 @@
 package org.semver4j.internal.range.processor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * <p>Processor for translating {@code *} and empty strings into a classic range.</p>
@@ -18,9 +18,11 @@ import org.jetbrains.annotations.Nullable;
  *     <li>An empty string to {@code ≥0.0.0-0}</li>
  * </ul>
  */
+@NullMarked
 public class AllVersionsProcessor extends Processor {
     @Override
-    public @Nullable String tryProcess(@NotNull String range) {
+    @Nullable
+    public String tryProcess(String range) {
         if (range.equals("*") || range.isEmpty()) {
             return this.getIncludePrerelease() ? RangesUtils.ALL_RANGE_WITH_PRERELEASE : RangesUtils.ALL_RANGE;
         }

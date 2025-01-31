@@ -1,7 +1,7 @@
 package org.semver4j.internal.range.processor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -41,15 +41,16 @@ import static org.semver4j.internal.range.processor.RangesUtils.*;
  *     <li>{@code latest.integration} to {@code ≥0.0.0-0}</li>
  * </ul>
  */
+@NullMarked
 public class IvyProcessor extends Processor {
     private static final String LATEST = "latest";
     private static final String LATEST_INTEGRATION = LATEST + ".integration";
 
-    @NotNull
     private static final Pattern PATTERN = compile(IVY);
 
     @Override
-    public @Nullable String tryProcess(@NotNull String range) {
+    @Nullable
+    public String tryProcess(String range) {
         if (range.equals(LATEST) || range.equals(LATEST_INTEGRATION)) {
             return this.getIncludePrerelease() ? ALL_RANGE_WITH_PRERELEASE : ALL_RANGE;
         }
@@ -114,7 +115,7 @@ public class IvyProcessor extends Processor {
         return range;
     }
 
-    private boolean isInclusiveRange(@NotNull final String character) {
+    private boolean isInclusiveRange(final String character) {
         return character.equals("[") || character.equals("]");
     }
 }

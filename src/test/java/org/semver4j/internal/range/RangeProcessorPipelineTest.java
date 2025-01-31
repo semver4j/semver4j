@@ -1,7 +1,5 @@
 package org.semver4j.internal.range;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.semver4j.internal.range.processor.Processor;
 
@@ -33,7 +31,7 @@ class RangeProcessorPipelineTest {
         }
 
         @Override
-        public @Nullable String tryProcess(@NotNull String range) {
+        public String tryProcess(String range) {
             return process.apply(range);
         }
     }

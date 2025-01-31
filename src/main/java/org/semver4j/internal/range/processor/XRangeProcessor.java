@@ -1,8 +1,8 @@
 package org.semver4j.internal.range.processor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.semver4j.Semver;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +29,13 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  * range.</p>
  * <br>
  */
+@NullMarked
 public class XRangeProcessor extends Processor {
-    @NotNull
     private static final Pattern pattern = compile(XRANGE);
 
     @Override
-    public @Nullable String tryProcess(@NotNull String range) {
+    @Nullable
+    public String tryProcess(String range) {
         String[] rangeVersions = range.split("\\s+");
 
         List<String> objects = new ArrayList<>();

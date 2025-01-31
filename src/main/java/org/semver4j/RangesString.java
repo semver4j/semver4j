@@ -1,6 +1,6 @@
 package org.semver4j;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 import org.semver4j.internal.range.RangeProcessorPipeline;
 import org.semver4j.internal.range.processor.AllVersionsProcessor;
 import org.semver4j.internal.range.processor.CaretProcessor;
@@ -18,12 +18,10 @@ import static java.util.regex.Pattern.compile;
 import static org.semver4j.internal.Tokenizers.COMPARATOR;
 import static org.semver4j.internal.range.RangeProcessorPipeline.startWith;
 
+@NullMarked
 class RangesString {
-    @NotNull
     private static final Pattern splitterPattern = compile("(\\s*)([<>]?=?)\\s*");
-    @NotNull
     private static final Pattern comparatorPattern = compile(COMPARATOR);
-    @NotNull
     private static final RangeProcessorPipeline rangeProcessorPipeline = startWith(new AllVersionsProcessor())
             .addProcessor(new IvyProcessor())
             .addProcessor(new HyphenProcessor())
@@ -31,7 +29,6 @@ class RangesString {
             .addProcessor(new TildeProcessor())
             .addProcessor(new XRangeProcessor());
 
-    @NotNull
     private static final RangeProcessorPipeline rangeProcessorPipelineWithPrerelease = startWith(new AllVersionsProcessor())
             .addProcessor(new IvyProcessor())
             .addProcessor(new HyphenProcessor())
@@ -40,14 +37,13 @@ class RangesString {
             .addProcessor(new XRangeProcessor())
             .includePrerelease();
 
-    @NotNull
-    RangesList get(@NotNull String range, boolean includePrerelease) {
+    RangesList get(String range, boolean includePrerelease) {
         RangesList rangesList = new RangesList();
         range = range.trim();
         String[] rangeSections = range.split("\\|\\|");
         for (String rangeSection : rangeSections) {
             rangeSection = stripWhitespacesBetweenRangeOperator(rangeSection);
-            rangeSection = includePrerelease ? rangeProcessorPipelineWithPrerelease.process(rangeSection) : rangeProcessorPipeline.process(rangeSection);
+            rangeSection = applyProcessors(rangeSection, includePrerelease);
 
             List<Range> ranges = addRanges(rangeSection);
             rangesList.add(ranges);
@@ -56,14 +52,16 @@ class RangesString {
         return rangesList;
     }
 
-    @NotNull
-    private static String stripWhitespacesBetweenRangeOperator(@NotNull final String rangeSection) {
+    private static String stripWhitespacesBetweenRangeOperator(final String rangeSection) {
         Matcher matcher = splitterPattern.matcher(rangeSection);
         return matcher.replaceAll("$1$2").trim();
     }
 
-    @NotNull
-    private static List<@NotNull Range> addRanges(@NotNull final String range) {
+    private static String applyProcessors(final String range, boolean includePrerelease) {
+        return includePrerelease ? rangeProcessorPipelineWithPrerelease.process(range) : rangeProcessorPipeline.process(range);
+    }
+
+    private static List<Range> addRanges(final String range) {
         List<Range> ranges = new ArrayList<>();
 
         String[] parsedRanges = range.split("\\s+");

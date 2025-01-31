@@ -1,24 +1,23 @@
 package org.semver4j.internal.range.processor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Optional;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Processor for pipeline range translations.
  */
+@NullMarked
 public abstract class Processor {
     private boolean includePrerelease;
 
     @Deprecated
-    @NotNull
-    public String process(@NotNull String range) {
+    public String process(String range) {
         return Optional.ofNullable(tryProcess(range)).orElse(range);
-    };
+    }
 
     @Nullable
-    public abstract String tryProcess(@NotNull String range);
+    public abstract String tryProcess(String range);
 
     public Processor includePrerelease() {
         this.includePrerelease = true;
@@ -28,6 +27,4 @@ public abstract class Processor {
     boolean getIncludePrerelease() {
         return this.includePrerelease;
     }
-
-
 }
