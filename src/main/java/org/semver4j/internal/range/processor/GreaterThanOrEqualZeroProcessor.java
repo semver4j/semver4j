@@ -21,7 +21,7 @@ import static org.semver4j.Range.RangeOperator.GTE;
  */
 @NullMarked
 @Deprecated
-public class GreaterThanOrEqualZeroProcessor implements Processor {
+public class GreaterThanOrEqualZeroProcessor extends Processor {
     @Override
     @Nullable
     public String tryProcess(String range) {

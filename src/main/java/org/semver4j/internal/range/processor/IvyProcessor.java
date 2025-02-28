@@ -14,9 +14,7 @@ import static org.semver4j.Range.RangeOperator.GTE;
 import static org.semver4j.Range.RangeOperator.LT;
 import static org.semver4j.Range.RangeOperator.LTE;
 import static org.semver4j.internal.Tokenizers.IVY;
-import static org.semver4j.internal.range.processor.RangesUtils.ALL_RANGE;
-import static org.semver4j.internal.range.processor.RangesUtils.isX;
-import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
+import static org.semver4j.internal.range.processor.RangesUtils.*;
 
 /**
  * <p>Processor for translate <a href="https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html">Ivy ranges</a>
@@ -36,9 +34,15 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  *     <li>{@code latest} to {@code ≥0.0.0}</li>
  *     <li>{@code latest.integration} to {@code ≥0.0.0}</li>
  * </ul>
+ *
+ * If the prerelease flag is set to true, translate the same as if the flag is not set, except for the following:
+ * <ul>
+ *     <li>{@code latest} to {@code ≥0.0.0-0}</li>
+ *     <li>{@code latest.integration} to {@code ≥0.0.0-0}</li>
+ * </ul>
  */
 @NullMarked
-public class IvyProcessor implements Processor {
+public class IvyProcessor extends Processor {
     private static final String LATEST = "latest";
     private static final String LATEST_INTEGRATION = LATEST + ".integration";
 
@@ -48,7 +52,7 @@ public class IvyProcessor implements Processor {
     @Nullable
     public String tryProcess(String range) {
         if (range.equals(LATEST) || range.equals(LATEST_INTEGRATION)) {
-            return ALL_RANGE;
+            return this.getIncludePrerelease() ? ALL_RANGE_WITH_PRERELEASE : ALL_RANGE;
         }
 
         Matcher matcher = PATTERN.matcher(range);
