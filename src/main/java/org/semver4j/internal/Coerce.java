@@ -14,7 +14,7 @@ import static java.util.regex.Pattern.compile;
 @NullMarked
 public class Coerce {
     private static final Pattern PATTERN = compile(
-        "(^|\\D)(\\d{1,16})(?:\\.(\\d{1,16}))?(?:\\.(\\d{1,16}))?(?:$|\\D)"
+        "(^|\\D)0*(\\d{1,16})(?:\\.0*(\\d{1,16}))?(?:\\.0*(\\d{1,16}))?(?:$|\\D)"
     );
 
     private Coerce() {
