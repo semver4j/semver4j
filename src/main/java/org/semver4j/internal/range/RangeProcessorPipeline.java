@@ -18,6 +18,11 @@ public class RangeProcessorPipeline {
         return this;
     }
 
+    public RangeProcessorPipeline includePrerelease() {
+        processors.forEach(Processor::includePrerelease);
+        return this;
+    }
+
     public String process(final String range) {
         for (Processor processor : processors) {
             String processedRange = processor.tryProcess(range);
