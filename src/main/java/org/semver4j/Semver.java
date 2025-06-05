@@ -558,7 +558,7 @@ public class Semver implements Comparable<Semver> {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Semver)) {
             return false;
         }
         Semver semver = (Semver) o;
