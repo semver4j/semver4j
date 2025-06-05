@@ -203,7 +203,7 @@ If you want to check if a version satisfies a range, use the `satisfies()` metho
     - [X-Ranges](https://github.com/npm/node-semver#x-ranges-12x-1x-12-) `1.2.x`, `1.X`, `1.2.*` and `*`
     - [Tilde ranges](https://github.com/npm/node-semver#tilde-ranges-123-12-1) `~1.2.3`, `~1.2` and `~1`
     - [Caret ranges](https://github.com/npm/node-semver#caret-ranges-123-025-004) `^1.2.3`, `^0.2.5` and `^0.0.4`
-- [CocaPods](https://guides.cocoapods.org/using/the-podfile.html)
+- [CocoaPods](https://guides.cocoapods.org/using/the-podfile.html)
     - [Optimistic operator](https://guides.cocoapods.org/using/the-podfile.html#specifying-pod-versions) `~> 1.0`
 - [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html)
     - Version Range Matcher `[1.0,2.0]`, `[1.0,2.0[`, `]1.0,2.0]`, `]1.0,2.0[`, `[1.0,)`, `]1.0,)`, `(,2.0]`
