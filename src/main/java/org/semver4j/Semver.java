@@ -561,13 +561,12 @@ public class Semver implements Comparable<Semver> {
         if (!(o instanceof Semver)) {
             return false;
         }
-        Semver semver = (Semver) o;
-        return Objects.equals(originalVersion, semver.originalVersion);
+        return version.equals(((Semver) o).version);
     }
 
     @Override
     public int hashCode() {
-        return hash(originalVersion);
+        return hash(version);
     }
 
     @Override
