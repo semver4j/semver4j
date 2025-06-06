@@ -17,12 +17,25 @@ import static org.semver4j.internal.range.RangeProcessorPipeline.startWith;
 class RangesString {
     private static final Pattern splitterPattern = compile("(\\s*)([<>]?=?)\\s*");
     private static final Pattern comparatorPattern = compile(COMPARATOR);
-    private static final RangeProcessorPipeline rangeProcessorPipeline = startWith(new AllVersionsProcessor())
-            .addProcessor(new IvyProcessor())
-            .addProcessor(new HyphenProcessor())
-            .addProcessor(new CaretProcessor())
-            .addProcessor(new TildeProcessor())
-            .addProcessor(new XRangeProcessor());
+    private final RangeProcessorPipeline rangeProcessorPipeline;
+
+    RangesString() {
+        this(
+                new AllVersionsProcessor(),
+                new IvyProcessor(),
+                new HyphenProcessor(),
+                new CaretProcessor(),
+                new TildeProcessor(),
+                new XRangeProcessor()
+        );
+    }
+
+    RangesString(Processor start, Processor... additional) {
+        rangeProcessorPipeline = startWith(start);
+        for (Processor p : additional) {
+            rangeProcessorPipeline.addProcessor(p);
+        }
+    }
 
     RangesList get(String range, boolean includePrerelease) {
         RangesList rangesList = new RangesList(includePrerelease);
@@ -44,7 +57,7 @@ class RangesString {
         return matcher.replaceAll("$1$2").trim();
     }
 
-    private static String applyProcessors(final String range, boolean includePrerelease) {
+    private String applyProcessors(final String range, boolean includePrerelease) {
         return rangeProcessorPipeline.process(range, includePrerelease);
     }
 
