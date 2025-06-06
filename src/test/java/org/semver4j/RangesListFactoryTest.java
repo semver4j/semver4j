@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.semver4j.Range.RangeOperator;
+import org.semver4j.internal.range.processor.IvyProcessor;
+import org.semver4j.internal.range.processor.XRangeProcessor;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,5 +56,19 @@ class RangesListFactoryTest {
 
         //then
         assertThat(range).isEqualTo("(>=14.14.20 and <15.0.0) or (>=16.0.0 and <17.0.0)");
+    }
+
+    @Test
+    void shouldAllowToConfigureProcessors() {
+        //given
+        String ivyRange = "[1.0.0,2.0.0]";
+
+        //when
+        RangesList ivyRangesList = RangesListFactory.create(ivyRange, new IvyProcessor());
+        RangesList nonIvyRangesList = RangesListFactory.create(ivyRange, new XRangeProcessor());
+
+        //then
+        assertThat(ivyRangesList.toString()).isEqualTo(">=1.0.0 and <=2.0.0");
+        assertThat(nonIvyRangesList.get()).isEmpty();
     }
 }
