@@ -1,7 +1,7 @@
-package org.semver4j.internal.range;
+package org.semver4j.internal;
 
 import org.junit.jupiter.api.Test;
-import org.semver4j.internal.range.processor.Processor;
+import org.semver4j.processor.Processor;
 
 import java.util.function.Function;
 

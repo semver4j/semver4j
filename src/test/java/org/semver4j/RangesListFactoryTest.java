@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.semver4j.Range.RangeOperator;
-import org.semver4j.internal.range.processor.IvyProcessor;
-import org.semver4j.internal.range.processor.XRangeProcessor;
+import org.semver4j.processor.IvyProcessor;
+import org.semver4j.processor.XRangeProcessor;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;

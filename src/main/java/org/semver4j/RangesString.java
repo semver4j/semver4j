@@ -1,8 +1,8 @@
 package org.semver4j;
 
 import org.jspecify.annotations.NullMarked;
-import org.semver4j.internal.range.RangeProcessorPipeline;
-import org.semver4j.internal.range.processor.*;
+import org.semver4j.internal.RangeProcessorPipeline;
+import org.semver4j.processor.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 import static java.util.regex.Pattern.compile;
 import static org.semver4j.internal.Tokenizers.COMPARATOR;
-import static org.semver4j.internal.range.RangeProcessorPipeline.startWith;
+import static org.semver4j.internal.RangeProcessorPipeline.startWith;
 
 @NullMarked
 class RangesString {
