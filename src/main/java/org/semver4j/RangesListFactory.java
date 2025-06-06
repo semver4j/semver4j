@@ -1,7 +1,7 @@
 package org.semver4j;
 
 import org.jspecify.annotations.NullMarked;
-import org.semver4j.internal.range.processor.Processor;
+import org.semver4j.processor.Processor;
 
 /**
  * Class for create a {@link RangesList} object.
