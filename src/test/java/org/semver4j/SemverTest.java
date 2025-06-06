@@ -736,6 +736,16 @@ class SemverTest {
         assertThat(version).isInstanceOf(Semver.class);
     }
 
+    @Test
+    void shouldTreatParsedVersionsAsEqual() {
+        //when
+        Semver parsed = Semver.parse("1.0.0-rc.1");
+        Semver parsedWithV = Semver.parse("v1.0.0-rc.1");
+
+        //then
+        assertThat(parsed).isEqualTo(parsedWithV);
+    }
+
     @ParameterizedTest
     @MethodSource("coerceVersions")
     void shouldTryCoerceVersion(String versionToCoerce, String expected) {
