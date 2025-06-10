@@ -1,4 +1,4 @@
-package org.semver4j.internal.range.processor;
+package org.semver4j.processor;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -18,10 +18,10 @@ import static org.semver4j.Range.RangeOperator.GTE;
 import static org.semver4j.Range.RangeOperator.LT;
 import static org.semver4j.Range.RangeOperator.LTE;
 import static org.semver4j.internal.Tokenizers.XRANGE;
-import static org.semver4j.internal.range.processor.RangesUtils.EMPTY;
-import static org.semver4j.internal.range.processor.RangesUtils.SPACE;
-import static org.semver4j.internal.range.processor.RangesUtils.isX;
-import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
+import static org.semver4j.processor.RangesUtils.EMPTY;
+import static org.semver4j.processor.RangesUtils.SPACE;
+import static org.semver4j.processor.RangesUtils.isX;
+import static org.semver4j.processor.RangesUtils.parseIntWithXSupport;
 
 /**
  * <p>Processor for translate <a href="https://github.com/npm/node-semver#x-ranges-12x-1x-12-">X-Ranges</a> into classic
