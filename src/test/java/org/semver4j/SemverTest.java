@@ -898,7 +898,6 @@ class SemverTest {
         assertThat(lowerThan1).isEqualTo(lowerThan2);
     }
 
-
     @ParameterizedTest
     @MethodSource({"getParametersNoIncludePrerelease", "getParametersCommon"})
     void shouldCheckSatisfiesNoIncludePrerelease(String version, String range, boolean expected) {
@@ -906,7 +905,7 @@ class SemverTest {
         Semver semver = new Semver(version);
 
         //when
-        boolean satisfies = semver.satisfies(range, false);
+        boolean satisfies = semver.satisfies(range);
 
         //then
         assertThat(satisfies).isEqualTo(expected);

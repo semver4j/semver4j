@@ -35,71 +35,68 @@ import static org.semver4j.internal.range.processor.RangesUtils.*;
  * </ul>
  */
 @NullMarked
-//TODO(ading): Add PR flag support
-public class HyphenProcessor extends Processor {
+public class HyphenProcessor implements Processor {
     private static final Pattern pattern = compile(HYPHEN);
 
     @Override
     @Nullable
-    public String tryProcess(String range) {
+    public String process(String range, boolean includePrerelease) {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {
             return null;
         }
 
-        String rangeFrom = getRangeFrom(matcher);
-        String rangeTo = getRangeTo(matcher);
+        String rangeFrom = getRangeFrom(matcher, includePrerelease);
+        String rangeTo = getRangeTo(matcher, includePrerelease);
 
         return format(Locale.ROOT, "%s %s", rangeFrom, rangeTo);
     }
 
-    private String getRangeFrom(final Matcher matcher) {
+    private String getRangeFrom(final Matcher matcher, boolean includePrerelease) {
         String from = matcher.group(1);
 
         int fromMajor = parseIntWithXSupport(matcher.group(2));
         int fromMinor = parseIntWithXSupport(matcher.group(3));
         int fromPatch = parseIntWithXSupport(matcher.group(4));
 
-        String pr = this.getIncludePrerelease() ? Semver.LOWEST_PRERELEASE : "";
+        String prerelease = includePrerelease ? Processor.LOWEST_PRERELEASE : "";
 
         boolean minorIsX = isX(fromMinor);
         boolean patchIsX = isX(fromPatch);
 
         if (minorIsX) {
-            return format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), fromMajor, pr);
+            return format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), fromMajor, prerelease);
         } else {
             if (patchIsX) {
-                return format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), fromMajor, fromMinor, pr);
+                return format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), fromMajor, fromMinor, prerelease);
             } else {
                 return format(Locale.ROOT, "%s%s", GTE.asString(), from);
             }
         }
     }
 
-    private String getRangeTo(final Matcher matcher) {
-        String to = matcher.group(7);
-
+    private String getRangeTo(final Matcher matcher, boolean includePrerelease) {
         int toMajor = parseIntWithXSupport(matcher.group(8));
         int toMinor = parseIntWithXSupport(matcher.group(9));
         int toPatch = parseIntWithXSupport(matcher.group(10));
 
         @Nullable String preRelease = matcher.group(11);
-        String pr = this.getIncludePrerelease() ? Semver.LOWEST_PRERELEASE : "";
+        String prerelease = includePrerelease ? Processor.LOWEST_PRERELEASE : "";
 
         boolean minorIsX = isX(toMinor);
         boolean patchIsX = isX(toPatch);
 
         if (minorIsX) {
-            return format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (toMajor + 1), pr);
+            return format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (toMajor + 1), prerelease);
         } else {
             if (patchIsX) {
-                return format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), toMajor, (toMinor + 1), pr);
+                return format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), toMajor, (toMinor + 1), prerelease);
             } else {
-                if (!isNotBlank(preRelease)) {
-                    return format(Locale.ROOT, "%s%d.%d.%d%s", LT.asString(), toMajor, toMinor, (toPatch + 1), pr);
-                } else {
+                if (isNotBlank(preRelease)) {
                     return format(Locale.ROOT, "%s%d.%d.%d%s", LTE.asString(), toMajor, toMinor, toPatch, "-" + preRelease);
+                } else {
+                    return format(Locale.ROOT, "%s%d.%d.%d%s", LT.asString(), toMajor, toMinor, (toPatch + 1), prerelease);
                 }
             }
         }

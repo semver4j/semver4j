@@ -1,7 +1,6 @@
 package org.semver4j.internal.range;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.semver4j.internal.range.processor.Processor;
 
@@ -15,7 +14,7 @@ class RangeProcessorPipelineTest {
         RangeProcessorPipeline pipeline = RangeProcessorPipeline.startWith(new DummyProcessor(range -> range + "_A"))
                 .addProcessor(new DummyProcessor(range -> range + "_B"))
                 .addProcessor(new DummyProcessor(range -> range + "_C"));
-        assertThat(pipeline.process("RANGE")).isEqualTo("RANGE_A");
+        assertThat(pipeline.process("RANGE", false)).isEqualTo("RANGE_A");
     }
 
     @Test
@@ -23,17 +22,19 @@ class RangeProcessorPipelineTest {
         RangeProcessorPipeline pipeline = RangeProcessorPipeline.startWith(new DummyProcessor(range -> null))
                 .addProcessor(new DummyProcessor(range -> null))
                 .addProcessor(new DummyProcessor(range -> null));
-        assertThat(pipeline.process("RANGE")).isEqualTo("RANGE");
+        assertThat(pipeline.process("RANGE", true)).isEqualTo("RANGE");
     }
 
-    private final class DummyProcessor extends Processor {
+    private static class DummyProcessor implements Processor {
         private final Function<String, String> process;
+
         private DummyProcessor(Function<String, String> process) {
             this.process = process;
         }
 
         @Override
-        public @Nullable String tryProcess(@NotNull String range) {
+        @Nullable
+        public String process(String range) {
             return process.apply(range);
         }
     }

@@ -2,12 +2,7 @@ package org.semver4j;
 
 import org.jspecify.annotations.NullMarked;
 import org.semver4j.internal.range.RangeProcessorPipeline;
-import org.semver4j.internal.range.processor.AllVersionsProcessor;
-import org.semver4j.internal.range.processor.CaretProcessor;
-import org.semver4j.internal.range.processor.HyphenProcessor;
-import org.semver4j.internal.range.processor.IvyProcessor;
-import org.semver4j.internal.range.processor.TildeProcessor;
-import org.semver4j.internal.range.processor.XRangeProcessor;
+import org.semver4j.internal.range.processor.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,21 +24,13 @@ class RangesString {
             .addProcessor(new TildeProcessor())
             .addProcessor(new XRangeProcessor());
 
-    private static final RangeProcessorPipeline rangeProcessorPipelineWithPrerelease = startWith(new AllVersionsProcessor())
-            .addProcessor(new IvyProcessor())
-            .addProcessor(new HyphenProcessor())
-            .addProcessor(new CaretProcessor())
-            .addProcessor(new TildeProcessor())
-            .addProcessor(new XRangeProcessor())
-            .includePrerelease();
-
     RangesList get(String range, boolean includePrerelease) {
-        RangesList rangesList = new RangesList();
+        RangesList rangesList = new RangesList(includePrerelease);
         range = range.trim();
         String[] rangeSections = range.split("\\|\\|");
         for (String rangeSection : rangeSections) {
             rangeSection = stripWhitespacesBetweenRangeOperator(rangeSection);
-            rangeSection = includePrerelease ? rangeProcessorPipelineWithPrerelease.process(rangeSection) : rangeProcessorPipeline.process(rangeSection);
+            rangeSection = applyProcessors(rangeSection, includePrerelease);
 
             List<Range> ranges = addRanges(rangeSection);
             rangesList.add(ranges);
@@ -55,6 +42,10 @@ class RangesString {
     private static String stripWhitespacesBetweenRangeOperator(final String rangeSection) {
         Matcher matcher = splitterPattern.matcher(rangeSection);
         return matcher.replaceAll("$1$2").trim();
+    }
+
+    private static String applyProcessors(final String range, boolean includePrerelease) {
+        return rangeProcessorPipeline.process(range, includePrerelease);
     }
 
     private static List<Range> addRanges(final String range) {

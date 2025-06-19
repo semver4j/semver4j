@@ -11,7 +11,7 @@ import org.jspecify.annotations.Nullable;
  *     <li>{@code *} to {@code ≥0.0.0}</li>
  *     <li>An empty string to {@code ≥0.0.0}</li>
  * </ul>
- *
+ * <p>
  * If the prerelease flag is set to true, will translate:
  * <ul>
  *     <li>{@code *} to {@code ≥0.0.0-0}</li>
@@ -19,12 +19,12 @@ import org.jspecify.annotations.Nullable;
  * </ul>
  */
 @NullMarked
-public class AllVersionsProcessor extends Processor {
+public class AllVersionsProcessor implements Processor {
     @Override
     @Nullable
-    public String tryProcess(String range) {
+    public String process(String range, boolean includePrerelease) {
         if (range.equals("*") || range.isEmpty()) {
-            return this.getIncludePrerelease() ? RangesUtils.ALL_RANGE_WITH_PRERELEASE : RangesUtils.ALL_RANGE;
+            return includePrerelease ? RangesUtils.ALL_RANGE_WITH_PRERELEASE : RangesUtils.ALL_RANGE;
         }
         return null;
     }

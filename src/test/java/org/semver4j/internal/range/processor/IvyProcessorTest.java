@@ -15,7 +15,7 @@ class IvyProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldProcessIvyRanges(String range, String expected) {
-        assertThat(ivyProcessor.tryProcess(range)).isEqualTo(expected);
+        assertThat(ivyProcessor.process(range, false)).isEqualTo(expected);
     }
 
     static Stream<Arguments> shouldProcessIvyRanges() {
@@ -43,7 +43,7 @@ class IvyProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldProcessIvyRangesIncludePrerelease(String range, String expected) {
-        assertThat(ivyProcessor.includePrerelease().tryProcess(range)).isEqualTo(expected);
+        assertThat(ivyProcessor.process(range, true)).isEqualTo(expected);
     }
 
     static Stream<Arguments> shouldProcessIvyRangesIncludePrerelease() {

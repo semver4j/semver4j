@@ -21,10 +21,10 @@ import static org.semver4j.Range.RangeOperator.GTE;
  */
 @NullMarked
 @Deprecated
-public class GreaterThanOrEqualZeroProcessor extends Processor {
+public class GreaterThanOrEqualZeroProcessor implements Processor {
     @Override
     @Nullable
-    public String tryProcess(String range) {
+    public String process(String range, boolean includePrerelease) {
         if (range.equals("latest") || range.equals("latest.integration") || range.equals("*") || range.isEmpty()) {
             return format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
         }

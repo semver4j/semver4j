@@ -15,7 +15,7 @@ class XRangeProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldParseXRange(String range, String expectedString) {
-        assertThat(xRangeProcessor.tryProcess(range)).isEqualTo(expectedString);
+        assertThat(xRangeProcessor.process(range, false)).isEqualTo(expectedString);
     }
 
     static Stream<Arguments> shouldParseXRange() {
@@ -39,7 +39,7 @@ class XRangeProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldParseXRangeIncludePrerelease(String range, String expectedString) {
-        assertThat(xRangeProcessor.includePrerelease().tryProcess(range)).isEqualTo(expectedString);
+        assertThat(xRangeProcessor.process(range, true)).isEqualTo(expectedString);
     }
 
     static Stream<Arguments> shouldParseXRangeIncludePrerelease() {

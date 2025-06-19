@@ -15,7 +15,7 @@ class CaretProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldParseCaretRange(String range, String expectedString) {
-        assertThat(processor.tryProcess(range)).isEqualTo(expectedString);
+        assertThat(processor.process(range, false)).isEqualTo(expectedString);
     }
 
     static Stream<Arguments> shouldParseCaretRange() {
@@ -34,7 +34,7 @@ class CaretProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldParseCaretRangeIncludePrerelease(String range, String expectedString) {
-        assertThat(processor.includePrerelease().tryProcess(range)).isEqualTo(expectedString);
+        assertThat(processor.process(range, true)).isEqualTo(expectedString);
     }
 
     static Stream<Arguments> shouldParseCaretRangeIncludePrerelease() {

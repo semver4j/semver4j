@@ -15,7 +15,7 @@ class HyphenProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldParseHyphenRange(String range, String expectedString) {
-        assertThat(hyphenProcessor.tryProcess(range)).isEqualTo(expectedString);
+        assertThat(hyphenProcessor.process(range, false)).isEqualTo(expectedString);
     }
 
     static Stream<Arguments> shouldParseHyphenRange() {
@@ -35,7 +35,7 @@ class HyphenProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldParseHyphenRangeIncludePrerelease(String range, String expectedString) {
-        assertThat(hyphenProcessor.includePrerelease().tryProcess(range)).isEqualTo(expectedString);
+        assertThat(hyphenProcessor.process(range, true)).isEqualTo(expectedString);
     }
 
     static Stream<Arguments> shouldParseHyphenRangeIncludePrerelease() {

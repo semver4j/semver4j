@@ -27,7 +27,7 @@ import static org.semver4j.Range.RangeOperator.*;
 @NullMarked
 @SuppressWarnings("checkstyle:DeclarationOrder")
 public class RangesExpression {
-    private final RangesList rangesList = new RangesList();
+    private final RangesList rangesList = new RangesList(false);
 
     private final List<Range> andOperationRanges = new ArrayList<>();
 

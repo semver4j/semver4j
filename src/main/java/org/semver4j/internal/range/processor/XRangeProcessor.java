@@ -30,18 +30,18 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  * <br>
  */
 @NullMarked
-public class XRangeProcessor extends Processor {
+public class XRangeProcessor implements Processor {
     private static final Pattern pattern = compile(XRANGE);
 
     @Override
     @Nullable
-    public String tryProcess(String range) {
+    public String process(String range, boolean includePrerelease) {
         String[] rangeVersions = range.split("\\s+");
 
         List<String> objects = new ArrayList<>();
         for (String rangeVersion : rangeVersions) {
             Matcher matcher = pattern.matcher(rangeVersion);
-            String pr = this.getIncludePrerelease() ? Semver.LOWEST_PRERELEASE : "";
+            String prerelease = includePrerelease ? Processor.LOWEST_PRERELEASE : "";
 
             if (matcher.matches()) {
                 String fullRange = matcher.group(0);
@@ -79,16 +79,16 @@ public class XRangeProcessor extends Processor {
                         minor = 0;
                     }
 
-                    String from = format(Locale.ROOT, "%s%d.%d.%d%s", compareSign, major, minor, patch, pr);
+                    String from = format(Locale.ROOT, "%s%d.%d.%d%s", compareSign, major, minor, patch, prerelease);
                     objects.add(from);
                 } else if (isX(minor)) {
-                    String from = format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), major, pr);
-                    String to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), pr);
+                    String from = format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), major, prerelease);
+                    String to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), prerelease);
                     objects.add(from);
                     objects.add(to);
                 } else if (isX(patch)) {
-                    String from = format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), major, minor, pr);
-                    String to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), pr);
+                    String from = format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), major, minor, prerelease);
+                    String to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), prerelease);
                     objects.add(from);
                     objects.add(to);
                 } else {

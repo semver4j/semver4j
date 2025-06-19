@@ -15,7 +15,7 @@ class TildeProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldParseTildeRange(String range, String expectedString) {
-        assertThat(tildeProcessor.tryProcess(range)).isEqualTo(expectedString);
+        assertThat(tildeProcessor.process(range, false)).isEqualTo(expectedString);
     }
 
     static Stream<Arguments> shouldParseTildeRange() {
@@ -31,7 +31,7 @@ class TildeProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldParseTildeRangeIncludePrerelease(String range, String expectedString) {
-        assertThat(tildeProcessor.includePrerelease().tryProcess(range)).isEqualTo(expectedString);
+        assertThat(tildeProcessor.process(range, true)).isEqualTo(expectedString);
     }
 
     static Stream<Arguments> shouldParseTildeRangeIncludePrerelease() {

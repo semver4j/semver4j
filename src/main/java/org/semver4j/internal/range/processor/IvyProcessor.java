@@ -42,7 +42,7 @@ import static org.semver4j.internal.range.processor.RangesUtils.*;
  * </ul>
  */
 @NullMarked
-public class IvyProcessor extends Processor {
+public class IvyProcessor implements Processor {
     private static final String LATEST = "latest";
     private static final String LATEST_INTEGRATION = LATEST + ".integration";
 
@@ -50,9 +50,9 @@ public class IvyProcessor extends Processor {
 
     @Override
     @Nullable
-    public String tryProcess(String range) {
+    public String process(String range, boolean includePrerelease) {
         if (range.equals(LATEST) || range.equals(LATEST_INTEGRATION)) {
-            return this.getIncludePrerelease() ? ALL_RANGE_WITH_PRERELEASE : ALL_RANGE;
+            return includePrerelease ? ALL_RANGE_WITH_PRERELEASE : ALL_RANGE;
         }
 
         Matcher matcher = PATTERN.matcher(range);
