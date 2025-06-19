@@ -13,7 +13,7 @@ class RangeProcessorPipelineTest {
         RangeProcessorPipeline pipeline = RangeProcessorPipeline.startWith(new DummyProcessor(range -> range + "_A"))
                 .addProcessor(new DummyProcessor(range -> range + "_B"))
                 .addProcessor(new DummyProcessor(range -> range + "_C"));
-        assertThat(pipeline.process("RANGE", false)).isEqualTo("RANGE_A");
+        assertThat(pipeline.process("RANGE")).isEqualTo("RANGE_A");
     }
 
     @Test
@@ -21,7 +21,7 @@ class RangeProcessorPipelineTest {
         RangeProcessorPipeline pipeline = RangeProcessorPipeline.startWith(new DummyProcessor(range -> null))
                 .addProcessor(new DummyProcessor(range -> null))
                 .addProcessor(new DummyProcessor(range -> null));
-        assertThat(pipeline.process("RANGE", true)).isEqualTo("RANGE");
+        assertThat(pipeline.process("RANGE")).isEqualTo("RANGE");
     }
 
     private final class DummyProcessor implements Processor {
