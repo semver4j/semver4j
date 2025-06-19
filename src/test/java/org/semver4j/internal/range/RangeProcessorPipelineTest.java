@@ -34,7 +34,7 @@ class RangeProcessorPipelineTest {
 
         @Override
         @Nullable
-        public String process(String range) {
+        public String process(String range, boolean includePrerelease) {
             return process.apply(range);
         }
     }
