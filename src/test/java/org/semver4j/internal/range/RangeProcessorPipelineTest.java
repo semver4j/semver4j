@@ -1,6 +1,5 @@
 package org.semver4j.internal.range;
 
-import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.semver4j.internal.range.processor.Processor;
 
