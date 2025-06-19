@@ -2,7 +2,6 @@ package org.semver4j.internal.range.processor;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
-import org.semver4j.Semver;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -25,7 +24,7 @@ import static org.semver4j.internal.range.processor.RangesUtils.*;
  *     <li>{@code 1.2.3 - 2.3} to {@code ≥1.2.3 <2.4.0}</li>
  *     <li>{@code 1.2.3 - 2} to {@code ≥1.2.3 <3.0.0}</li>
  * </ul>
- *
+ * <p>
  * If the prerelease flag is set to true, will translate:
  * <ul>
  *     <li>{@code 1.2.3 - 2.3.4} to {@code ≥1.2.3 <2.3.5-0}</li>
