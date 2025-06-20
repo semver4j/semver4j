@@ -1,4 +1,4 @@
-package org.semver4j.internal.range.processor;
+package org.semver4j.processor;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -11,7 +11,7 @@ import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.*;
 import static org.semver4j.internal.Tokenizers.HYPHEN;
-import static org.semver4j.internal.range.processor.RangesUtils.*;
+import static org.semver4j.processor.RangesUtils.*;
 
 /**
  * <p>Processor for translate <a href="https://github.com/npm/node-semver#hyphen-ranges-xyz---abc">hyphen ranges</a>

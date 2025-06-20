@@ -1,7 +1,7 @@
-package org.semver4j.internal.range;
+package org.semver4j.internal;
 
 import org.junit.jupiter.api.Test;
-import org.semver4j.internal.range.processor.Processor;
+import org.semver4j.processor.Processor;
 
 import java.util.function.Function;
 
@@ -24,7 +24,7 @@ class RangeProcessorPipelineTest {
         assertThat(pipeline.process("RANGE", false)).isEqualTo("RANGE");
     }
 
-    private final class DummyProcessor implements Processor {
+    private static final class DummyProcessor implements Processor {
         private final Function<String, String> process;
 
         private DummyProcessor(Function<String, String> process) {
