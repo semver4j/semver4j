@@ -12,16 +12,9 @@ import java.util.regex.Pattern;
 import static java.lang.String.format;
 import static java.lang.String.join;
 import static java.util.regex.Pattern.compile;
-import static org.semver4j.Range.RangeOperator.EQ;
-import static org.semver4j.Range.RangeOperator.GT;
-import static org.semver4j.Range.RangeOperator.GTE;
-import static org.semver4j.Range.RangeOperator.LT;
-import static org.semver4j.Range.RangeOperator.LTE;
+import static org.semver4j.Range.RangeOperator.*;
 import static org.semver4j.internal.Tokenizers.XRANGE;
-import static org.semver4j.internal.range.processor.RangesUtils.EMPTY;
-import static org.semver4j.internal.range.processor.RangesUtils.SPACE;
-import static org.semver4j.internal.range.processor.RangesUtils.isX;
-import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
+import static org.semver4j.internal.range.processor.RangesUtils.*;
 
 /**
  * <p>Processor for translate <a href="https://github.com/npm/node-semver#x-ranges-12x-1x-12-">X-Ranges</a> into classic
@@ -34,12 +27,13 @@ public class XRangeProcessor implements Processor {
 
     @Override
     @Nullable
-    public String tryProcess(String range) {
+    public String process(String range, boolean includePrerelease) {
         String[] rangeVersions = range.split("\\s+");
 
         List<String> objects = new ArrayList<>();
         for (String rangeVersion : rangeVersions) {
             Matcher matcher = pattern.matcher(rangeVersion);
+            String prerelease = includePrerelease ? Processor.LOWEST_PRERELEASE : "";
 
             if (matcher.matches()) {
                 String fullRange = matcher.group(0);
@@ -77,16 +71,16 @@ public class XRangeProcessor implements Processor {
                         minor = 0;
                     }
 
-                    String from = format(Locale.ROOT, "%s%d.%d.%d", compareSign, major, minor, patch);
+                    String from = format(Locale.ROOT, "%s%d.%d.%d%s", compareSign, major, minor, patch, prerelease);
                     objects.add(from);
                 } else if (isX(minor)) {
-                    String from = format(Locale.ROOT, "%s%d.0.0", GTE.asString(), major);
-                    String to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
+                    String from = format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), major, prerelease);
+                    String to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), prerelease);
                     objects.add(from);
                     objects.add(to);
                 } else if (isX(patch)) {
-                    String from = format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), major, minor);
-                    String to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
+                    String from = format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), major, minor, prerelease);
+                    String to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), prerelease);
                     objects.add(from);
                     objects.add(to);
                 } else {

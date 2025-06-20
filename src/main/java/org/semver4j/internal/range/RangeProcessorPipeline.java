@@ -4,10 +4,11 @@ import org.jspecify.annotations.NullMarked;
 import org.semver4j.internal.range.processor.Processor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @NullMarked
 public class RangeProcessorPipeline {
-    private final ArrayList<Processor> processors = new ArrayList<>();
+    private final List<Processor> processors = new ArrayList<>();
 
     public RangeProcessorPipeline(final Processor currentProcessor) {
         this.processors.add(currentProcessor);
@@ -18,9 +19,9 @@ public class RangeProcessorPipeline {
         return this;
     }
 
-    public String process(final String range) {
+    public String process(final String range, boolean includePrerelease) {
         for (Processor processor : processors) {
-            String processedRange = processor.tryProcess(range);
+            String processedRange = processor.process(range, includePrerelease);
             if (processedRange != null) {
                 return processedRange;
             }

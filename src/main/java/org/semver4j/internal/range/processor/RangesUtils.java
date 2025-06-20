@@ -18,6 +18,7 @@ final class RangesUtils {
     static final String EMPTY = "";
     static final String SPACE = " ";
     static final String ALL_RANGE = format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
+    static final String ALL_RANGE_WITH_PRERELEASE = format(Locale.ROOT, "%s%s%s", GTE.asString(), Semver.ZERO, Processor.LOWEST_PRERELEASE);
 
     private static final int X_RANGE_MARKER = -1;
 

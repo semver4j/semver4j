@@ -1,9 +1,10 @@
 package org.semver4j;
 
+import org.jspecify.annotations.NullMarked;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import org.jspecify.annotations.NullMarked;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
@@ -45,6 +46,12 @@ public class RangesList {
 
     private final List<List<Range>> rangesList = new ArrayList<>();
 
+    private final boolean includePrerelease;
+
+    public RangesList(boolean includePrerelease) {
+        this.includePrerelease = includePrerelease;
+    }
+
     /**
      * Add ranges to ranges list.
      */
@@ -67,8 +74,8 @@ public class RangesList {
      */
     public boolean isSatisfiedByAny() {
         return rangesList.stream()
-            .flatMap(List::stream)
-            .allMatch(Range::isSatisfiedByAny);
+                .flatMap(List::stream)
+                .allMatch(Range::isSatisfiedByAny);
     }
 
     /**
@@ -76,21 +83,21 @@ public class RangesList {
      */
     public boolean isSatisfiedBy(final Semver version) {
         return rangesList.stream()
-            .anyMatch(ranges -> isSingleSetOfRangesIsSatisfied(ranges, version));
+                .anyMatch(ranges -> isSingleSetOfRangesIsSatisfied(ranges, version));
     }
 
     @Override
     public String toString() {
         return rangesList.stream()
-            .map(RangesList::formatRanges)
-            .collect(joining(OR_JOINER))
-            .replaceAll("^\\(([^()]+)\\)$", "$1");
+                .map(RangesList::formatRanges)
+                .collect(joining(OR_JOINER))
+                .replaceAll("^\\(([^()]+)\\)$", "$1");
     }
 
     private static String formatRanges(final List<Range> ranges) {
         String representation = ranges.stream()
-            .map(Range::toString)
-            .collect(joining(AND_JOINER));
+                .map(Range::toString)
+                .collect(joining(AND_JOINER));
 
         if (ranges.size() < 2) {
             return representation;
@@ -99,21 +106,21 @@ public class RangesList {
         return format(Locale.ROOT, "(%s)", representation);
     }
 
-    private static boolean isSingleSetOfRangesIsSatisfied(final List<Range> ranges, final Semver version) {
+    private boolean isSingleSetOfRangesIsSatisfied(final List<Range> ranges, final Semver version) {
         for (Range range : ranges) {
             if (!range.isSatisfiedBy(version)) {
                 return false;
             }
         }
 
-        if (!version.getPreRelease().isEmpty()) {
+        if (!version.getPreRelease().isEmpty() && !includePrerelease) {
             for (Range range : ranges) {
                 Semver rangeSemver = range.getRangeVersion();
-                List<String> preRelease = rangeSemver.getPreRelease();
-                if (preRelease.size() > 0) {
+                List<String> prerelease = rangeSemver.getPreRelease();
+                if (prerelease.size() > 0) {
                     if (version.getMajor() == rangeSemver.getMajor() &&
-                        version.getMinor() == rangeSemver.getMinor() &&
-                        version.getPatch() == rangeSemver.getPatch()) {
+                            version.getMinor() == rangeSemver.getMinor() &&
+                            version.getPatch() == rangeSemver.getPatch()) {
                         return true;
                     }
                 }

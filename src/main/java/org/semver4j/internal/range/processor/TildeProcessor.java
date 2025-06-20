@@ -12,9 +12,7 @@ import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.GTE;
 import static org.semver4j.Range.RangeOperator.LT;
 import static org.semver4j.internal.Tokenizers.TILDE;
-import static org.semver4j.internal.range.processor.RangesUtils.isNotBlank;
-import static org.semver4j.internal.range.processor.RangesUtils.isX;
-import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSupport;
+import static org.semver4j.internal.range.processor.RangesUtils.*;
 
 /**
  * <p>Processor for translate <a href="https://github.com/npm/node-semver#tilde-ranges-123-12-1">tilde ranges</a>
@@ -29,6 +27,16 @@ import static org.semver4j.internal.range.processor.RangesUtils.parseIntWithXSup
  *     <li>{@code ~0.2} to {@code ≥0.2.0 <0.3.0}</li>
  *     <li>{@code ~0} to {@code ≥0.0.0 <1.0.0}</li>
  * </ul>
+ * <p>
+ * If the prerelease flag is set to true, translates:
+ * <ul>
+ *     <li>{@code ~1.2.3} to {@code ≥1.2.3 <1.3.0-0}</li>
+ *     <li>{@code ~1.2} to {@code ≥1.2.0-0 <1.3.0-0}</li>
+ *     <li>{@code ~1} to {@code ≥1.0.0-0 <2.0.0-0}</li>
+ *     <li>{@code ~0.2.3} to {@code ≥0.2.3 <0.3.0-0}</li>
+ *     <li>{@code ~0.2} to {@code ≥0.2.0-0 <0.3.0-0}</li>
+ *     <li>{@code ~0} to {@code ≥0.0.0-0 <1.0.0-0}</li>
+ * </ul>
  */
 @NullMarked
 public class TildeProcessor implements Processor {
@@ -36,7 +44,7 @@ public class TildeProcessor implements Processor {
 
     @Override
     @Nullable
-    public String tryProcess(String range) {
+    public String process(String range, boolean includePrerelease) {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {
@@ -50,19 +58,20 @@ public class TildeProcessor implements Processor {
 
         String from;
         String to;
+        String prerelease = includePrerelease ? Processor.LOWEST_PRERELEASE : "";
 
         if (isX(minor)) {
-            from = format(Locale.ROOT, "%s%d.0.0", GTE.asString(), major);
-            to = format(Locale.ROOT, "%s%d.0.0", LT.asString(), (major + 1));
+            from = format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), major, prerelease);
+            to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), prerelease);
         } else if (isX(path)) {
-            from = format(Locale.ROOT, "%s%d.%d.0", GTE.asString(), major, minor);
-            to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
+            from = format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), major, minor, prerelease);
+            to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), prerelease);
         } else if (isNotBlank(preRelease)) {
             from = format(Locale.ROOT, "%s%d.%d.%d-%s", GTE.asString(), major, minor, path, preRelease);
-            to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
+            to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), prerelease);
         } else {
             from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, path);
-            to = format(Locale.ROOT, "%s%d.%d.0", LT.asString(), major, (minor + 1));
+            to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), prerelease);
         }
 
         return format(Locale.ROOT, "%s %s", from, to);

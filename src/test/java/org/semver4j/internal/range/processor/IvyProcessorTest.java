@@ -15,7 +15,7 @@ class IvyProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldProcessIvyRanges(String range, String expected) {
-        assertThat(ivyProcessor.tryProcess(range)).isEqualTo(expected);
+        assertThat(ivyProcessor.process(range, false)).isEqualTo(expected);
     }
 
     static Stream<Arguments> shouldProcessIvyRanges() {
@@ -36,6 +36,34 @@ class IvyProcessorTest {
                 arguments("[1.0.1,2.0]", ">=1.0.1 <=2.0.0"),
                 arguments("latest", ">=0.0.0"),
                 arguments("latest.integration", ">=0.0.0"),
+                arguments("INVALID", null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldProcessIvyRangesIncludePrerelease(String range, String expected) {
+        assertThat(ivyProcessor.process(range, true)).isEqualTo(expected);
+    }
+
+    static Stream<Arguments> shouldProcessIvyRangesIncludePrerelease() {
+        return Stream.of(
+                arguments("[1.0,2.0]", ">=1.0.0 <=2.0.0"),
+                arguments("[1.0,2.0[", ">=1.0.0 <2.0.0"),
+                arguments("]1.0,2.0]", ">1.0.0 <=2.0.0"),
+                arguments("]1.0,2.0[", ">1.0.0 <2.0.0"),
+                arguments("[1.0,)", ">=1.0.0"),
+                arguments("]1.0,)", ">1.0.0"),
+                arguments("(,2.0]", "<=2.0.0"),
+                arguments("(,2.0[", "<2.0.0"),
+                arguments("[1.0.1,2.0.1]", ">=1.0.1 <=2.0.1"),
+                arguments("]1.0.1,2.0.1]", ">1.0.1 <=2.0.1"),
+                arguments("[1.0.1,2.0.1[", ">=1.0.1 <2.0.1"),
+                arguments("]1.0.1,2.0.1[", ">1.0.1 <2.0.1"),
+                arguments("[1.0,2.0.1]", ">=1.0.0 <=2.0.1"),
+                arguments("[1.0.1,2.0]", ">=1.0.1 <=2.0.0"),
+                arguments("latest", ">=0.0.0-0"),
+                arguments("latest.integration", ">=0.0.0-0"),
                 arguments("INVALID", null)
         );
     }

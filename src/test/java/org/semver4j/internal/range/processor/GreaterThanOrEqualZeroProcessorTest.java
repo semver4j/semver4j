@@ -16,7 +16,7 @@ class GreaterThanOrEqualZeroProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldParseRanges(String range, String expectedString) {
-        assertThat(processor.tryProcess(range)).isEqualTo(expectedString);
+        assertThat(processor.process(range, false)).isEqualTo(expectedString);
     }
 
     static Stream<Arguments> shouldParseRanges() {

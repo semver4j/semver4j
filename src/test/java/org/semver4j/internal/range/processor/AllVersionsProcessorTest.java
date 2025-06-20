@@ -15,13 +15,27 @@ class AllVersionsProcessorTest {
     @ParameterizedTest
     @MethodSource
     void shouldParseAllVersions(String range, String expectedString) {
-        assertThat(allVersionsProcessor.tryProcess(range)).isEqualTo(expectedString);
+        assertThat(allVersionsProcessor.process(range, false)).isEqualTo(expectedString);
     }
 
     static Stream<Arguments> shouldParseAllVersions() {
         return Stream.of(
                 arguments("*", ">=0.0.0"),
                 arguments("", ">=0.0.0"),
+                arguments("INVALID", null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void shouldParseAllVersionsIncludePrerelease(String range, String expectedString) {
+        assertThat(allVersionsProcessor.process(range, true)).isEqualTo(expectedString);
+    }
+
+    static Stream<Arguments> shouldParseAllVersionsIncludePrerelease() {
+        return Stream.of(
+                arguments("*", ">=0.0.0-0"),
+                arguments("", ">=0.0.0-0"),
                 arguments("INVALID", null)
         );
     }
