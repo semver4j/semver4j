@@ -24,7 +24,7 @@ class RangeProcessorPipelineTest {
         assertThat(pipeline.process("RANGE", false)).isEqualTo("RANGE");
     }
 
-    private final class DummyProcessor implements Processor {
+    private static final class DummyProcessor implements Processor {
         private final Function<String, String> process;
 
         private DummyProcessor(Function<String, String> process) {
