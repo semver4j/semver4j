@@ -1329,7 +1329,7 @@ class SemverTest {
         Semver.Builder builder = new Semver.Builder();
 
         //when
-        Semver semver = builder.toSemver();
+        Semver semver = builder.build();
 
         //then
         assertThat(semver.getVersion()).isEqualTo("0.0.0");
@@ -1338,7 +1338,7 @@ class SemverTest {
     @Test
     void shouldBuildBasicSemver() {
         //when
-        Semver semver = Semver.of(1, 2, 3);
+        Semver semver = Semver.create(1, 2, 3);
 
         //then
         assertThat(semver.getVersion()).isEqualTo("1.2.3");
@@ -1347,7 +1347,7 @@ class SemverTest {
     @Test
     void shouldUseCustomFormatterInBuilder() {
         //given
-        Semver.Builder builder = Semver.of()
+        Semver.Builder builder = Semver.builder()
                 .withMajor(1)
                 .withMinor(2)
                 .withPatch(3)
@@ -1355,7 +1355,7 @@ class SemverTest {
                 .withBuild("5bb76cdb");
 
         //when
-        String version = builder.toVersion(semver -> {
+        String version = builder.build().format(semver -> {
             String preRelease = join("&", semver.getPreRelease());
             String build = join("&", semver.getBuild());
             return format(Locale.ROOT, "%d:%d:%d|%s*%s", semver.getMajor(), semver.getMinor(), semver.getPatch(), preRelease, build);
@@ -1368,13 +1368,13 @@ class SemverTest {
     @Test
     void shouldUseCustomFormatter() {
         //given
-        Semver actualSemver = Semver.of()
+        Semver actualSemver = Semver.builder()
                 .withMajor(1)
                 .withMinor(2)
                 .withPatch(3)
                 .withPreRelease("alpha")
                 .withBuild("5bb76cdb")
-                .toSemver();
+                .build();
 
         //when
         String version = actualSemver.format(semver -> {

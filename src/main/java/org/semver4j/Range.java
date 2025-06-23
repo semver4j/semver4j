@@ -58,20 +58,13 @@ public class Range {
      * @see #isSatisfiedBy(String)
      */
     public boolean isSatisfiedBy(final Semver version) {
-        switch (rangeOperator) {
-            case EQ:
-                return version.isEquivalentTo(rangeVersion);
-            case LT:
-                return version.isLowerThan(rangeVersion);
-            case LTE:
-                return version.isLowerThanOrEqualTo(rangeVersion);
-            case GT:
-                return version.isGreaterThan(rangeVersion);
-            case GTE:
-                return version.isGreaterThanOrEqualTo(rangeVersion);
-        }
-
-        throw new RuntimeException(format(Locale.ROOT, "Unknown RangeOperator: %s", rangeOperator));
+        return switch (rangeOperator) {
+            case EQ -> version.isEquivalentTo(rangeVersion);
+            case LT -> version.isLowerThan(rangeVersion);
+            case LTE -> version.isLowerThanOrEqualTo(rangeVersion);
+            case GT -> version.isGreaterThan(rangeVersion);
+            case GTE -> version.isGreaterThanOrEqualTo(rangeVersion);
+        };
     }
 
     @Override

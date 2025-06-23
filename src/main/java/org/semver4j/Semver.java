@@ -1,12 +1,12 @@
 package org.semver4j;
 
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.semver4j.internal.*;
-import org.semver4j.internal.Comparator;
 import org.semver4j.internal.StrictParser.Version;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 
 import static java.lang.String.join;
@@ -18,11 +18,8 @@ import static java.util.Objects.requireNonNull;
  * Semver is a tool that provides useful methods to manipulate versions that follow the "semantic versioning"
  * specification (see <a href="http://semver.org">semver.org</a>).
  */
-@NullMarked
 public class Semver implements Comparable<Semver> {
     public static final Semver ZERO = new Semver("0.0.0");
-
-    private final String originalVersion;
 
     private final int major;
     private final int minor;
@@ -32,16 +29,16 @@ public class Semver implements Comparable<Semver> {
 
     private final String version;
 
-    public Semver(final String version) {
-        this.originalVersion = version.trim();
+    public Semver(String version) {
+        requireNonNull(version, "version must not be null");
 
-        Version parsedVersion = StrictParser.parse(this.originalVersion);
+        Version parsedVersion = StrictParser.parse(version.trim());
 
-        major = parsedVersion.getMajor();
-        minor = parsedVersion.getMinor();
-        patch = parsedVersion.getPatch();
-        preRelease = parsedVersion.getPreRelease();
-        build = parsedVersion.getBuild();
+        major = parsedVersion.major();
+        minor = parsedVersion.minor();
+        patch = parsedVersion.patch();
+        preRelease = parsedVersion.preRelease();
+        build = parsedVersion.build();
 
         this.version = new Builder()
                 .withMajor(major)
@@ -53,13 +50,12 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Try to parse string as semver.
+     * Try to parse string as a semver.
      *
      * @param version version string to parse
      * @return {@link Semver} when done, {@code null} otherwise
      */
-    @Nullable
-    public static Semver parse(final @Nullable String version) {
+    public static @Nullable Semver parse(@Nullable String version) {
         if (version == null) {
             return null;
         }
@@ -74,10 +70,9 @@ public class Semver implements Comparable<Semver> {
      * Coerce string into semver if is possible.
      *
      * @param version version to coerce
-     * @return {@link Semver} if can coerce version, {@code null} otherwise
+     * @return {@link Semver} if can coerce a version, {@code null} otherwise
      */
-    @Nullable
-    public static Semver coerce(final @Nullable String version) {
+    public static @Nullable Semver coerce(@Nullable String version) {
         if (version == null) {
             return null;
         }
@@ -87,8 +82,8 @@ public class Semver implements Comparable<Semver> {
             return semver;
         }
 
-        String coerce = Coerce.coerce(version);
-        return parse(coerce);
+        String coercedVersion = Coerce.coerce(version);
+        return parse(coercedVersion);
     }
 
     /**
@@ -97,16 +92,16 @@ public class Semver implements Comparable<Semver> {
      * @param version version to check
      * @return {@code true} if is valid version, {@code false} otherwise
      */
-    public static boolean isValid(final @Nullable String version) {
+    public static boolean isValid(@Nullable String version) {
         return parse(version) != null;
     }
 
     /**
      * Returns builder instance to create semver.
      *
-     * @since 5.3.0
+     * @since 6.0.0
      */
-    public static Builder of() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -119,12 +114,28 @@ public class Semver implements Comparable<Semver> {
      * @return basic {@link Semver} object
      * @since 5.3.0
      */
-    public static Semver of(int major, int minor, int patch) {
-        return new Builder()
+    public static Builder of(int major, int minor, int patch) {
+        return builder()
+                .withMajor(major)
+                .withMinor(minor)
+                .withPatch(patch);
+    }
+
+    /**
+     * Returns a programmatically created basic {@link Semver} object.
+     *
+     * @param major version to set
+     * @param minor version to set
+     * @param patch version to set
+     * @return basic {@link Semver} object
+     * @since 5.3.0
+     */
+    public static Semver create(int major, int minor, int patch) {
+        return builder()
                 .withMajor(major)
                 .withMinor(minor)
                 .withPatch(patch)
-                .toSemver();
+                .build();
     }
 
     /**
@@ -178,7 +189,7 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Returns the build of the version.
-     * Example: for "1.2.3-beta.4+sha98450956" = "sha98450956"
+     * Example: for "1.2.3-beta.4+sha98450956" = {"sha98450956"}
      *
      * @return the build of the version
      */
@@ -287,7 +298,7 @@ public class Semver implements Comparable<Semver> {
      * @param preRelease version to set
      * @return semver with new pre-release
      */
-    public Semver withPreRelease(final String preRelease) {
+    public Semver withPreRelease(String preRelease) {
         return Modifier.withPreRelease(this, preRelease);
     }
 
@@ -297,7 +308,7 @@ public class Semver implements Comparable<Semver> {
      * @param build version to set
      * @return semver with new build
      */
-    public Semver withBuild(final String build) {
+    public Semver withBuild(String build) {
         return Modifier.withBuild(this, build);
     }
 
@@ -329,22 +340,21 @@ public class Semver implements Comparable<Semver> {
     }
 
     @Override
-    public int compareTo(final Semver other) {
+    public int compareTo(Semver other) {
         return Comparator.compareTo(this, other);
     }
 
     /**
      * Checks whether the given version is API compatible with this version.
      */
-    public boolean isApiCompatible(final String version) {
-        return diff(version).ordinal() < VersionDiff.MAJOR.ordinal();
+    public boolean isApiCompatible(String version) {
+        return isApiCompatible(new Semver(version));
     }
 
     /**
      * Checks whether the given version is API compatible with this version.
      */
-    @SuppressWarnings("unused")
-    public boolean isApiCompatible(final Semver version) {
+    public boolean isApiCompatible(Semver version) {
         return diff(version).ordinal() < VersionDiff.MAJOR.ordinal();
     }
 
@@ -355,7 +365,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version is greater than the provided version, {@code false} otherwise
      * @see #isGreaterThan(Semver)
      */
-    public boolean isGreaterThan(final String version) {
+    public boolean isGreaterThan(String version) {
         return isGreaterThan(new Semver(version));
     }
 
@@ -366,7 +376,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version is greater than the provided version, {@code false} otherwise
      * @see #isGreaterThan(String)
      */
-    public boolean isGreaterThan(final Semver version) {
+    public boolean isGreaterThan(Semver version) {
         return compareTo(version) > 0;
     }
 
@@ -377,7 +387,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version is greater than or equal to the provided version, {@code false} otherwise
      * @see #isGreaterThanOrEqualTo(Semver)
      */
-    public boolean isGreaterThanOrEqualTo(final String version) {
+    public boolean isGreaterThanOrEqualTo(String version) {
         return isGreaterThanOrEqualTo(new Semver(version));
     }
 
@@ -388,7 +398,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version is greater than or equal to the provided version, {@code false} otherwise
      * @see #isLowerThan(String)
      */
-    public boolean isGreaterThanOrEqualTo(final Semver version) {
+    public boolean isGreaterThanOrEqualTo(Semver version) {
         return compareTo(version) >= 0;
     }
 
@@ -399,7 +409,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version is lower than the provided version, {@code false} otherwise
      * @see #isLowerThan(Semver)
      */
-    public boolean isLowerThan(final String version) {
+    public boolean isLowerThan(String version) {
         return isLowerThan(new Semver(version));
     }
 
@@ -410,7 +420,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version is lower than the provided version, {@code false} otherwise
      * @see #isLowerThan(String)
      */
-    public boolean isLowerThan(final Semver version) {
+    public boolean isLowerThan(Semver version) {
         return compareTo(version) < 0;
     }
 
@@ -421,7 +431,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version is lower than or equal to the provided version, {@code false} otherwise
      * @see #isLowerThanOrEqualTo(Semver)
      */
-    public boolean isLowerThanOrEqualTo(final String version) {
+    public boolean isLowerThanOrEqualTo(String version) {
         return isLowerThanOrEqualTo(new Semver(version));
     }
 
@@ -432,7 +442,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version is lower than or equal to the provided version, {@code false} otherwise
      * @see #isLowerThanOrEqualTo(String)
      */
-    public boolean isLowerThanOrEqualTo(final Semver version) {
+    public boolean isLowerThanOrEqualTo(Semver version) {
         return compareTo(version) <= 0;
     }
 
@@ -443,7 +453,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version equals the provided version, {@code false} otherwise
      * @see #isEqualTo(Semver)
      */
-    public boolean isEqualTo(final String version) {
+    public boolean isEqualTo(String version) {
         return isEqualTo(new Semver(version));
     }
 
@@ -454,7 +464,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version equals the provided version, {@code false} otherwise
      * @see #isEqualTo(String)
      */
-    public boolean isEqualTo(final Semver version) {
+    public boolean isEqualTo(Semver version) {
         return equals(version);
     }
 
@@ -465,7 +475,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version equals the provided version (build excluded), {@code false} otherwise
      * @see #isEquivalentTo(Semver)
      */
-    public boolean isEquivalentTo(final String version) {
+    public boolean isEquivalentTo(String version) {
         return isEquivalentTo(new Semver(version));
     }
 
@@ -476,7 +486,7 @@ public class Semver implements Comparable<Semver> {
      * @return {@code true} if the current version equals the provided version (build excluded), {@code false} otherwise
      * @see #isEquivalentTo(String)
      */
-    public boolean isEquivalentTo(final Semver version) {
+    public boolean isEquivalentTo(Semver version) {
         return compareTo(version) == 0;
     }
 
@@ -489,7 +499,7 @@ public class Semver implements Comparable<Semver> {
      * @return the greatest difference
      * @see #diff(Semver)
      */
-    public VersionDiff diff(final String version) {
+    public VersionDiff diff(String version) {
         return diff(new Semver(version));
     }
 
@@ -502,34 +512,34 @@ public class Semver implements Comparable<Semver> {
      * @return the greatest difference
      * @see #diff(String)
      */
-    public VersionDiff diff(final Semver version) {
+    public VersionDiff diff(Semver version) {
         return Differ.diff(this, version);
     }
 
     /**
-     * Check if the version satisfies a range. Defaults to not including prereleases.
+     * Check if the version satisfies a range. Defaults to not including pre-releases.
      *
      * @param range range
      * @return {@code true} if the version satisfies the range, {@code false} otherwise
      * @see #satisfies(RangesList)
      * @see #satisfies(RangesExpression)
      */
-    public boolean satisfies(final String range) {
+    public boolean satisfies(String range) {
         return satisfies(range, false);
     }
 
     /**
-     * Check if the version satisfies a range with an option to include prereleases.
+     * Check if the version satisfies a range with an option to include pre-releases.
      *
      * @param range             version range expression to check against
-     * @param includePrerelease whether to include prereleases in the check
+     * @param includePreRelease whether to include pre-releases in the check
      * @return {@code true} if the version satisfies the range, {@code false} otherwise
      * @see #satisfies(String)
      * @see #satisfies(RangesList)
      * @since 5.8.0
      */
-    public boolean satisfies(final String range, boolean includePrerelease) {
-        RangesList rangesList = RangesListFactory.create(range, includePrerelease);
+    public boolean satisfies(String range, boolean includePreRelease) {
+        RangesList rangesList = RangesListFactory.create(range, includePreRelease);
         return satisfies(rangesList);
     }
 
@@ -543,7 +553,7 @@ public class Semver implements Comparable<Semver> {
      * @see #satisfies(RangesList)
      * @since 4.2.0
      */
-    public boolean satisfies(final RangesExpression rangesExpression) {
+    public boolean satisfies(RangesExpression rangesExpression) {
         RangesList rangesList = RangesListFactory.create(rangesExpression);
         return satisfies(rangesList);
     }
@@ -556,7 +566,7 @@ public class Semver implements Comparable<Semver> {
      * @see #satisfies(String)
      * @see #satisfies(RangesExpression)
      */
-    public boolean satisfies(final RangesList rangesList) {
+    public boolean satisfies(RangesList rangesList) {
         return rangesList.isSatisfiedBy(this);
     }
 
@@ -568,7 +578,7 @@ public class Semver implements Comparable<Semver> {
     }
 
     @Override
-    public boolean equals(final @Nullable Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -628,46 +638,44 @@ public class Semver implements Comparable<Semver> {
             return this;
         }
 
-        @SuppressWarnings("unused")
         public Builder withPreRelease(String preRelease) {
             requireNonNull(preRelease, "preRelease cannot be null");
-            return withPreReleases(new String[]{preRelease});
+            return withPreReleases(List.of(preRelease));
         }
 
         public Builder withPreReleases(Collection<String> preReleases) {
-            requireNonNull(preReleases, "preRelease cannot be null");
-            this.preRelease = new ArrayList<>(preReleases);
+            requireNonNull(preReleases, "preReleases cannot be null");
+            this.preRelease = List.copyOf(preReleases);
             return this;
         }
 
-        public Builder withPreReleases(String[] preReleases) {
-            requireNonNull(preReleases, "preRelease cannot be null");
-            this.preRelease = Arrays.asList(preReleases);
+        public Builder withPreReleases(String... preReleases) {
+            requireNonNull(preReleases, "preReleases cannot be null");
+            this.preRelease = List.of(preReleases);
             return this;
         }
 
-        @SuppressWarnings("unused")
         public Builder withBuild(String build) {
             requireNonNull(build, "build cannot be null");
-            return withBuilds(new String[]{build});
+            return withBuilds(List.of(build));
         }
 
         public Builder withBuilds(Collection<String> builds) {
             requireNonNull(builds, "builds cannot be null");
-            this.build = new ArrayList<>(builds);
+            this.build = List.copyOf(builds);
             return this;
         }
 
-        public Builder withBuilds(String[] builds) {
+        public Builder withBuilds(String... builds) {
             requireNonNull(builds, "builds cannot be null");
-            this.build = Arrays.asList(builds);
+            this.build = List.of(builds);
             return this;
         }
 
         /**
          * Build a {@link Semver} object.
          */
-        public Semver toSemver() {
+        public Semver build() {
             String version = toVersion();
             return new Semver(version);
         }
@@ -677,7 +685,7 @@ public class Semver implements Comparable<Semver> {
          * It follows a semver specification which results in:
          * {@code 1.2.3-alpha+5bb76cdb}
          */
-        public String toVersion() {
+        private String toVersion() {
             String resultVersion = String.format(Locale.ROOT, "%d.%d.%d", major, minor, patch);
             if (!preRelease.isEmpty()) {
                 resultVersion += "-" + join(".", preRelease);
@@ -686,13 +694,6 @@ public class Semver implements Comparable<Semver> {
                 resultVersion += "+" + join(".", build);
             }
             return resultVersion;
-        }
-
-        /**
-         * Format {@link Semver} object using custom formatting rules.
-         */
-        public String toVersion(Function<Semver, String> formatter) {
-            return formatter.apply(toSemver());
         }
     }
 }
