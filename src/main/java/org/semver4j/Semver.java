@@ -1,18 +1,17 @@
 package org.semver4j;
 
-import org.jspecify.annotations.Nullable;
-import org.semver4j.internal.*;
-import org.semver4j.internal.StrictParser.Version;
+import static java.lang.String.join;
+import static java.util.Collections.emptyList;
+import static java.util.Objects.hash;
+import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
-
-import static java.lang.String.join;
-import static java.util.Collections.emptyList;
-import static java.util.Objects.hash;
-import static java.util.Objects.requireNonNull;
+import org.jspecify.annotations.Nullable;
+import org.semver4j.internal.*;
+import org.semver4j.internal.StrictParser.Version;
 
 /**
  * Semver is a tool that provides useful methods to manipulate versions that follow the "semantic versioning"
@@ -115,10 +114,7 @@ public class Semver implements Comparable<Semver> {
      * @since 5.3.0
      */
     public static Builder of(int major, int minor, int patch) {
-        return builder()
-                .withMajor(major)
-                .withMinor(minor)
-                .withPatch(patch);
+        return builder().withMajor(major).withMinor(minor).withPatch(patch);
     }
 
     /**
@@ -131,11 +127,7 @@ public class Semver implements Comparable<Semver> {
      * @since 5.3.0
      */
     public static Semver create(int major, int minor, int patch) {
-        return builder()
-                .withMajor(major)
-                .withMinor(minor)
-                .withPatch(patch)
-                .build();
+        return builder().withMajor(major).withMinor(minor).withPatch(patch).build();
     }
 
     /**
@@ -148,8 +140,7 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Returns the major part of the version.
-     * Example: for "1.2.3" = 1
+     * Returns the major part of the version. Example: for "1.2.3" = 1
      *
      * @return the major part of the version
      */
@@ -158,8 +149,7 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Returns the minor part of the version.
-     * Example: for "1.2.3" = 2
+     * Returns the minor part of the version. Example: for "1.2.3" = 2
      *
      * @return the minor part of the version
      */
@@ -168,8 +158,7 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Returns the patch part of the version.
-     * Example: for "1.2.3" = 3
+     * Returns the patch part of the version. Example: for "1.2.3" = 3
      *
      * @return the patch part of the version
      */
@@ -178,8 +167,7 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Returns the pre-release of the version.
-     * Example: for "1.2.3-beta.4+sha98450956" = {"beta", "4"}
+     * Returns the pre-release of the version. Example: for "1.2.3-beta.4+sha98450956" = {"beta", "4"}
      *
      * @return the pre-release of the version
      */
@@ -188,8 +176,7 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Returns the build of the version.
-     * Example: for "1.2.3-beta.4+sha98450956" = {"sha98450956"}
+     * Returns the build of the version. Example: for "1.2.3-beta.4+sha98450956" = {"sha98450956"}
      *
      * @return the build of the version
      */
@@ -198,9 +185,9 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Determines if the current version is stable or not.
-     * Stable version have a major version number <a href="https://semver.org/#spec-item-4">strictly positive</a>
-     * and no <a href="https://semver.org/#spec-item-9">pre-release tokens</a>.
+     * Determines if the current version is stable or not. Stable version have a major version number <a
+     * href="https://semver.org/#spec-item-4">strictly positive</a> and no <a
+     * href="https://semver.org/#spec-item-9">pre-release tokens</a>.
      *
      * @return true if the current version is stable
      */
@@ -344,16 +331,12 @@ public class Semver implements Comparable<Semver> {
         return Comparator.compareTo(this, other);
     }
 
-    /**
-     * Checks whether the given version is API compatible with this version.
-     */
+    /** Checks whether the given version is API compatible with this version. */
     public boolean isApiCompatible(String version) {
         return isApiCompatible(new Semver(version));
     }
 
-    /**
-     * Checks whether the given version is API compatible with this version.
-     */
+    /** Checks whether the given version is API compatible with this version. */
     public boolean isApiCompatible(Semver version) {
         return diff(version).ordinal() < VersionDiff.MAJOR.ordinal();
     }
@@ -384,7 +367,8 @@ public class Semver implements Comparable<Semver> {
      * Checks if the version is greater than or equal to another version.
      *
      * @param version version to compare
-     * @return {@code true} if the current version is greater than or equal to the provided version, {@code false} otherwise
+     * @return {@code true} if the current version is greater than or equal to the provided version, {@code false}
+     *     otherwise
      * @see #isGreaterThanOrEqualTo(Semver)
      */
     public boolean isGreaterThanOrEqualTo(String version) {
@@ -395,7 +379,8 @@ public class Semver implements Comparable<Semver> {
      * Checks if the version is greater than or equal to another version.
      *
      * @param version version to compare
-     * @return {@code true} if the current version is greater than or equal to the provided version, {@code false} otherwise
+     * @return {@code true} if the current version is greater than or equal to the provided version, {@code false}
+     *     otherwise
      * @see #isLowerThan(String)
      */
     public boolean isGreaterThanOrEqualTo(Semver version) {
@@ -428,7 +413,8 @@ public class Semver implements Comparable<Semver> {
      * Checks if the version is lower than or equal to another version.
      *
      * @param version version to compare
-     * @return {@code true} if the current version is lower than or equal to the provided version, {@code false} otherwise
+     * @return {@code true} if the current version is lower than or equal to the provided version, {@code false}
+     *     otherwise
      * @see #isLowerThanOrEqualTo(Semver)
      */
     public boolean isLowerThanOrEqualTo(String version) {
@@ -439,7 +425,8 @@ public class Semver implements Comparable<Semver> {
      * Checks if the version is lower than or equal to another version.
      *
      * @param version version to compare
-     * @return {@code true} if the current version is lower than or equal to the provided version, {@code false} otherwise
+     * @return {@code true} if the current version is lower than or equal to the provided version, {@code false}
+     *     otherwise
      * @see #isLowerThanOrEqualTo(String)
      */
     public boolean isLowerThanOrEqualTo(Semver version) {
@@ -492,8 +479,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Returns the <b>greatest</b> difference between two versions.<br>
-     * example, if the current version is {@code 1.2.3} and compared version is {@code 1.3.0}, the biggest difference
-     * is the <b>MINOR</b> number.
+     * example, if the current version is {@code 1.2.3} and compared version is {@code 1.3.0}, the biggest difference is
+     * the <b>MINOR</b> number.
      *
      * @param version version to compare
      * @return the greatest difference
@@ -505,8 +492,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Returns the <b>greatest</b> difference between two versions.<br>
-     * For example, if the current version is {@code 1.2.3} and compared version is {@code 1.3.0}, the biggest difference
-     * is the <b>MINOR</b> number.
+     * For example, if the current version is {@code 1.2.3} and compared version is {@code 1.3.0}, the biggest
+     * difference is the <b>MINOR</b> number.
      *
      * @param version version to compare
      * @return the greatest difference
@@ -531,7 +518,7 @@ public class Semver implements Comparable<Semver> {
     /**
      * Check if the version satisfies a range with an option to include pre-releases.
      *
-     * @param range             version range expression to check against
+     * @param range version range expression to check against
      * @param includePreRelease whether to include pre-releases in the check
      * @return {@code true} if the version satisfies the range, {@code false} otherwise
      * @see #satisfies(String)
@@ -570,9 +557,7 @@ public class Semver implements Comparable<Semver> {
         return rangesList.isSatisfiedBy(this);
     }
 
-    /**
-     * Format {@link Semver} object using custom formatting rules.
-     */
+    /** Format {@link Semver} object using custom formatting rules. */
     public String format(Function<Semver, String> formatter) {
         return formatter.apply(this);
     }
@@ -672,18 +657,16 @@ public class Semver implements Comparable<Semver> {
             return this;
         }
 
-        /**
-         * Build a {@link Semver} object.
-         */
+        /** Build a {@link Semver} object. */
         public Semver build() {
             String version = toVersion();
             return new Semver(version);
         }
 
         /**
-         * Build a string representation of the version.<p>
-         * It follows a semver specification which results in:
-         * {@code 1.2.3-alpha+5bb76cdb}
+         * Build a string representation of the version.
+         *
+         * <p>It follows a semver specification which results in: {@code 1.2.3-alpha+5bb76cdb}
          */
         private String toVersion() {
             String resultVersion = String.format(Locale.ROOT, "%d.%d.%d", major, minor, patch);

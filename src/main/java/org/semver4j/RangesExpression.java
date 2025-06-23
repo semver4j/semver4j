@@ -1,23 +1,25 @@
 package org.semver4j;
 
+import static org.semver4j.Range.RangeOperator.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.jspecify.annotations.NullMarked;
 
-import static org.semver4j.Range.RangeOperator.*;
-
 /**
  * The internal expression class used to create a ranges.<br>
  * Allows to create ranges using a fluent interface.
- * <p>
- * Usage:
+ *
+ * <p>Usage:
+ *
  * <pre>
  * equal("1.0.0")
  *     .and(less("2.0.0"))
  *     .or(greaterOrEqual("3.0.0"))
  * </pre>
- * <p>
- * Will produce range:
+ *
+ * <p>Will produce range:
+ *
  * <pre>
  * (=1.0.0 and &lt;2.0.0) or &gt;=3.0.0
  * </pre>
@@ -40,9 +42,7 @@ public class RangesExpression {
         return equal(new Semver(version));
     }
 
-    /**
-     * Expression for equal range item.
-     */
+    /** Expression for equal range item. */
     public static RangesExpression equal(final Semver version) {
         return new RangesExpression(new Range(version, EQ));
     }
@@ -56,9 +56,7 @@ public class RangesExpression {
         return greater(new Semver(version));
     }
 
-    /**
-     * Expression for greater range item.
-     */
+    /** Expression for greater range item. */
     public static RangesExpression greater(final Semver version) {
         return new RangesExpression(new Range(version, GT));
     }
@@ -72,9 +70,7 @@ public class RangesExpression {
         return greaterOrEqual(new Semver(version));
     }
 
-    /**
-     * Expression for greater or equal range item.
-     */
+    /** Expression for greater or equal range item. */
     public static RangesExpression greaterOrEqual(final Semver version) {
         return new RangesExpression(new Range(version, GTE));
     }
@@ -88,9 +84,7 @@ public class RangesExpression {
         return less(new Semver(version));
     }
 
-    /**
-     * Expression for lee range item.
-     */
+    /** Expression for lee range item. */
     public static RangesExpression less(final Semver version) {
         return new RangesExpression(new Range(version, LT));
     }
@@ -104,9 +98,7 @@ public class RangesExpression {
         return lessOrEqual(new Semver(version));
     }
 
-    /**
-     * Expression for less or equal range item.
-     */
+    /** Expression for less or equal range item. */
     public static RangesExpression lessOrEqual(final Semver version) {
         return new RangesExpression(new Range(version, LTE));
     }
@@ -115,9 +107,7 @@ public class RangesExpression {
         andOperationRanges.add(range);
     }
 
-    /**
-     * Allows to join ranges using {@code AND} operator.
-     */
+    /** Allows to join ranges using {@code AND} operator. */
     public RangesExpression and(final RangesExpression rangeExpression) {
         RangesList rangesList = rangeExpression.get();
         List<List<Range>> lists = rangesList.get();
@@ -130,9 +120,7 @@ public class RangesExpression {
         return this;
     }
 
-    /**
-     * Allows to join ranges using {@code OR} operator.
-     */
+    /** Allows to join ranges using {@code OR} operator. */
     public RangesExpression or(final RangesExpression rangeExpression) {
         flushAndClearAndOperationRangesToRangesList();
         return and(rangeExpression);

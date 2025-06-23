@@ -1,9 +1,9 @@
 package org.semver4j.internal;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.semver4j.Semver;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class ComparatorTest {
     @Test

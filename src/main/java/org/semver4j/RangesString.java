@@ -1,17 +1,16 @@
 package org.semver4j;
 
-import org.jspecify.annotations.NullMarked;
-import org.semver4j.internal.RangeProcessorPipeline;
-import org.semver4j.processor.*;
+import static java.util.regex.Pattern.compile;
+import static org.semver4j.internal.RangeProcessorPipeline.startWith;
+import static org.semver4j.internal.Tokenizers.COMPARATOR;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static java.util.regex.Pattern.compile;
-import static org.semver4j.internal.Tokenizers.COMPARATOR;
-import static org.semver4j.internal.RangeProcessorPipeline.startWith;
+import org.jspecify.annotations.NullMarked;
+import org.semver4j.internal.RangeProcessorPipeline;
+import org.semver4j.processor.*;
 
 @NullMarked
 class RangesString {
@@ -26,8 +25,7 @@ class RangesString {
                 new HyphenProcessor(),
                 new CaretProcessor(),
                 new TildeProcessor(),
-                new XRangeProcessor()
-        );
+                new XRangeProcessor());
     }
 
     RangesString(Processor start, Processor... additional) {

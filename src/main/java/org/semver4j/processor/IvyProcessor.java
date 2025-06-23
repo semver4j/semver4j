@@ -1,12 +1,5 @@
 package org.semver4j.processor;
 
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
-
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.GT;
@@ -16,29 +9,37 @@ import static org.semver4j.Range.RangeOperator.LTE;
 import static org.semver4j.internal.Tokenizers.IVY;
 import static org.semver4j.processor.RangesUtils.*;
 
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
 /**
- * <p>Processor for translate <a href="https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html">Ivy ranges</a>
- * into classic range.</p>
- * <br>
+ * Processor for translate <a
+ * href="https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html">Ivy ranges</a> into classic
+ * range. <br>
  * Translates:
+ *
  * <ul>
- *     <li>{@code [1.0,2.0]} to {@code ≥1.0.0 ≤2.0.0}</li>
- *     <li>{@code [1.0,2.0[} to {@code ≥1.0.0 <2.0.0}</li>
- *     <li>{@code ]1.0,2.0]} to {@code >1.0.0 ≤2.0.0}</li>
- *     <li>{@code ]1.0,2.0[} to {@code ≥1.0.0 ≤2.0.0}</li>
- *     <li>{@code ]1.0.1,2.0.1[} to {@code ≥1.0.1 ≤2.0.1}</li>
- *     <li>{@code [1.0,)} to {@code ≥1.0.0}</li>
- *     <li>{@code ]1.0,)} to {@code >1.0.0}</li>
- *     <li>{@code (,2.0]} to {@code ≤2.0.0}</li>
- *     <li>{@code (,2.0[} to {@code <2.0.0}</li>
- *     <li>{@code latest} to {@code ≥0.0.0}</li>
- *     <li>{@code latest.integration} to {@code ≥0.0.0}</li>
+ *   <li>{@code [1.0,2.0]} to {@code ≥1.0.0 ≤2.0.0}
+ *   <li>{@code [1.0,2.0[} to {@code ≥1.0.0 <2.0.0}
+ *   <li>{@code ]1.0,2.0]} to {@code >1.0.0 ≤2.0.0}
+ *   <li>{@code ]1.0,2.0[} to {@code ≥1.0.0 ≤2.0.0}
+ *   <li>{@code ]1.0.1,2.0.1[} to {@code ≥1.0.1 ≤2.0.1}
+ *   <li>{@code [1.0,)} to {@code ≥1.0.0}
+ *   <li>{@code ]1.0,)} to {@code >1.0.0}
+ *   <li>{@code (,2.0]} to {@code ≤2.0.0}
+ *   <li>{@code (,2.0[} to {@code <2.0.0}
+ *   <li>{@code latest} to {@code ≥0.0.0}
+ *   <li>{@code latest.integration} to {@code ≥0.0.0}
  * </ul>
  *
  * If the prerelease flag is set to true, translate the same as if the flag is not set, except for the following:
+ *
  * <ul>
- *     <li>{@code latest} to {@code ≥0.0.0-0}</li>
- *     <li>{@code latest.integration} to {@code ≥0.0.0-0}</li>
+ *   <li>{@code latest} to {@code ≥0.0.0-0}
+ *   <li>{@code latest.integration} to {@code ≥0.0.0-0}
  * </ul>
  */
 @NullMarked
@@ -90,13 +91,53 @@ public class IvyProcessor implements Processor {
         boolean closeInclusive = isInclusiveRange(closeSign);
         if (openInclusive && closeInclusive) {
             if (openSign.equals("[") && closeSign.equals("]")) {
-                return format(Locale.ROOT, "%s%d.%d.%d %s%d.%d.%d", GTE.asString(), fromMajor, fromMinor, fromPatch, LTE.asString(), toMajor, toMinor, toPatch);
+                return format(
+                        Locale.ROOT,
+                        "%s%d.%d.%d %s%d.%d.%d",
+                        GTE.asString(),
+                        fromMajor,
+                        fromMinor,
+                        fromPatch,
+                        LTE.asString(),
+                        toMajor,
+                        toMinor,
+                        toPatch);
             } else if (openSign.equals("[") && closeSign.equals("[")) {
-                return format(Locale.ROOT, "%s%d.%d.%d %s%d.%d.%d", GTE.asString(), fromMajor, fromMinor, fromPatch, LT.asString(), toMajor, toMinor, toPatch);
+                return format(
+                        Locale.ROOT,
+                        "%s%d.%d.%d %s%d.%d.%d",
+                        GTE.asString(),
+                        fromMajor,
+                        fromMinor,
+                        fromPatch,
+                        LT.asString(),
+                        toMajor,
+                        toMinor,
+                        toPatch);
             } else if (openSign.equals("]") && closeSign.equals("]")) {
-                return format(Locale.ROOT, "%s%d.%d.%d %s%d.%d.%d", GT.asString(), fromMajor, fromMinor, fromPatch, LTE.asString(), toMajor, toMinor, toPatch);
+                return format(
+                        Locale.ROOT,
+                        "%s%d.%d.%d %s%d.%d.%d",
+                        GT.asString(),
+                        fromMajor,
+                        fromMinor,
+                        fromPatch,
+                        LTE.asString(),
+                        toMajor,
+                        toMinor,
+                        toPatch);
             } else if (openSign.equals("]") && closeSign.equals("[")) {
-                return format(Locale.ROOT, "%s%d.%d.%d %s%d.%d.%d", GT.asString(), fromMajor, fromMinor, fromPatch, LT.asString(), toMajor, toMinor, toPatch);
+                return format(
+                        Locale.ROOT,
+                        "%s%d.%d.%d %s%d.%d.%d",
+                        GT.asString(),
+                        fromMajor,
+                        fromMinor,
+                        fromPatch,
+                        LT.asString(),
+                        toMajor,
+                        toMinor,
+                        toPatch);
             }
         } else if (closeSign.equals(")")) {
             if (openSign.equals("[")) {

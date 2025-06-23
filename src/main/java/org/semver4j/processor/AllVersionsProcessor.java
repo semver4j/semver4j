@@ -4,18 +4,19 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
- * <p>Processor for translating {@code *} and empty strings into a classic range.</p>
- * <br>
+ * Processor for translating {@code *} and empty strings into a classic range. <br>
  * Translates:
+ *
  * <ul>
- *     <li>{@code *} to {@code ≥0.0.0}</li>
- *     <li>An empty string to {@code ≥0.0.0}</li>
+ *   <li>{@code *} to {@code ≥0.0.0}
+ *   <li>An empty string to {@code ≥0.0.0}
  * </ul>
- * <p>
- * If the prerelease flag is set to true, will translate:
+ *
+ * <p>If the prerelease flag is set to true, will translate:
+ *
  * <ul>
- *     <li>{@code *} to {@code ≥0.0.0-0}</li>
- *     <li>An empty string to {@code ≥0.0.0-0}</li>
+ *   <li>{@code *} to {@code ≥0.0.0-0}
+ *   <li>An empty string to {@code ≥0.0.0-0}
  * </ul>
  */
 @NullMarked

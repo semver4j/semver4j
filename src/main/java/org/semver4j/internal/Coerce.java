@@ -1,24 +1,21 @@
 package org.semver4j.internal;
 
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
+import static java.lang.String.format;
+import static java.util.regex.Pattern.compile;
 
 import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static java.lang.String.format;
-import static java.util.regex.Pattern.compile;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 @NullMarked
 public class Coerce {
-    private static final Pattern PATTERN = compile(
-        "(^|\\D)0*(\\d{1,16})(?:\\.0*(\\d{1,16}))?(?:\\.0*(\\d{1,16}))?(?:$|\\D)"
-    );
+    private static final Pattern PATTERN =
+            compile("(^|\\D)0*(\\d{1,16})(?:\\.0*(\\d{1,16}))?(?:\\.0*(\\d{1,16}))?(?:$|\\D)");
 
-    private Coerce() {
-    }
+    private Coerce() {}
 
     @Nullable
     public static String coerce(final String version) {

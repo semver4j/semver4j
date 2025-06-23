@@ -1,36 +1,36 @@
 package org.semver4j.processor;
 
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
-
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.*;
 import static org.semver4j.internal.Tokenizers.HYPHEN;
 import static org.semver4j.processor.RangesUtils.*;
 
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
 /**
- * <p>Processor for translate <a href="https://github.com/npm/node-semver#hyphen-ranges-xyz---abc">hyphen ranges</a>
- * into a classic ranges.</p>
- * <br>
+ * Processor for translate <a href="https://github.com/npm/node-semver#hyphen-ranges-xyz---abc">hyphen ranges</a> into a
+ * classic ranges. <br>
  * Translates:
+ *
  * <ul>
- *     <li>{@code 1.2.3 - 2.3.4} to {@code ≥1.2.3 <2.3.5}</li>
- *     <li>{@code 1.2 - 2.3.4} to {@code ≥1.2.0 <2.3.5}</li>
- *     <li>{@code 1.2.3 - 2.3} to {@code ≥1.2.3 <2.4.0}</li>
- *     <li>{@code 1.2.3 - 2} to {@code ≥1.2.3 <3.0.0}</li>
+ *   <li>{@code 1.2.3 - 2.3.4} to {@code ≥1.2.3 <2.3.5}
+ *   <li>{@code 1.2 - 2.3.4} to {@code ≥1.2.0 <2.3.5}
+ *   <li>{@code 1.2.3 - 2.3} to {@code ≥1.2.3 <2.4.0}
+ *   <li>{@code 1.2.3 - 2} to {@code ≥1.2.3 <3.0.0}
  * </ul>
- * <p>
- * If the prerelease flag is set to true, will translate:
+ *
+ * <p>If the prerelease flag is set to true, will translate:
+ *
  * <ul>
- *     <li>{@code 1.2.3 - 2.3.4} to {@code ≥1.2.3 <2.3.5-0}</li>
- *     <li>{@code 1.2 - 2.3.4} to {@code ≥1.2.0-0 <2.3.5-0}</li>
- *     <li>{@code 1.2.3 - 2.3} to {@code ≥1.2.3 <2.4.0-0}</li>
- *     <li>{@code 1.2.3 - 2} to {@code ≥1.2.3 <3.0.0-0}</li>
+ *   <li>{@code 1.2.3 - 2.3.4} to {@code ≥1.2.3 <2.3.5-0}
+ *   <li>{@code 1.2 - 2.3.4} to {@code ≥1.2.0-0 <2.3.5-0}
+ *   <li>{@code 1.2.3 - 2.3} to {@code ≥1.2.3 <2.4.0-0}
+ *   <li>{@code 1.2.3 - 2} to {@code ≥1.2.3 <3.0.0-0}
  * </ul>
  */
 @NullMarked
@@ -93,9 +93,11 @@ public class HyphenProcessor implements Processor {
                 return format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), toMajor, (toMinor + 1), prerelease);
             } else {
                 if (isNotBlank(preRelease)) {
-                    return format(Locale.ROOT, "%s%d.%d.%d%s", LTE.asString(), toMajor, toMinor, toPatch, "-" + preRelease);
+                    return format(
+                            Locale.ROOT, "%s%d.%d.%d%s", LTE.asString(), toMajor, toMinor, toPatch, "-" + preRelease);
                 } else {
-                    return format(Locale.ROOT, "%s%d.%d.%d%s", LT.asString(), toMajor, toMinor, (toPatch + 1), prerelease);
+                    return format(
+                            Locale.ROOT, "%s%d.%d.%d%s", LT.asString(), toMajor, toMinor, (toPatch + 1), prerelease);
                 }
             }
         }

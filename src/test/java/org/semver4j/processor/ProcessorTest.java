@@ -1,8 +1,8 @@
 package org.semver4j.processor;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("deprecation")
 class ProcessorTest {

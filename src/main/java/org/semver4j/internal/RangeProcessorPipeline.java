@@ -1,10 +1,9 @@
 package org.semver4j.internal;
 
-import org.jspecify.annotations.NullMarked;
-import org.semver4j.processor.Processor;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.jspecify.annotations.NullMarked;
+import org.semver4j.processor.Processor;
 
 @NullMarked
 public class RangeProcessorPipeline {

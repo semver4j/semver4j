@@ -1,17 +1,14 @@
 package org.semver4j;
 
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
-
-import java.util.Locale;
-import java.util.Objects;
-
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 
-/**
- * Represents single range item.
- */
+import java.util.Locale;
+import java.util.Objects;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
+/** Represents single range item. */
 @NullMarked
 public class Range {
     private final Semver rangeVersion;
@@ -90,29 +87,19 @@ public class Range {
     }
 
     public enum RangeOperator {
-        /**
-         * The version and the requirement are equivalent.
-         */
+        /** The version and the requirement are equivalent. */
         EQ("="),
 
-        /**
-         * The version is lower than the requirement.
-         */
+        /** The version is lower than the requirement. */
         LT("<"),
 
-        /**
-         * The version is lower than or equivalent to the requirement.
-         */
+        /** The version is lower than or equivalent to the requirement. */
         LTE("<="),
 
-        /**
-         * The version is greater than the requirement.
-         */
+        /** The version is greater than the requirement. */
         GT(">"),
 
-        /**
-         * The version is greater than or equivalent to the requirement.
-         */
+        /** The version is greater than or equivalent to the requirement. */
         GTE(">="),
         ;
 
@@ -136,9 +123,10 @@ public class Range {
                 return EQ;
             }
             return stream(values())
-                .filter(rangeOperator -> rangeOperator.asString().equals(string))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(format(Locale.ROOT, "Range operator for '%s' not found", string)));
+                    .filter(rangeOperator -> rangeOperator.asString().equals(string))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            format(Locale.ROOT, "Range operator for '%s' not found", string)));
         }
     }
 }

@@ -1,12 +1,5 @@
 package org.semver4j.processor;
 
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
-
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.GTE;
@@ -14,24 +7,31 @@ import static org.semver4j.Range.RangeOperator.LT;
 import static org.semver4j.internal.Tokenizers.CARET;
 import static org.semver4j.processor.RangesUtils.*;
 
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
 /**
- * <p>Processor for translate <a href="https://github.com/npm/node-semver#caret-ranges-123-025-004">caret ranges</a>
- * into classic range.</p>
- * <br>
+ * Processor for translate <a href="https://github.com/npm/node-semver#caret-ranges-123-025-004">caret ranges</a> into
+ * classic range. <br>
  * Translates:
+ *
  * <ul>
- *     <li>{@code ^1.2.3} to {@code ≥1.2.3 <2.0.0}</li>
- *     <li>{@code ^1.2} to {@code ≥1.2.0 <2.0.0}</li>
- *     <li>{@code ^1} to {@code ≥1.0.0 < 2.0.0}</li>
- *     <li>{@code ^0.2.3} to {@code ≥0.2.3 <0.3.0}</li>
+ *   <li>{@code ^1.2.3} to {@code ≥1.2.3 <2.0.0}
+ *   <li>{@code ^1.2} to {@code ≥1.2.0 <2.0.0}
+ *   <li>{@code ^1} to {@code ≥1.0.0 < 2.0.0}
+ *   <li>{@code ^0.2.3} to {@code ≥0.2.3 <0.3.0}
  * </ul>
- * <p>
- * If the prerelease flag is set to true, will translate:
+ *
+ * <p>If the prerelease flag is set to true, will translate:
+ *
  * <ul>
- *     <li>{@code ^1.2.3} to {@code ≥1.2.3 <2.0.0-0}</li>
- *     <li>{@code ^1.2} to {@code ≥1.2.0-0 <2.0.0-0}</li>
- *     <li>{@code ^1} to {@code ≥1.0.0-0 < 2.0.0-0}</li>
- *     <li>{@code ^0.2.3} to {@code ≥0.2.3 <0.3.0-0}</li>
+ *   <li>{@code ^1.2.3} to {@code ≥1.2.3 <2.0.0-0}
+ *   <li>{@code ^1.2} to {@code ≥1.2.0-0 <2.0.0-0}
+ *   <li>{@code ^1} to {@code ≥1.0.0-0 < 2.0.0-0}
+ *   <li>{@code ^0.2.3} to {@code ≥0.2.3 <0.3.0-0}
  * </ul>
  */
 @NullMarked

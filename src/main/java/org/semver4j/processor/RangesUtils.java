@@ -1,29 +1,26 @@
 package org.semver4j.processor;
 
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
-import org.semver4j.Semver;
-
-import java.util.Locale;
-
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static org.semver4j.Range.RangeOperator.GTE;
 
-/**
- * Set of methods which helps ranges handling.
- */
+import java.util.Locale;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+import org.semver4j.Semver;
+
+/** Set of methods which helps ranges handling. */
 @NullMarked
 final class RangesUtils {
     static final String EMPTY = "";
     static final String SPACE = " ";
     static final String ALL_RANGE = format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
-    static final String ALL_RANGE_WITH_PRERELEASE = format(Locale.ROOT, "%s%s%s", GTE.asString(), Semver.ZERO, Processor.LOWEST_PRERELEASE);
+    static final String ALL_RANGE_WITH_PRERELEASE =
+            format(Locale.ROOT, "%s%s%s", GTE.asString(), Semver.ZERO, Processor.LOWEST_PRERELEASE);
 
     private static final int X_RANGE_MARKER = -1;
 
-    private RangesUtils() {
-    }
+    private RangesUtils() {}
 
     static int parseIntWithXSupport(final @Nullable String id) {
         if (id == null || id.equalsIgnoreCase("x") || id.equals("*") || id.equals("+")) {

@@ -1,13 +1,10 @@
 package org.semver4j.processor;
 
+import java.util.Optional;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Optional;
-
-/**
- * Processor for pipeline range translations.
- */
+/** Processor for pipeline range translations. */
 @NullMarked
 public interface Processor {
     String LOWEST_PRERELEASE = "-0";

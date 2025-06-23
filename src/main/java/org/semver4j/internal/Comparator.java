@@ -1,12 +1,11 @@
 package org.semver4j.internal;
 
+import static java.lang.Math.max;
+
+import java.util.List;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.semver4j.Semver;
-
-import java.util.List;
-
-import static java.lang.Math.max;
 
 @NullMarked
 public class Comparator {
@@ -17,8 +16,7 @@ public class Comparator {
 
     private static final String UNDEFINED_MARKER = "undef";
 
-    private Comparator() {
-    }
+    private Comparator() {}
 
     public static int compareTo(final Semver version, final Semver other) {
         int result = mainCompare(version, other);
@@ -51,7 +49,8 @@ public class Comparator {
             return 0;
         }
 
-        int maxElements = max(version.getPreRelease().size(), other.getPreRelease().size());
+        int maxElements =
+                max(version.getPreRelease().size(), other.getPreRelease().size());
 
         int i = 0;
         do {
@@ -120,8 +119,7 @@ public class Comparator {
             } else {
                 return compareIdentifiers(
                         a.substring(a.indexOf(leadingDigitsArrA[0]) + 1),
-                        b.substring(b.indexOf(leadingDigitsArrB[0]) + 1)
-                );
+                        b.substring(b.indexOf(leadingDigitsArrB[0]) + 1));
             }
         }
         return null;

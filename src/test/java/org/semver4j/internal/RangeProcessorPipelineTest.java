@@ -1,11 +1,10 @@
 package org.semver4j.internal;
 
-import org.junit.jupiter.api.Test;
-import org.semver4j.processor.Processor;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.function.Function;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.semver4j.processor.Processor;
 
 class RangeProcessorPipelineTest {
     @Test

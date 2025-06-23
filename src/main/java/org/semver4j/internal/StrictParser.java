@@ -1,26 +1,24 @@
 package org.semver4j.internal;
 
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
-import org.semver4j.SemverException;
+import static java.lang.String.format;
+import static java.util.regex.Pattern.compile;
+import static org.semver4j.internal.Tokenizers.STRICT;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static java.lang.String.format;
-import static java.util.regex.Pattern.compile;
-import static org.semver4j.internal.Tokenizers.STRICT;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+import org.semver4j.SemverException;
 
 @NullMarked
 public class StrictParser {
     private static final Pattern PATTERN = compile(STRICT);
     private static final BigInteger MAX_INT = BigInteger.valueOf(Integer.MAX_VALUE);
 
-    private StrictParser() {
-    }
+    private StrictParser() {}
 
     public static Version parse(String version) {
         Matcher matcher = PATTERN.matcher(version);

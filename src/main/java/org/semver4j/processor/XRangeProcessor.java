@@ -1,14 +1,5 @@
 package org.semver4j.processor;
 
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static java.lang.String.format;
 import static java.lang.String.join;
 import static java.util.regex.Pattern.compile;
@@ -16,10 +7,17 @@ import static org.semver4j.Range.RangeOperator.*;
 import static org.semver4j.internal.Tokenizers.XRANGE;
 import static org.semver4j.processor.RangesUtils.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
 /**
- * <p>Processor for translate <a href="https://github.com/npm/node-semver#x-ranges-12x-1x-12-">X-Ranges</a> into classic
- * range.</p>
- * <br>
+ * Processor for translate <a href="https://github.com/npm/node-semver#x-ranges-12x-1x-12-">X-Ranges</a> into classic
+ * range. <br>
  */
 @NullMarked
 public class XRangeProcessor implements Processor {
