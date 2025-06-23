@@ -169,7 +169,7 @@ public class Tokenizers {
      *
      * <ul>
      *   <li>{@code 1.2.3 - 2.3.4} - Matches all versions from 1.2.3 up to and including 2.3.4
-     *   <li>{@code 1.2 - 2.3.4} - Equivalent to >=1.2.0 <=2.3.4
+     *   <li>{@code 1.2 - 2.3.4} - Equivalent to &gt;=1.2.0 &lt;=2.3.4
      * </ul>
      */
     public static final String HYPHEN = format(Locale.ROOT, "^\\s*(%s)\\s+-\\s+(%s)\\s*$", XRANGE_PLAIN, XRANGE_PLAIN);
@@ -180,10 +180,10 @@ public class Tokenizers {
      * <p>Valid examples:
      *
      * <ul>
-     *   <li>{@code [1.0,2.0]} - Matches 1.0 <= version <= 2.0
-     *   <li>{@code [1.0,2.0)} - Matches 1.0 <= version < 2.0
-     *   <li>{@code (1.0,2.0]} - Matches 1.0 < version <= 2.0
-     *   <li>{@code (1.0,2.0)} - Matches 1.0 < version < 2.0
+     *   <li>{@code [1.0,2.0]} - Matches 1.0 &lt;= version &lt;= 2.0
+     *   <li>{@code [1.0,2.0)} - Matches 1.0 &lt;= version &lt; 2.0
+     *   <li>{@code (1.0,2.0]} - Matches 1.0 &lt; version &lt;= 2.0
+     *   <li>{@code (1.0,2.0)} - Matches 1.0 &lt; version &lt; 2.0
      * </ul>
      */
     public static final String IVY =
