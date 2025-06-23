@@ -33,19 +33,19 @@ jobs:
       - name: Build with Apache Maven
         run: mvn clean verify -Dgpg.skip
 
-      - name: Report code coverage
-        run: |
-          curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import # One-time step
-
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
-          curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
-
-          gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
-          shasum -a 256 -c codecov.SHA256SUM
-
-          chmod +x codecov
-          ./codecov
+#      - name: Report code coverage
+#        run: |
+#          curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import # One-time step
+#
+#          curl -Os https://uploader.codecov.io/latest/linux/codecov
+#          curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
+#          curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
+#
+#          gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
+#          shasum -a 256 -c codecov.SHA256SUM
+#
+#          chmod +x codecov
+#          ./codecov
 
   nullaway:
     runs-on: ubuntu-latest
@@ -63,4 +63,6 @@ jobs:
           cache: maven
 
       - name: Compile with Apache Maven and NullAway
-        run: mvn clean compile -P nullaway
+        run: |
+          cp -v .mvn/nullaway.jvm.config .mvn/jvm.config
+          mvn clean compile -P nullaway
