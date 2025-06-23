@@ -192,6 +192,7 @@
                     <java>
                         <formatAnnotations/>
                         <palantirJavaFormat>
+                            <version>2.68.0</version>
                             <style>PALANTIR</style>
                             <formatJavadoc>true</formatJavadoc>
                         </palantirJavaFormat>
