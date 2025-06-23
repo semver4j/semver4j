@@ -28,9 +28,10 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
+          cache: maven
 
       - name: Build with Apache Maven
-        run: ./mvnw clean verify -Dgpg.skip
+        run: mvn clean verify -Dgpg.skip
 
       - name: Report code coverage
         run: |
@@ -59,8 +60,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 23
+          cache: maven
 
       - name: Compile with Apache Maven and NullAway
-        run: |
-          cp -v .mvn/nullaway.jvm.config .mvn/jvm.config
-          ./mvnw clean compile -P nullaway
+        run: mvn clean compile -P nullaway
