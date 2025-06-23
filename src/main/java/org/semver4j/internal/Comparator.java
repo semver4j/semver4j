@@ -7,8 +7,8 @@ import org.jspecify.annotations.Nullable;
 import org.semver4j.Semver;
 
 /**
- * Utility class for comparing semantic versions according to the SemVer specification.
- * This class provides functionality to compare two {@link Semver} objects.
+ * Utility class for comparing semantic versions according to the SemVer specification. This class provides
+ * functionality to compare two {@link Semver} objects.
  */
 public class Comparator {
     private static final String ALL_DIGITS = "^\\d+$";
@@ -18,9 +18,7 @@ public class Comparator {
 
     private static final String UNDEFINED_MARKER = "undef";
 
-    /**
-     * Private constructor to prevent instantiation of this utility class.
-     */
+    /** Private constructor to prevent instantiation of this utility class. */
     private Comparator() {}
 
     /**
@@ -28,9 +26,8 @@ public class Comparator {
      *
      * @param version the first version to compare
      * @param other the second version to compare
-     * @return a negative integer if version is less than other,
-     *         zero if they are equal,
-     *         a positive integer if version is greater than other
+     * @return a negative integer if version is less than other, zero if they are equal, a positive integer if version
+     *     is greater than other
      */
     public static int compareTo(Semver version, Semver other) {
         int result = mainCompare(version, other);
