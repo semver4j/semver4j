@@ -6,8 +6,8 @@ import static org.semver4j.Range.RangeOperator.GT;
 import static org.semver4j.Range.RangeOperator.GTE;
 import static org.semver4j.Range.RangeOperator.LT;
 import static org.semver4j.Range.RangeOperator.LTE;
+import static org.semver4j.internal.RangesUtils.*;
 import static org.semver4j.internal.Tokenizers.IVY;
-import static org.semver4j.processor.RangesUtils.*;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -51,9 +51,9 @@ public class IvyProcessor implements Processor {
 
     @Override
     @Nullable
-    public String process(String range, boolean includePrerelease) {
+    public String process(String range, boolean includePreRelease) {
         if (range.equals(LATEST) || range.equals(LATEST_INTEGRATION)) {
-            return includePrerelease ? ALL_RANGE_WITH_PRERELEASE : ALL_RANGE;
+            return includePreRelease ? ALL_RANGE_WITH_PRERELEASE : ALL_RANGE;
         }
 
         Matcher matcher = PATTERN.matcher(range);

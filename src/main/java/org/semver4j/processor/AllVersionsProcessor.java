@@ -2,6 +2,7 @@ package org.semver4j.processor;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
+import org.semver4j.internal.RangesUtils;
 
 /**
  * Processor for translating {@code *} and empty strings into a classic range. <br>
@@ -23,9 +24,9 @@ import org.jspecify.annotations.Nullable;
 public class AllVersionsProcessor implements Processor {
     @Override
     @Nullable
-    public String process(String range, boolean includePrerelease) {
+    public String process(String range, boolean includePreRelease) {
         if (range.equals("*") || range.isEmpty()) {
-            return includePrerelease ? RangesUtils.ALL_RANGE_WITH_PRERELEASE : RangesUtils.ALL_RANGE;
+            return includePreRelease ? RangesUtils.ALL_RANGE_WITH_PRERELEASE : RangesUtils.ALL_RANGE;
         }
         return null;
     }

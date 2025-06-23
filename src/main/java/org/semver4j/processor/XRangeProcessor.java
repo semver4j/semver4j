@@ -4,8 +4,8 @@ import static java.lang.String.format;
 import static java.lang.String.join;
 import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.*;
+import static org.semver4j.internal.RangesUtils.*;
 import static org.semver4j.internal.Tokenizers.XRANGE;
-import static org.semver4j.processor.RangesUtils.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +25,13 @@ public class XRangeProcessor implements Processor {
 
     @Override
     @Nullable
-    public String process(String range, boolean includePrerelease) {
+    public String process(String range, boolean includePreRelease) {
         String[] rangeVersions = range.split("\\s+");
 
         List<String> objects = new ArrayList<>();
         for (String rangeVersion : rangeVersions) {
             Matcher matcher = pattern.matcher(rangeVersion);
-            String prerelease = includePrerelease ? Processor.LOWEST_PRERELEASE : "";
+            String prerelease = includePreRelease ? Processor.LOWEST_PRERELEASE : "";
 
             if (matcher.matches()) {
                 String fullRange = matcher.group(0);

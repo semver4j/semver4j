@@ -1,33 +1,85 @@
 package org.semver4j;
 
-import org.jspecify.annotations.NullMarked;
+import org.semver4j.processor.CompositeProcessor;
 import org.semver4j.processor.Processor;
 
-/** Class for create a {@link RangesList} object. */
-@NullMarked
+/**
+ * Factory class for creating {@link RangesList} objects used in semantic version range matching.
+ *
+ * <p>This class provides static factory methods to create {@link RangesList} instances from different sources such as
+ * string representations or {@link RangesExpression} objects. The created objects can be used with
+ * {@link Semver#satisfies(RangesList)} to check if a version satisfies a given range.
+ *
+ * <pre>{@code
+ * RangesList rangesList = RangesListFactory.create(">=1.0.0 <2.0.0");
+ * boolean satisfies = semver.satisfies(rangesList);
+ * }</pre>
+ */
 public class RangesListFactory {
-    /** @since 5.8.0 */
-    public static RangesList create(final String range, boolean includePrerelease) {
-        return new RangesString().get(range, includePrerelease);
-    }
+    /** Private constructor to prevent instantiation. */
+    private RangesListFactory() {}
 
-    public static RangesList create(final String range) {
+    /**
+     * Creates a {@link RangesList} from a string representation of version ranges.
+     *
+     * <p>By default, {@code pre-release} versions are not included in the range matching.
+     *
+     * @param range the string representation of version ranges (e.g., {@code ">=1.0.0 <2.0.0"})
+     * @return a new {@link RangesList} instance
+     */
+    public static RangesList create(String range) {
         return create(range, false);
     }
 
-    /** @since 4.2.0 */
-    public static RangesList create(final RangesExpression rangeExpressions) {
+    /**
+     * Creates a {@link RangesList} from a {@link RangesExpression} object.
+     *
+     * @param rangeExpressions the ranges expression object
+     * @return a new {@link RangesList} instance
+     * @since 4.2.0
+     */
+    public static RangesList create(RangesExpression rangeExpressions) {
         return rangeExpressions.get();
     }
 
-    /** @since 5.8.0 */
-    public static RangesList create(final String range, Processor start, Processor... additional) {
-        return new RangesString(start, additional).get(range, false);
+    /**
+     * Creates a {@link RangesList} from a string representation of version ranges with control over {@code pre-release}
+     * version inclusion.
+     *
+     * @param range the string representation of version ranges (e.g., {@code ">=1.0.0 <2.0.0"})
+     * @param includePreRelease whether to include {@code pre-release} versions in range matching
+     * @return a new {@link RangesList} instance
+     * @since 5.8.0
+     */
+    public static RangesList create(String range, boolean includePreRelease) {
+        return new RangesExpressionParser().parse(range, includePreRelease);
     }
 
-    /** @since 5.8.0 */
-    public static RangesList create(
-            final String range, boolean includePrerelease, Processor start, Processor... additional) {
-        return new RangesString(start, additional).get(range, includePrerelease);
+    /**
+     * Creates a {@link RangesList} from a string representation of version ranges with custom processors.
+     *
+     * <p>By default, {@code pre-release} versions are not included in the range matching.
+     *
+     * @param range the string representation of version ranges
+     * @param processors additional processors to use in sequence
+     * @return a new {@link RangesList} instance
+     * @since 5.8.0
+     */
+    public static RangesList create(String range, Processor... processors) {
+        return create(range, false, processors);
+    }
+
+    /**
+     * Creates a {@link RangesList} from a string representation of version ranges with custom processors and control
+     * over {@code pre-release} version inclusion.
+     *
+     * @param range the string representation of version ranges
+     * @param includePreRelease whether to include {@code pre-release} versions in range matching
+     * @param processors additional processors to use in sequence
+     * @return a new {@link RangesList} instance
+     * @since 5.8.0
+     */
+    public static RangesList create(String range, boolean includePreRelease, Processor... processors) {
+        return new RangesExpressionParser(CompositeProcessor.of(processors)).parse(range, includePreRelease);
     }
 }

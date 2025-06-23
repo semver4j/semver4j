@@ -4,8 +4,8 @@ import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.GTE;
 import static org.semver4j.Range.RangeOperator.LT;
+import static org.semver4j.internal.RangesUtils.*;
 import static org.semver4j.internal.Tokenizers.TILDE;
-import static org.semver4j.processor.RangesUtils.*;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -44,7 +44,7 @@ public class TildeProcessor implements Processor {
 
     @Override
     @Nullable
-    public String process(String range, boolean includePrerelease) {
+    public String process(String range, boolean includePreRelease) {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {
@@ -58,7 +58,7 @@ public class TildeProcessor implements Processor {
 
         String from;
         String to;
-        String prerelease = includePrerelease ? Processor.LOWEST_PRERELEASE : "";
+        String prerelease = includePreRelease ? Processor.LOWEST_PRERELEASE : "";
 
         if (isX(minor)) {
             from = format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), major, prerelease);

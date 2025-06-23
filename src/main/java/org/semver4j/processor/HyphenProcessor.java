@@ -3,8 +3,8 @@ package org.semver4j.processor;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
 import static org.semver4j.Range.RangeOperator.*;
+import static org.semver4j.internal.RangesUtils.*;
 import static org.semver4j.internal.Tokenizers.HYPHEN;
-import static org.semver4j.processor.RangesUtils.*;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -39,15 +39,15 @@ public class HyphenProcessor implements Processor {
 
     @Override
     @Nullable
-    public String process(String range, boolean includePrerelease) {
+    public String process(String range, boolean includePreRelease) {
         Matcher matcher = pattern.matcher(range);
 
         if (!matcher.matches()) {
             return null;
         }
 
-        String rangeFrom = getRangeFrom(matcher, includePrerelease);
-        String rangeTo = getRangeTo(matcher, includePrerelease);
+        String rangeFrom = getRangeFrom(matcher, includePreRelease);
+        String rangeTo = getRangeTo(matcher, includePreRelease);
 
         return format(Locale.ROOT, "%s %s", rangeFrom, rangeTo);
     }
