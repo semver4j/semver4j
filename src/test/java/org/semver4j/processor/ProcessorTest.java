@@ -1,4 +1,4 @@
-package org.semver4j.internal.range.processor;
+package org.semver4j.processor;
 
 import org.junit.jupiter.api.Test;
 

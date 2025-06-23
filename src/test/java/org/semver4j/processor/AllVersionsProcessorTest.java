@@ -1,4 +1,4 @@
-package org.semver4j.internal.range.processor;
+package org.semver4j.processor;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
