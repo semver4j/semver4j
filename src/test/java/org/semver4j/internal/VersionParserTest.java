@@ -1,13 +1,10 @@
 package org.semver4j.internal;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -16,14 +13,14 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.semver4j.SemverException;
-import org.semver4j.internal.StrictParser.Version;
+import org.semver4j.internal.VersionParser.Version;
 
-class StrictParserTest {
+class VersionParserTest {
     @ParameterizedTest
     @MethodSource("validStrictSemver")
     void shouldParseValidVersions(String version, Version expected) {
         // when
-        Version actual = StrictParser.parse(version);
+        Version actual = VersionParser.parse(version);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -34,61 +31,59 @@ class StrictParserTest {
                 arguments("0.0.4", new Version(0, 0, 4)),
                 arguments("1.2.3", new Version(1, 2, 3)),
                 arguments("10.20.30", new Version(10, 20, 30)),
-                arguments(
-                        "1.1.2-prerelease+meta",
-                        new Version(1, 1, 2, singletonList("prerelease"), singletonList("meta"))),
-                arguments("1.1.2+meta", new Version(1, 1, 2, emptyList(), singletonList("meta"))),
-                arguments("1.1.2+meta-valid", new Version(1, 1, 2, emptyList(), singletonList("meta-valid"))),
-                arguments("1.0.0-alpha", new Version(1, 0, 0, singletonList("alpha"), emptyList())),
-                arguments("1.0.0-beta", new Version(1, 0, 0, singletonList("beta"), emptyList())),
-                arguments("1.0.0-alpha.beta", new Version(1, 0, 0, asList("alpha.beta".split("\\.")), emptyList())),
-                arguments("1.0.0-alpha.beta.1", new Version(1, 0, 0, asList("alpha.beta.1".split("\\.")), emptyList())),
-                arguments("1.0.0-alpha.1", new Version(1, 0, 0, asList("alpha.1".split("\\.")), emptyList())),
-                arguments("1.0.0-alpha0.valid", new Version(1, 0, 0, asList("alpha0.valid".split("\\.")), emptyList())),
-                arguments("1.0.0-alpha.0valid", new Version(1, 0, 0, asList("alpha.0valid".split("\\.")), emptyList())),
+                arguments("1.1.2-prerelease+meta", new Version(1, 1, 2, List.of("prerelease"), List.of("meta"))),
+                arguments("1.1.2+meta", new Version(1, 1, 2, List.of(), List.of("meta"))),
+                arguments("1.1.2+meta-valid", new Version(1, 1, 2, List.of(), List.of("meta-valid"))),
+                arguments("1.0.0-alpha", new Version(1, 0, 0, List.of("alpha"), List.of())),
+                arguments("1.0.0-beta", new Version(1, 0, 0, List.of("beta"), List.of())),
+                arguments("1.0.0-alpha.beta", new Version(1, 0, 0, List.of("alpha.beta".split("\\.")), List.of())),
+                arguments("1.0.0-alpha.beta.1", new Version(1, 0, 0, List.of("alpha.beta.1".split("\\.")), List.of())),
+                arguments("1.0.0-alpha.1", new Version(1, 0, 0, List.of("alpha.1".split("\\.")), List.of())),
+                arguments("1.0.0-alpha0.valid", new Version(1, 0, 0, List.of("alpha0.valid".split("\\.")), List.of())),
+                arguments("1.0.0-alpha.0valid", new Version(1, 0, 0, List.of("alpha.0valid".split("\\.")), List.of())),
                 arguments(
                         "1.0.0-alpha-a.b-c-somethinglong+build.1-aef.1-its-okay",
                         new Version(
                                 1,
                                 0,
                                 0,
-                                asList("alpha-a.b-c-somethinglong".split("\\.")),
-                                asList("build.1-aef.1-its-okay".split("\\.")))),
+                                List.of("alpha-a.b-c-somethinglong".split("\\.")),
+                                List.of("build.1-aef.1-its-okay".split("\\.")))),
                 arguments(
                         "1.0.0-rc.1+build.1",
-                        new Version(1, 0, 0, asList("rc.1".split("\\.")), asList("build.1".split("\\.")))),
+                        new Version(1, 0, 0, List.of("rc.1".split("\\.")), List.of("build.1".split("\\.")))),
                 arguments(
                         "2.0.0-rc.1+build.123",
-                        new Version(2, 0, 0, asList("rc.1".split("\\.")), asList("build.123".split("\\.")))),
-                arguments("1.2.3-beta", new Version(1, 2, 3, singletonList("beta"), emptyList())),
-                arguments("10.2.3-DEV-SNAPSHOT", new Version(10, 2, 3, singletonList("DEV-SNAPSHOT"), emptyList())),
-                arguments("1.2.3-SNAPSHOT-123", new Version(1, 2, 3, singletonList("SNAPSHOT-123"), emptyList())),
+                        new Version(2, 0, 0, List.of("rc.1".split("\\.")), List.of("build.123".split("\\.")))),
+                arguments("1.2.3-beta", new Version(1, 2, 3, List.of("beta"), List.of())),
+                arguments("10.2.3-DEV-SNAPSHOT", new Version(10, 2, 3, List.of("DEV-SNAPSHOT"), List.of())),
+                arguments("1.2.3-SNAPSHOT-123", new Version(1, 2, 3, List.of("SNAPSHOT-123"), List.of())),
                 arguments("1.0.0", new Version(1, 0, 0)),
                 arguments("2.0.0", new Version(2, 0, 0)),
                 arguments("1.1.7", new Version(1, 1, 7)),
-                arguments("2.0.0+build.1848", new Version(2, 0, 0, emptyList(), asList("build.1848".split("\\.")))),
-                arguments("2.0.1-alpha.1227", new Version(2, 0, 1, asList("alpha.1227".split("\\.")), emptyList())),
-                arguments("1.0.0-alpha+beta", new Version(1, 0, 0, singletonList("alpha"), singletonList("beta"))),
+                arguments("2.0.0+build.1848", new Version(2, 0, 0, List.of(), List.of("build.1848".split("\\.")))),
+                arguments("2.0.1-alpha.1227", new Version(2, 0, 1, List.of("alpha.1227".split("\\.")), List.of())),
+                arguments("1.0.0-alpha+beta", new Version(1, 0, 0, List.of("alpha"), List.of("beta"))),
                 arguments(
                         "1.2.3----RC-SNAPSHOT.12.9.1--.12+788",
-                        new Version(1, 2, 3, asList("---RC-SNAPSHOT.12.9.1--.12".split("\\.")), singletonList("788"))),
+                        new Version(1, 2, 3, List.of("---RC-SNAPSHOT.12.9.1--.12".split("\\.")), List.of("788"))),
                 arguments(
                         "1.2.3----R-S.12.9.1--.12+meta",
-                        new Version(1, 2, 3, asList("---R-S.12.9.1--.12".split("\\.")), singletonList("meta"))),
+                        new Version(1, 2, 3, List.of("---R-S.12.9.1--.12".split("\\.")), List.of("meta"))),
                 arguments(
                         "1.2.3----RC-SNAPSHOT.12.9.1--.12",
-                        new Version(1, 2, 3, asList("---RC-SNAPSHOT.12.9.1--.12".split("\\.")), emptyList())),
+                        new Version(1, 2, 3, List.of("---RC-SNAPSHOT.12.9.1--.12".split("\\.")), List.of())),
                 arguments(
                         "1.0.0+0.build.1-rc.10000aaa-kk-0.1",
-                        new Version(1, 0, 0, emptyList(), asList("0.build.1-rc.10000aaa-kk-0.1".split("\\.")))),
-                arguments("1.0.0-0A.is.legal", new Version(1, 0, 0, asList("0A.is.legal".split("\\.")), emptyList())));
+                        new Version(1, 0, 0, List.of(), List.of("0.build.1-rc.10000aaa-kk-0.1".split("\\.")))),
+                arguments("1.0.0-0A.is.legal", new Version(1, 0, 0, List.of("0A.is.legal".split("\\.")), List.of())));
     }
 
     @ParameterizedTest
     @MethodSource("invalidStrictSemver")
     void shouldParseInvalidVersions(String version) {
         // when/then
-        assertThatThrownBy(() -> StrictParser.parse(version))
+        assertThatThrownBy(() -> VersionParser.parse(version))
                 .isInstanceOf(SemverException.class)
                 .hasMessage(format(Locale.ROOT, "Version [%s] is not valid semver.", version));
     }
@@ -96,7 +91,7 @@ class StrictParserTest {
     @Test
     void shouldParseInvalidVersions() {
         // when/then
-        assertThatThrownBy(() -> StrictParser.parse("99999999999999999999999.999999999999999999.99999999999999999"))
+        assertThatCode(() -> VersionParser.parse("99999999999999999999999.999999999999999999.99999999999999999"))
                 .isInstanceOf(SemverException.class)
                 .hasMessage(format(Locale.ROOT, "Value [%s] is too big.", "99999999999999999999999"));
     }
@@ -151,6 +146,6 @@ class StrictParserTest {
     @ValueSource(strings = {"1", "99999999999999999999999.999999999999999999.99999999999999999"})
     void shouldThrowSemverExceptionWhichExtendsIllegalArgumentException(String version) {
         // when/then
-        assertThatThrownBy(() -> StrictParser.parse(version)).isInstanceOf(IllegalArgumentException.class);
+        assertThatCode(() -> VersionParser.parse(version)).isInstanceOf(IllegalArgumentException.class);
     }
 }

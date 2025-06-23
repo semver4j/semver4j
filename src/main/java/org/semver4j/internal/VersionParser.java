@@ -9,17 +9,33 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.semver4j.SemverException;
 
-@NullMarked
-public class StrictParser {
+/**
+ * A utility class for parsing semantic version strings according to the SemVer specification.
+ *
+ * <p>This class provides functionality to parse a version string into its components: {@code major}, {@code minor},
+ * {@code patch}, {@code pre-release} identifiers, and {@code build} metadata.
+ *
+ * <p>The parser follows strict SemVer rules and validates input against the standard pattern.
+ *
+ * @see <a href="https://semver.org/">Semantic Versioning Specification</a>
+ */
+public class VersionParser {
     private static final Pattern PATTERN = compile(STRICT);
     private static final BigInteger MAX_INT = BigInteger.valueOf(Integer.MAX_VALUE);
 
-    private StrictParser() {}
+    /** Private constructor to prevent instantiation of this utility class */
+    private VersionParser() {}
 
+    /**
+     * Parses a semantic version string into its component parts.
+     *
+     * @param version the version string to parse
+     * @return a {@link Version} object containing the parsed components
+     * @throws SemverException if the version string is not a valid semantic version
+     */
     public static Version parse(String version) {
         Matcher matcher = PATTERN.matcher(version);
 
@@ -59,6 +75,12 @@ public class StrictParser {
         return toList == null ? List.of() : List.of(toList.split("\\."));
     }
 
+    /**
+     * A record representing a parsed semantic version with its component parts.
+     *
+     * <p>Includes {@code major}, {@code minor}, and {@code pat h} version numbers, as well as optional
+     * {@code pre-release} identifiers and {@code build} metadata.
+     */
     public record Version(int major, int minor, int patch, List<String> preRelease, List<String> build) {
         Version(int major, int minor, int patch) {
             this(major, minor, patch, List.of(), List.of());

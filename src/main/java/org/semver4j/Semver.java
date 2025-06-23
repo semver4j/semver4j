@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.function.Function;
 import org.jspecify.annotations.Nullable;
 import org.semver4j.internal.*;
-import org.semver4j.internal.StrictParser.Version;
+import org.semver4j.internal.VersionParser.Version;
 
 /**
  * {@code Semver} is a tool that provides useful methods to manipulate versions that follow the "semantic versioning"
@@ -42,7 +42,7 @@ public class Semver implements Comparable<Semver> {
     public Semver(String version) {
         requireNonNull(version, "version must not be null");
 
-        Version parsedVersion = StrictParser.parse(version.trim());
+        Version parsedVersion = VersionParser.parse(version.trim());
 
         major = parsedVersion.major();
         minor = parsedVersion.minor();
