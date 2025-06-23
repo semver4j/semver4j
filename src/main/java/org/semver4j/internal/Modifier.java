@@ -6,18 +6,31 @@ import static java.util.Collections.emptyList;
 
 import java.util.List;
 import java.util.Locale;
-import org.jspecify.annotations.NullMarked;
 import org.semver4j.Semver;
 
-@NullMarked
+/**
+ * Utility class for semantic versioning operations. Provides methods to manipulate and transform {@link Semver}
+ * instances according to semantic versioning specifications.
+ */
 public class Modifier {
     private static final String FULL_FORMAT = "%d.%d.%d";
     private static final String MAJOR_FORMAT = "%d.0.0";
     private static final String MAJOR_MINOR_FORMAT = "%d.%d.0";
 
+    /** Private constructor to prevent instantiation of utility class. */
     private Modifier() {}
 
-    public static Semver nextMajor(final Semver version) {
+    /**
+     * Increments the {@code major} version component.
+     *
+     * <p>If the version is a {@code pre-release} (e.g., {@code 1.0.0-5}), it will become a regular release
+     * ({@code 1.0.0}). Otherwise, the {@code major} version is incremented and {@code minor} and {@code patch} are
+     * reset to {@code 0}.
+     *
+     * @param version the version to increment
+     * @return a new {@link Semver} instance with incremented {@code major} version
+     */
+    public static Semver nextMajor(Semver version) {
         int nextMajor = version.getMajor();
 
         // Prerelease version 1.0.0-5 bumps to 1.0.0
@@ -31,7 +44,14 @@ public class Modifier {
         return new Semver(newVersion);
     }
 
-    public static Semver withIncMajor(final Semver version, int number) {
+    /**
+     * Increases the {@code major} version component by a specified number.
+     *
+     * @param version the version to modify
+     * @param number the number to add to the major version
+     * @return a new {@link Semver} instance with increased {@code major} version
+     */
+    public static Semver withIncMajor(Semver version, int number) {
         String newVersion = createFullVersion(
                 version,
                 format(Locale.ROOT, FULL_FORMAT, (version.getMajor() + number), version.getMinor(), version.getPatch()),
@@ -39,7 +59,16 @@ public class Modifier {
         return new Semver(newVersion);
     }
 
-    public static Semver nextMinor(final Semver version) {
+    /**
+     * Increments the {@code minor} version component.
+     *
+     * <p>If the version is a {@code pre-release} (e.g., {@code 1.2.0-5}), it will become a regular release
+     * ({@code 1.2.0}). Otherwise, the {@code minor} version is incremented and {@code patch} is reset to {@code 0}.
+     *
+     * @param version the version to increment
+     * @return a new {@link Semver} instance with incremented {@code minor} version
+     */
+    public static Semver nextMinor(Semver version) {
         int nextMinor = version.getMinor();
 
         // Prerelease version 1.2.0-5 bumps to 1.2.0
@@ -52,7 +81,14 @@ public class Modifier {
         return new Semver(newVersion);
     }
 
-    public static Semver withIncMinor(final Semver version, int number) {
+    /**
+     * Increases the {@code minor} version component by a specified number.
+     *
+     * @param version the version to modify
+     * @param number the number to add to the {@code minor} version
+     * @return a new {@link Semver} instance with increased {@code minor} version
+     */
+    public static Semver withIncMinor(Semver version, int number) {
         String newVersion = createFullVersion(
                 version,
                 format(Locale.ROOT, FULL_FORMAT, version.getMajor(), (version.getMinor() + number), version.getPatch()),
@@ -60,7 +96,16 @@ public class Modifier {
         return new Semver(newVersion);
     }
 
-    public static Semver nextPatch(final Semver version) {
+    /**
+     * Increments the {@code patch} version component.
+     *
+     * <p>If the version is a {@code pre-release} (e.g., {@code 1.2.3-5}), it will become a regular release
+     * ({@code 1.2.3}). Otherwise, the {@code patch} version is incremented.
+     *
+     * @param version the version to increment
+     * @return a new {@link Semver} instance with incremented {@code patch} version
+     */
+    public static Semver nextPatch(Semver version) {
         int newPatch = version.getPatch();
 
         // Prerelease version 1.2.0-5 bumps to 1.2.0
@@ -75,7 +120,14 @@ public class Modifier {
         return new Semver(newVersion);
     }
 
-    public static Semver withIncPatch(final Semver version, int number) {
+    /**
+     * Increases the {@code patch} version component by a specified number.
+     *
+     * @param version the version to modify
+     * @param number the number to add to the {@code patch} version
+     * @return a new {@link Semver} instance with increased {@code patch} version
+     */
+    public static Semver withIncPatch(Semver version, int number) {
         String newVersion = createFullVersion(
                 version,
                 format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), (version.getPatch() + number)),
@@ -83,7 +135,14 @@ public class Modifier {
         return new Semver(newVersion);
     }
 
-    public static Semver withPreRelease(final Semver version, final String preRelease) {
+    /**
+     * Sets the {@code pre-release} identifier of a version.
+     *
+     * @param version the version to modify
+     * @param preRelease the {@code pre-release} identifier to set (dot-separated)
+     * @return a new {@link Semver} instance with the specified {@code pre-release} identifier
+     */
+    public static Semver withPreRelease(Semver version, String preRelease) {
         List<String> newPreRelease = asList(preRelease.split("\\."));
 
         String newVersion = createFullVersion(
@@ -93,7 +152,14 @@ public class Modifier {
         return new Semver(newVersion);
     }
 
-    public static Semver withBuild(final Semver version, final String build) {
+    /**
+     * Sets the {@code build} metadata of a version.
+     *
+     * @param version the version to modify
+     * @param build the {@code build} metadata to set (dot-separated)
+     * @return a new {@link Semver} instance with the specified {@code build} metadata
+     */
+    public static Semver withBuild(Semver version, String build) {
         List<String> newBuild = asList(build.split("\\."));
 
         String newVersion = createFullVersion(
@@ -103,7 +169,13 @@ public class Modifier {
         return new Semver(newVersion);
     }
 
-    public static Semver withClearedPreRelease(final Semver version) {
+    /**
+     * Removes the {@code pre-release} identifier from a version.
+     *
+     * @param version the version to modify
+     * @return a new {@link Semver} instance without {@code pre-release} identifier
+     */
+    public static Semver withClearedPreRelease(Semver version) {
         String newVersion = createFullVersion(
                 version,
                 format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()),
@@ -111,7 +183,13 @@ public class Modifier {
         return new Semver(newVersion);
     }
 
-    public static Semver withClearedBuild(final Semver version) {
+    /**
+     * Removes the {@code build} metadata from a version.
+     *
+     * @param version the version to modify
+     * @return a new {@link Semver} instance without {@code build} metadata
+     */
+    public static Semver withClearedBuild(Semver version) {
         String newVersion = createFullVersion(
                 format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch()),
                 version.getPreRelease(),
@@ -119,18 +197,23 @@ public class Modifier {
         return new Semver(newVersion);
     }
 
-    public static Semver withClearedPreReleaseAndBuild(final Semver version) {
+    /**
+     * Removes both {@code pre-release} identifier and build metadata from a version.
+     *
+     * @param version the version to modify
+     * @return a new {@link Semver} instance without {@code pre-release} identifier and build metadata
+     */
+    public static Semver withClearedPreReleaseAndBuild(Semver version) {
         String newVersion =
                 format(Locale.ROOT, FULL_FORMAT, version.getMajor(), version.getMinor(), version.getPatch());
         return new Semver(newVersion);
     }
 
-    private static String createFullVersion(final Semver version, final String main, final List<String> preRelease) {
+    private static String createFullVersion(Semver version, String main, List<String> preRelease) {
         return createFullVersion(main, preRelease, version.getBuild());
     }
 
-    private static String createFullVersion(
-            final String main, final List<String> preRelease, final List<String> build) {
+    private static String createFullVersion(String main, List<String> preRelease, List<String> build) {
         StringBuilder stringBuilder = new StringBuilder(main);
 
         if (!preRelease.isEmpty()) {
