@@ -1,30 +1,27 @@
 package org.semver4j;
 
-import org.jspecify.annotations.Nullable;
-import org.semver4j.internal.*;
-import org.semver4j.internal.StrictParser.Version;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.function.Function;
-
 import static java.lang.String.join;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.hash;
 import static java.util.Objects.requireNonNull;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Function;
+import org.jspecify.annotations.Nullable;
+import org.semver4j.internal.*;
+import org.semver4j.internal.StrictParser.Version;
+
 /**
  * {@code Semver} is a tool that provides useful methods to manipulate versions that follow the "semantic versioning"
  * specification (see <a href="http://semver.org">semver.org</a>).
- * <p>
- * This implementation adheres to the SemVer 2.0.0 specification and provides a comprehensive API for version parsing,
- * comparison, manipulation, and validation.
+ *
+ * <p>This implementation adheres to the SemVer 2.0.0 specification and provides a comprehensive API for version
+ * parsing, comparison, manipulation, and validation.
  */
 public class Semver implements Comparable<Semver> {
-    /**
-     * A constant {@link Semver} version object representing {@code 0.0.0}.
-     */
+    /** A constant {@link Semver} version object representing {@code 0.0.0}. */
     public static final Semver ZERO = new Semver("0.0.0");
 
     private final int major;
@@ -81,8 +78,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Coerce string into semver if possible.
-     * <p>
-     * This method attempts to transform non-standard version strings into valid SemVer format before parsing.
+     *
+     * <p>This method attempts to transform non-standard version strings into valid SemVer format before parsing.
      *
      * @param version version string to coerce
      * @return {@link Semver} if coercion and parsing succeed, {@code null} otherwise
@@ -158,8 +155,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Returns the {@code major} part of the version.
-     * <p>
-     * Example: for {@code 1.2.3} = {@code 1}
+     *
+     * <p>Example: for {@code 1.2.3} = {@code 1}
      *
      * @return the {@code major} part of the version
      */
@@ -169,8 +166,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Returns the {@code minor} part of the version.
-     * <p>
-     * Example: for {@code 1.2.3} = {@code 2}
+     *
+     * <p>Example: for {@code 1.2.3} = {@code 2}
      *
      * @return the {@code minor} part of the version
      */
@@ -180,8 +177,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Returns the {@code patch} part of the version.
-     * <p>
-     * Example: for {@code 1.2.3} = {@code 3}
+     *
+     * <p>Example: for {@code 1.2.3} = {@code 3}
      *
      * @return the {@code patch} part of the version
      */
@@ -191,8 +188,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Returns the {@code pre-release} identifiers of the version.
-     * <p>
-     * Example: for {@code 1.2.3-beta.4+sha98450956} = {@code ["beta", "4"]}
+     *
+     * <p>Example: for {@code 1.2.3-beta.4+sha98450956} = {@code ["beta", "4"]}
      *
      * @return the list of {@code pre-release} identifiers, empty if none exist
      */
@@ -202,8 +199,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Returns the {@code build} identifiers of the version.
-     * <p>
-     * Example: for {@code 1.2.3-beta.4+sha98450956} = {@code ["sha98450956"]}
+     *
+     * <p>Example: for {@code 1.2.3-beta.4+sha98450956} = {@code ["sha98450956"]}
      *
      * @return the list of {@code build} identifiers, empty if none exist
      */
@@ -213,9 +210,9 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Determines if the current version is stable or not.
-     * <p>
-     * Stable versions have a {@code major} version number <a href="https://semver.org/#spec-item-4">strictly positive</a>
-     * and no <a href="https://semver.org/#spec-item-9">pre-release identifiers</a>.
+     *
+     * <p>Stable versions have a {@code major} version number <a href="https://semver.org/#spec-item-4">strictly
+     * positive</a> and no <a href="https://semver.org/#spec-item-9">pre-release identifiers</a>.
      *
      * @return {@code true} if the current version is stable, {@code false} otherwise
      */
@@ -225,8 +222,9 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Increments a {@code major} version component to the next closest version.
-     * <p>
-     * This resets {@code minor} and {@code patch} to 0 and removes {@code pre-release} and {@code build} identifiers.
+     *
+     * <p>This resets {@code minor} and {@code patch} to 0 and removes {@code pre-release} and {@code build}
+     * identifiers.
      *
      * @return new {@link Semver} with an incremented {@code major} version
      */
@@ -255,8 +253,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Increments a {@code minor} version component to the next closest version.
-     * <p>
-     * This resets a {@code patch} to 0 and removes {@code pre-release} and build identifiers.
+     *
+     * <p>This resets a {@code patch} to 0 and removes {@code pre-release} and build identifiers.
      *
      * @return new {@link Semver} with an incremented {@code minor} version
      */
@@ -285,8 +283,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Increments {@code patch} a version component to the next closest version.
-     * <p>
-     * This removes {@code pre-release} and build identifiers.
+     *
+     * <p>This removes {@code pre-release} and build identifiers.
      *
      * @return new {@link Semver} with an incremented {@code patch} version
      */
@@ -364,8 +362,8 @@ public class Semver implements Comparable<Semver> {
      * Compares this version with another version according to SemVer precedence rules.
      *
      * @param other the version to compare with
-     * @return a negative integer, zero, or a positive integer as this version is less than,
-     *         equal to, or greater than the specified version
+     * @return a negative integer, zero, or a positive integer as this version is less than, equal to, or greater than
+     *     the specified version
      */
     @Override
     public int compareTo(Semver other) {
@@ -374,8 +372,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Checks whether the given version is API compatible with this version.
-     * <p>
-     * API compatibility means the versions differ only in {@code minor}, {@code patch}, {@code pre-release}, or
+     *
+     * <p>API compatibility means the versions differ only in {@code minor}, {@code patch}, {@code pre-release}, or
      * {@code build} components.
      *
      * @param version version string to check for compatibility
@@ -388,8 +386,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Checks whether the given version is API compatible with this version.
-     * <p>
-     * API compatibility means the versions differ only in {@code minor}, {@code patch}, {@code pre-release}, or
+     *
+     * <p>API compatibility means the versions differ only in {@code minor}, {@code patch}, {@code pre-release}, or
      * {@code build} components.
      *
      * @param version version object to check for compatibility
@@ -489,7 +487,8 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Checks if this version exactly equals another version (including {@code pre-release} and {@code build} identifiers).
+     * Checks if this version exactly equals another version (including {@code pre-release} and {@code build}
+     * identifiers).
      *
      * @param version version string to compare with
      * @return {@code true} if this version exactly equals the provided version, {@code false} otherwise
@@ -500,7 +499,8 @@ public class Semver implements Comparable<Semver> {
     }
 
     /**
-     * Checks if this version exactly equals another version (including {@code pre-release} and {@code build} identifiers).
+     * Checks if this version exactly equals another version (including {@code pre-release} and {@code build}
+     * identifiers).
      *
      * @param version version object to compare with
      * @return {@code true} if this version exactly equals the provided version, {@code false} otherwise
@@ -512,8 +512,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Checks if this version equals another version ignoring {@code build} identifiers.
-     * <p>
-     * This comparison includes all version components except {@code build} metadata.
+     *
+     * <p>This comparison includes all version components except {@code build} metadata.
      *
      * @param version version string to compare with
      * @return {@code true} if this version equals the provided version (ignoring build), {@code false} otherwise
@@ -525,8 +525,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Checks if this version equals another version ignoring {@code build} identifiers.
-     * <p>
-     * This comparison includes all version components except {@code build} metadata.
+     *
+     * <p>This comparison includes all version components except {@code build} metadata.
      *
      * @param version version object to compare with
      * @return {@code true} if this version equals the provided version (ignoring build), {@code false} otherwise
@@ -538,10 +538,9 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Returns the greatest difference between this version and another version.
-     * <p>
-     * For example, if this version is {@code 1.2.3} and compared version is {@code 1.3.0},
-     * the greatest difference is the {@code MINOR} component.
-     * </p>
+     *
+     * <p>For example, if this version is {@code 1.2.3} and compared version is {@code 1.3.0}, the greatest difference
+     * is the {@code MINOR} component.
      *
      * @param version version string to compare with
      * @return the greatest difference as a {@link VersionDiff} enum value
@@ -553,10 +552,9 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Returns the greatest difference between this version and another version.
-     * <p>
-     * For example, if this version is {@code 1.2.3} and compared version is {@code 1.3.0},
-     * the greatest difference is the {@code MINOR} component.
-     * </p>
+     *
+     * <p>For example, if this version is {@code 1.2.3} and compared version is {@code 1.3.0}, the greatest difference
+     * is the {@code MINOR} component.
      *
      * @param version version object to compare with
      * @return the greatest difference as a {@link VersionDiff} enum value
@@ -568,8 +566,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Checks if this version satisfies the specified version range.
-     * <p>
-     * By default, {@code pre-release} versions are not included in the check.
+     *
+     * <p>By default, {@code pre-release} versions are not included in the check.
      *
      * @param range version range expression to check against
      * @return {@code true} if this version satisfies the range, {@code false} otherwise
@@ -582,8 +580,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * Checks if this version satisfies the specified version range.
-     * <p>
-     * Allows control over whether {@code pre-release} versions are included in the check.
+     *
+     * <p>Allows control over whether {@code pre-release} versions are included in the check.
      *
      * @param range version range expression to check against
      * @param includePreRelease whether to include {@code pre-releases} in the check
@@ -657,8 +655,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * The types of differences between the two versions.
-     * <p>
-     * The higher the ordinal value of the enum, the greater the difference between versions.
+     *
+     * <p>The higher the ordinal value of the enum, the greater the difference between versions.
      */
     public enum VersionDiff {
         /** No difference between versions */
@@ -677,8 +675,8 @@ public class Semver implements Comparable<Semver> {
 
     /**
      * A builder for creating {@link Semver} instances.
-     * <p>
-     * This builder allows constructing versions programmatically.
+     *
+     * <p>This builder allows constructing versions programmatically.
      *
      * @since 5.3.0
      */
@@ -810,8 +808,8 @@ public class Semver implements Comparable<Semver> {
 
         /**
          * Builds a string representation of the version.
-         * <p>
-         * Follows the SemVer specification format: {@code MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]}
+         *
+         * <p>Follows the SemVer specification format: {@code MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]}
          *
          * @return the formatted version string
          */
