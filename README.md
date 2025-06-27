@@ -214,7 +214,7 @@ If you want to check if a version satisfies a range, use the `satisfies()` metho
 The internal ranges builds ranges using fluent interface.
 
 ```java
-RangesExpression rangesExpression = equal("1.0.0")
+RangesExpression rangeExpression = equal("1.0.0")
         .and(less("2.0.0"))
         .or(greaterOrEqual("3.0.0")); // (=1.0.0 and <2.0.0) or >=3.0.0
 ```

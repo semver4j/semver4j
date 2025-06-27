@@ -1,16 +1,17 @@
-package org.semver4j;
+package org.semver4j.range;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.semver4j.Range.RangeOperator.*;
+import static org.semver4j.range.Range.RangeOperator.*;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.semver4j.Range.RangeOperator;
+import org.semver4j.Semver;
+import org.semver4j.range.Range.RangeOperator;
 
 class RangeTest {
     @Test

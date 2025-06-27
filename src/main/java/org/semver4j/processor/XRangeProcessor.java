@@ -3,9 +3,9 @@ package org.semver4j.processor;
 import static java.lang.String.format;
 import static java.lang.String.join;
 import static java.util.regex.Pattern.compile;
-import static org.semver4j.Range.RangeOperator.*;
-import static org.semver4j.internal.RangesUtils.*;
 import static org.semver4j.internal.Tokenizers.XRANGE;
+import static org.semver4j.internal.Utils.*;
+import static org.semver4j.range.Range.RangeOperator.*;
 
 import java.util.ArrayList;
 import java.util.List;

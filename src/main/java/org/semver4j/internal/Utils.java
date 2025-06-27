@@ -2,18 +2,18 @@ package org.semver4j.internal;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
-import static org.semver4j.Range.RangeOperator.GTE;
 import static org.semver4j.processor.Processor.LOWEST_PRERELEASE;
+import static org.semver4j.range.Range.RangeOperator.GTE;
 
 import java.util.Locale;
 import org.jspecify.annotations.Nullable;
 import org.semver4j.Semver;
 
 /**
- * Utility methods for handling semantic versioning ranges. Provides functionality for parsing, comparing, and
- * manipulating version ranges.
+ * Utility methods for handling semantic versioning ranges and performing common operations used throughout the library.
+ * Provides functionality for parsing, comparing, and manipulating version ranges according to the SemVer specification.
  */
-public class RangesUtils {
+public class Utils {
     public static final String EMPTY = "";
     public static final String SPACE = " ";
     public static final String ALL_RANGE = format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
@@ -23,7 +23,7 @@ public class RangesUtils {
     private static final int X_RANGE_MARKER = -1;
 
     /** Private constructor to prevent instantiation of utility class. */
-    private RangesUtils() {}
+    private Utils() {}
 
     /**
      * Parses a string to an integer with support for {@code x}, {@code *}, and {@code +} wildcards.

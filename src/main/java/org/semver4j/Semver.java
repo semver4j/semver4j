@@ -12,6 +12,9 @@ import java.util.function.Function;
 import org.jspecify.annotations.Nullable;
 import org.semver4j.internal.*;
 import org.semver4j.internal.VersionParser.Version;
+import org.semver4j.range.RangeExpression;
+import org.semver4j.range.RangeList;
+import org.semver4j.range.RangeListFactory;
 
 /**
  * {@code Semver} is a tool that provides useful methods to manipulate versions that follow the "semantic versioning"
@@ -571,8 +574,8 @@ public class Semver implements Comparable<Semver> {
      *
      * @param range version range expression to check against
      * @return {@code true} if this version satisfies the range, {@code false} otherwise
-     * @see #satisfies(RangesList)
-     * @see #satisfies(RangesExpression)
+     * @see #satisfies(RangeList)
+     * @see #satisfies(RangeExpression)
      */
     public boolean satisfies(String range) {
         return satisfies(range, false);
@@ -587,39 +590,39 @@ public class Semver implements Comparable<Semver> {
      * @param includePreRelease whether to include {@code pre-releases} in the check
      * @return {@code true} if this version satisfies the range, {@code false} otherwise
      * @see #satisfies(String)
-     * @see #satisfies(RangesList)
+     * @see #satisfies(RangeList)
      * @since 5.8.0
      */
     public boolean satisfies(String range, boolean includePreRelease) {
-        RangesList rangesList = RangesListFactory.create(range, includePreRelease);
-        return satisfies(rangesList);
+        RangeList rangeList = RangeListFactory.create(range, includePreRelease);
+        return satisfies(rangeList);
     }
 
     /**
      * Checks if this version satisfies the specified ranges expression.
      *
-     * @param rangesExpression ranges expression built via internal expressions mechanism
+     * @param rangeExpression ranges expression built via internal expressions mechanism
      * @return {@code true} if this version satisfies the range, {@code false} otherwise
-     * @see RangesExpression
+     * @see RangeExpression
      * @see #satisfies(String)
-     * @see #satisfies(RangesList)
+     * @see #satisfies(RangeList)
      * @since 4.2.0
      */
-    public boolean satisfies(RangesExpression rangesExpression) {
-        RangesList rangesList = RangesListFactory.create(rangesExpression);
-        return satisfies(rangesList);
+    public boolean satisfies(RangeExpression rangeExpression) {
+        RangeList rangeList = RangeListFactory.create(rangeExpression);
+        return satisfies(rangeList);
     }
 
     /**
      * Checks if this version satisfies the specified ranges list.
      *
-     * @param rangesList list of version ranges to check against
+     * @param rangeList list of version ranges to check against
      * @return {@code true} if this version satisfies the ranges list, {@code false} otherwise
      * @see #satisfies(String)
-     * @see #satisfies(RangesExpression)
+     * @see #satisfies(RangeExpression)
      */
-    public boolean satisfies(RangesList rangesList) {
-        return rangesList.isSatisfiedBy(this);
+    public boolean satisfies(RangeList rangeList) {
+        return rangeList.isSatisfiedBy(this);
     }
 
     /**

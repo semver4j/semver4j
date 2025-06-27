@@ -1,4 +1,4 @@
-package org.semver4j;
+package org.semver4j.range;
 
 import static java.util.regex.Pattern.compile;
 import static org.semver4j.internal.Tokenizers.COMPARATOR;
@@ -13,38 +13,38 @@ import org.semver4j.processor.Processor;
 
 /**
  * Handles semantic version range expressions and converts them into a structured format. This class parses string
- * representations of version ranges and transforms them into {@link RangesList} objects for version comparison
+ * representations of version ranges and transforms them into {@link RangeList} objects for version comparison
  * operations.
  */
-class RangesExpressionParser {
+class RangeExpressionParser {
     private static final Pattern SPLITTER_PATTERN = compile("(\\s*)([<>]?=?)\\s*");
     private static final Pattern COMPARATOR_PATTERN = compile(COMPARATOR);
 
     private final Processor processor;
 
-    /** Constructs a new RangesString with all available processors. */
-    RangesExpressionParser() {
+    /** Constructs a new {@code RangeExpressionParser} with all available processors. */
+    RangeExpressionParser() {
         this(CompositeProcessor.all());
     }
 
     /**
-     * Constructs a new RangesString with the specified processor.
+     * Constructs a new {@code RangeExpressionParser} with the specified processor.
      *
      * @param processor the processor to use for range processing
      */
-    RangesExpressionParser(Processor processor) {
+    RangeExpressionParser(Processor processor) {
         this.processor = processor;
     }
 
     /**
-     * Parses a range string and converts it to a structured {@link RangesList}.
+     * Parses a range string and converts it to a structured {@link RangeList}.
      *
      * @param range the version range string to parse
      * @param includePreRelease whether to include pre-release versions in the range
      * @return a structured representation of the version ranges
      */
-    RangesList parse(String range, boolean includePreRelease) {
-        RangesList rangesList = new RangesList(includePreRelease);
+    RangeList parse(String range, boolean includePreRelease) {
+        RangeList rangeList = new RangeList(includePreRelease);
         range = range.trim();
         String[] rangeSections = range.split("\\|\\|");
         for (String rangeSection : rangeSections) {
@@ -52,10 +52,10 @@ class RangesExpressionParser {
             rangeSection = applyProcessors(rangeSection, includePreRelease);
 
             List<Range> ranges = addRanges(rangeSection);
-            rangesList.add(ranges);
+            rangeList.add(ranges);
         }
 
-        return rangesList;
+        return rangeList;
     }
 
     private static String stripWhitespacesBetweenRangeOperator(String rangeSection) {

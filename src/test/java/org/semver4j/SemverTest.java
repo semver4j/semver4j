@@ -21,6 +21,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.semver4j.Semver.VersionDiff;
+import org.semver4j.range.RangeExpression;
 
 class SemverTest {
     @ParameterizedTest
@@ -1281,8 +1282,8 @@ class SemverTest {
         // given
         Semver semver = new Semver("1.1.1");
 
-        RangesExpression expression = RangesExpression.less("1.0.0")
-                .or(RangesExpression.greater("10.0.1").or(RangesExpression.equal("1.1.1")));
+        RangeExpression expression = RangeExpression.less("1.0.0")
+                .or(RangeExpression.greater("10.0.1").or(RangeExpression.eq("1.1.1")));
 
         // when
         boolean satisfies = semver.satisfies(expression);

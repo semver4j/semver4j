@@ -2,10 +2,10 @@ package org.semver4j.processor;
 
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
-import static org.semver4j.Range.RangeOperator.GTE;
-import static org.semver4j.Range.RangeOperator.LT;
-import static org.semver4j.internal.RangesUtils.*;
 import static org.semver4j.internal.Tokenizers.TILDE;
+import static org.semver4j.internal.Utils.*;
+import static org.semver4j.range.Range.RangeOperator.GTE;
+import static org.semver4j.range.Range.RangeOperator.LT;
 
 import java.util.Locale;
 import java.util.regex.Matcher;

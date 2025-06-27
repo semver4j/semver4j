@@ -2,12 +2,12 @@ package org.semver4j.processor;
 
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
-import static org.semver4j.Range.RangeOperator.GT;
-import static org.semver4j.Range.RangeOperator.GTE;
-import static org.semver4j.Range.RangeOperator.LT;
-import static org.semver4j.Range.RangeOperator.LTE;
-import static org.semver4j.internal.RangesUtils.*;
 import static org.semver4j.internal.Tokenizers.IVY;
+import static org.semver4j.internal.Utils.*;
+import static org.semver4j.range.Range.RangeOperator.GT;
+import static org.semver4j.range.Range.RangeOperator.GTE;
+import static org.semver4j.range.Range.RangeOperator.LT;
+import static org.semver4j.range.Range.RangeOperator.LTE;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
