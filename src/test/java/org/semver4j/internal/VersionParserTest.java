@@ -1,7 +1,9 @@
 package org.semver4j.internal;
 
 import static java.lang.String.format;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.List;
@@ -17,7 +19,7 @@ import org.semver4j.internal.VersionParser.Version;
 
 class VersionParserTest {
     @ParameterizedTest
-    @MethodSource("validStrictSemver")
+    @MethodSource("validSemver")
     void shouldParseValidVersions(String version, Version expected) {
         // when
         Version actual = VersionParser.parse(version);
@@ -26,7 +28,7 @@ class VersionParserTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    static Stream<Arguments> validStrictSemver() {
+    static Stream<Arguments> validSemver() {
         return Stream.of(
                 arguments("0.0.4", new Version(0, 0, 4)),
                 arguments("1.2.3", new Version(1, 2, 3)),
@@ -36,67 +38,58 @@ class VersionParserTest {
                 arguments("1.1.2+meta-valid", new Version(1, 1, 2, List.of(), List.of("meta-valid"))),
                 arguments("1.0.0-alpha", new Version(1, 0, 0, List.of("alpha"), List.of())),
                 arguments("1.0.0-beta", new Version(1, 0, 0, List.of("beta"), List.of())),
-                arguments("1.0.0-alpha.beta", new Version(1, 0, 0, List.of("alpha.beta".split("\\.")), List.of())),
-                arguments("1.0.0-alpha.beta.1", new Version(1, 0, 0, List.of("alpha.beta.1".split("\\.")), List.of())),
-                arguments("1.0.0-alpha.1", new Version(1, 0, 0, List.of("alpha.1".split("\\.")), List.of())),
-                arguments("1.0.0-alpha0.valid", new Version(1, 0, 0, List.of("alpha0.valid".split("\\.")), List.of())),
-                arguments("1.0.0-alpha.0valid", new Version(1, 0, 0, List.of("alpha.0valid".split("\\.")), List.of())),
+                arguments("1.0.0-alpha.beta", new Version(1, 0, 0, List.of("alpha", "beta"), List.of())),
+                arguments("1.0.0-alpha.beta.1", new Version(1, 0, 0, List.of("alpha", "beta", "1"), List.of())),
+                arguments("1.0.0-alpha.1", new Version(1, 0, 0, List.of("alpha", "1"), List.of())),
+                arguments("1.0.0-alpha0.valid", new Version(1, 0, 0, List.of("alpha0", "valid"), List.of())),
+                arguments("1.0.0-alpha.0valid", new Version(1, 0, 0, List.of("alpha", "0valid"), List.of())),
                 arguments(
                         "1.0.0-alpha-a.b-c-somethinglong+build.1-aef.1-its-okay",
                         new Version(
                                 1,
                                 0,
                                 0,
-                                List.of("alpha-a.b-c-somethinglong".split("\\.")),
-                                List.of("build.1-aef.1-its-okay".split("\\.")))),
-                arguments(
-                        "1.0.0-rc.1+build.1",
-                        new Version(1, 0, 0, List.of("rc.1".split("\\.")), List.of("build.1".split("\\.")))),
-                arguments(
-                        "2.0.0-rc.1+build.123",
-                        new Version(2, 0, 0, List.of("rc.1".split("\\.")), List.of("build.123".split("\\.")))),
+                                List.of("alpha-a", "b-c-somethinglong"),
+                                List.of("build", "1-aef", "1-its-okay"))),
+                arguments("1.0.0-rc.1+build.1", new Version(1, 0, 0, List.of("rc", "1"), List.of("build", "1"))),
+                arguments("2.0.0-rc.1+build.123", new Version(2, 0, 0, List.of("rc", "1"), List.of("build", "123"))),
                 arguments("1.2.3-beta", new Version(1, 2, 3, List.of("beta"), List.of())),
                 arguments("10.2.3-DEV-SNAPSHOT", new Version(10, 2, 3, List.of("DEV-SNAPSHOT"), List.of())),
                 arguments("1.2.3-SNAPSHOT-123", new Version(1, 2, 3, List.of("SNAPSHOT-123"), List.of())),
                 arguments("1.0.0", new Version(1, 0, 0)),
                 arguments("2.0.0", new Version(2, 0, 0)),
                 arguments("1.1.7", new Version(1, 1, 7)),
-                arguments("2.0.0+build.1848", new Version(2, 0, 0, List.of(), List.of("build.1848".split("\\.")))),
-                arguments("2.0.1-alpha.1227", new Version(2, 0, 1, List.of("alpha.1227".split("\\.")), List.of())),
+                arguments("2.0.0+build.1848", new Version(2, 0, 0, List.of(), List.of("build", "1848"))),
+                arguments("2.0.1-alpha.1227", new Version(2, 0, 1, List.of("alpha", "1227"), List.of())),
                 arguments("1.0.0-alpha+beta", new Version(1, 0, 0, List.of("alpha"), List.of("beta"))),
                 arguments(
                         "1.2.3----RC-SNAPSHOT.12.9.1--.12+788",
-                        new Version(1, 2, 3, List.of("---RC-SNAPSHOT.12.9.1--.12".split("\\.")), List.of("788"))),
+                        new Version(1, 2, 3, List.of("---RC-SNAPSHOT", "12", "9", "1--", "12"), List.of("788"))),
                 arguments(
                         "1.2.3----R-S.12.9.1--.12+meta",
-                        new Version(1, 2, 3, List.of("---R-S.12.9.1--.12".split("\\.")), List.of("meta"))),
+                        new Version(1, 2, 3, List.of("---R-S", "12", "9", "1--", "12"), List.of("meta"))),
                 arguments(
                         "1.2.3----RC-SNAPSHOT.12.9.1--.12",
-                        new Version(1, 2, 3, List.of("---RC-SNAPSHOT.12.9.1--.12".split("\\.")), List.of())),
+                        new Version(1, 2, 3, List.of("---RC-SNAPSHOT", "12", "9", "1--", "12"), List.of())),
                 arguments(
                         "1.0.0+0.build.1-rc.10000aaa-kk-0.1",
-                        new Version(1, 0, 0, List.of(), List.of("0.build.1-rc.10000aaa-kk-0.1".split("\\.")))),
-                arguments("1.0.0-0A.is.legal", new Version(1, 0, 0, List.of("0A.is.legal".split("\\.")), List.of())));
+                        new Version(1, 0, 0, List.of(), List.of("0", "build", "1-rc", "10000aaa-kk-0", "1"))),
+                arguments("1.0.0-0A.is.legal", new Version(1, 0, 0, List.of("0A", "is", "legal"), List.of())));
     }
 
     @ParameterizedTest
-    @MethodSource("invalidStrictSemver")
+    @MethodSource("invalidSemver")
     void shouldParseInvalidVersions(String version) {
-        // when/then
-        assertThatThrownBy(() -> VersionParser.parse(version))
+        // when
+        ThrowingCallable throwingCallable = () -> VersionParser.parse(version);
+
+        // then
+        assertThatCode(throwingCallable)
                 .isInstanceOf(SemverException.class)
                 .hasMessage(format(Locale.ROOT, "Version [%s] is not valid semver.", version));
     }
 
-    @Test
-    void shouldParseInvalidVersions() {
-        // when/then
-        assertThatCode(() -> VersionParser.parse("99999999999999999999999.999999999999999999.99999999999999999"))
-                .isInstanceOf(SemverException.class)
-                .hasMessage(format(Locale.ROOT, "Value [%s] is too big.", "99999999999999999999999"));
-    }
-
-    static Stream<Arguments> invalidStrictSemver() {
+    static Stream<Arguments> invalidSemver() {
         return Stream.of(
                 arguments("1"),
                 arguments("1.2"),
@@ -142,10 +135,25 @@ class VersionParserTest {
                 arguments("1.1.1.1"));
     }
 
+    @Test
+    void shouldParseInvalidVersions() {
+        // when
+        ThrowingCallable throwingCallable =
+                () -> VersionParser.parse("99999999999999999999999.999999999999999999.99999999999999999");
+
+        // then
+        assertThatCode(throwingCallable)
+                .isInstanceOf(SemverException.class)
+                .hasMessage(format(Locale.ROOT, "Value [%s] is too big.", "99999999999999999999999"));
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"1", "99999999999999999999999.999999999999999999.99999999999999999"})
     void shouldThrowSemverExceptionWhichExtendsIllegalArgumentException(String version) {
-        // when/then
-        assertThatCode(() -> VersionParser.parse(version)).isInstanceOf(IllegalArgumentException.class);
+        // when
+        ThrowingCallable throwingCallable = () -> VersionParser.parse(version);
+
+        // then
+        assertThatCode(throwingCallable).isInstanceOf(IllegalArgumentException.class);
     }
 }

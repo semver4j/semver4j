@@ -2,6 +2,8 @@ package org.semver4j.range;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.semver4j.Semver.ZERO;
+import static org.semver4j.range.Range.RangeOperator.GTE;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -9,7 +11,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.semver4j.Semver;
 import org.semver4j.processor.IvyProcessor;
 import org.semver4j.processor.XRangeProcessor;
-import org.semver4j.range.Range.RangeOperator;
 
 class RangeListFactoryTest {
     @Test
@@ -19,7 +20,7 @@ class RangeListFactoryTest {
 
         // when/then
         assertThat(rangeList.isSatisfiedByAny()).isTrue();
-        assertThat(rangeList.get()).isEqualTo(singletonList(singletonList(new Range(Semver.ZERO, RangeOperator.GTE))));
+        assertThat(rangeList.get()).isEqualTo(singletonList(singletonList(new Range(ZERO, GTE))));
     }
 
     @ParameterizedTest
@@ -27,9 +28,10 @@ class RangeListFactoryTest {
     void shouldBuildRangeListFromExactVersion(String range) {
         // given
         RangeList rangeList = RangeListFactory.create(range);
+        Semver semver = new Semver("1.2.0");
 
         // when
-        boolean satisfiedBy = rangeList.isSatisfiedBy(Semver.coerce("1.2"));
+        boolean satisfiedBy = rangeList.isSatisfiedBy(semver);
 
         // then
         assertThat(satisfiedBy).isTrue();
@@ -69,7 +71,7 @@ class RangeListFactoryTest {
         RangeList nonIvyRangeList = RangeListFactory.create(ivyRange, new XRangeProcessor());
 
         // then
-        assertThat(ivyRangeList.toString()).isEqualTo(">=1.0.0 and <=2.0.0");
+        assertThat(ivyRangeList.toString()).hasToString(">=1.0.0 and <=2.0.0");
         assertThat(nonIvyRangeList.get()).isEmpty();
     }
 }

@@ -15,7 +15,7 @@ class RangeExpressionTest {
         RangeList rangeList = rangeExpressions.get();
 
         // then
-        assertThat(rangeList.toString()).isEqualTo("=1.0.0");
+        assertThat(rangeList.toString()).hasToString("=1.0.0");
     }
 
     @Test
@@ -35,7 +35,7 @@ class RangeExpressionTest {
 
         // then
         assertThat(rangeList.toString())
-                .isEqualTo(
+                .hasToString(
                         "(=1.0.0 and =2.0.0 and =3.0.0) or (=4.0.0 and =5.0.0) or =6.0.0 or (<7.0.0 and =8.0.0) or <9.0.0");
     }
 
@@ -45,7 +45,7 @@ class RangeExpressionTest {
         RangeExpression rangeExpression = eq("1.0.0");
 
         // then
-        assertThat(rangeExpression.get().toString()).isEqualTo("=1.0.0");
+        assertThat(rangeExpression.get().toString()).hasToString("=1.0.0");
     }
 
     @Test
@@ -54,7 +54,7 @@ class RangeExpressionTest {
         RangeExpression rangeExpression = greater("1.0.0");
 
         // then
-        assertThat(rangeExpression.get().toString()).isEqualTo(">1.0.0");
+        assertThat(rangeExpression.get().toString()).hasToString(">1.0.0");
     }
 
     @Test
@@ -63,7 +63,7 @@ class RangeExpressionTest {
         RangeExpression rangeExpression = greaterOrEqual("1.0.0");
 
         // then
-        assertThat(rangeExpression.get().toString()).isEqualTo(">=1.0.0");
+        assertThat(rangeExpression.get().toString()).hasToString(">=1.0.0");
     }
 
     @Test
@@ -72,7 +72,7 @@ class RangeExpressionTest {
         RangeExpression rangeExpression = less("1.0.0");
 
         // then
-        assertThat(rangeExpression.get().toString()).isEqualTo("<1.0.0");
+        assertThat(rangeExpression.get().toString()).hasToString("<1.0.0");
     }
 
     @Test
@@ -81,6 +81,6 @@ class RangeExpressionTest {
         RangeExpression rangeExpression = lessOrEqual("1.0.0");
 
         // then
-        assertThat(rangeExpression.get().toString()).isEqualTo("<=1.0.0");
+        assertThat(rangeExpression.get().toString()).hasToString("<=1.0.0");
     }
 }

@@ -29,7 +29,7 @@ public class Processors {
     /**
      * Creates a new instance of {@link AllVersionsProcessor}.
      *
-     * <p>The {@link AllVersionsProcessor} handles special version ranges like {@code "*"} or {@codem ""} that match all
+     * <p>The {@link AllVersionsProcessor} handles special version ranges like {@code "*"} or {@code ""} that match all
      * versions.
      *
      * @return a new AllVersionsProcessor instance

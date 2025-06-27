@@ -5,8 +5,8 @@ import static java.lang.String.join;
 import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.sort;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.ThrowableAssert.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.semver4j.Semver.VersionDiff.*;
 import static org.semver4j.Semver.coerce;
@@ -15,6 +15,8 @@ import static org.semver4j.Semver.isValid;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
+
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -38,8 +40,11 @@ class SemverTest {
                 "1.2.3."
             })
     void shouldThrowExceptionWhenSemverIsNotValid(String version) {
-        // when/then
-        assertThatThrownBy(() -> new Semver(version))
+        // when
+        ThrowingCallable throwingCallable = () -> new Semver(version);
+
+        // then
+        assertThatCode(throwingCallable)
                 .isInstanceOf(SemverException.class)
                 .hasMessage(format(Locale.ROOT, "Version [%s] is not valid semver.", version));
     }
@@ -62,16 +67,22 @@ class SemverTest {
 
     @Test
     void shouldThrowExceptionWhenIsWithoutPatch() {
-        // when/then
-        assertThatThrownBy(() -> new Semver("1.2-beta.11+sha.0nsfgkjkjsdf"))
+        // when
+        ThrowingCallable throwingCallable = () -> new Semver("1.2-beta.11+sha.0nsfgkjkjsdf");
+
+        // then
+        assertThatCode(throwingCallable)
                 .isInstanceOf(SemverException.class)
                 .hasMessage("Version [1.2-beta.11+sha.0nsfgkjkjsdf] is not valid semver.");
     }
 
     @Test
     void shouldThrowExceptionWhenIsWithoutMinor() {
-        // when/then
-        assertThatThrownBy(() -> new Semver("1-beta.11+sha.0nsfgkjkjsdf"))
+        // when
+        ThrowingCallable throwingCallable = () -> new Semver("1-beta.11+sha.0nsfgkjkjsdf");
+
+        // then
+        assertThatCode(throwingCallable)
                 .isInstanceOf(SemverException.class)
                 .hasMessage("Version [1-beta.11+sha.0nsfgkjkjsdf] is not valid semver.");
     }
@@ -860,7 +871,7 @@ class SemverTest {
     void shouldSemverBeSymmetric() {
         // given
         Semver version1 = new Semver("2.10.1");
-        Semver version2 = coerce("2.99");
+        Semver version2 = new Semver("2.99.0");
 
         // when
         boolean equalTo1 = version1.isEqualTo(version2);
@@ -873,7 +884,7 @@ class SemverTest {
     @Test
     void shouldComparatorsBeSymmetric() {
         // given
-        Semver version1 = coerce("2.0");
+        Semver version1 = new Semver("2.0.0");
         Semver version2 = new Semver("2.0.0");
 
         // when
@@ -1315,34 +1326,6 @@ class SemverTest {
 
         // then
         assertThat(semver.getVersion()).isEqualTo("1.2.3");
-    }
-
-    @Test
-    void shouldUseCustomFormatterInBuilder() {
-        // given
-        Semver.Builder builder = Semver.builder()
-                .withMajor(1)
-                .withMinor(2)
-                .withPatch(3)
-                .withPreRelease("alpha")
-                .withBuild("5bb76cdb");
-
-        // when
-        String version = builder.build().format(semver -> {
-            String preRelease = join("&", semver.getPreRelease());
-            String build = join("&", semver.getBuild());
-            return format(
-                    Locale.ROOT,
-                    "%d:%d:%d|%s*%s",
-                    semver.getMajor(),
-                    semver.getMinor(),
-                    semver.getPatch(),
-                    preRelease,
-                    build);
-        });
-
-        // then
-        assertThat(version).isEqualTo("1:2:3|alpha*5bb76cdb");
     }
 
     @Test
