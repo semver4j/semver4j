@@ -2,7 +2,7 @@ package org.semver4j.internal;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
-import static org.semver4j.processor.Processor.LOWEST_PRERELEASE;
+import static org.semver4j.processor.Processor.LOWEST_PRE_RELEASE;
 import static org.semver4j.range.Range.RangeOperator.GTE;
 
 import java.util.Locale;
@@ -17,7 +17,7 @@ public class Utils {
     public static final String EMPTY = "";
     public static final String SPACE = " ";
     public static final String ALL_RANGE = format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
-    public static final String ALL_RANGE_WITH_PRERELEASE = GTE.asString() + Semver.ZERO + LOWEST_PRERELEASE;
+    public static final String ALL_RANGE_WITH_PRERELEASE = GTE.asString() + Semver.ZERO + LOWEST_PRE_RELEASE;
 
     /** Marker value used to represent an {@code x}, {@code *}, or {@code +} in version ranges. */
     private static final int X_RANGE_MARKER = -1;
