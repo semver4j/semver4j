@@ -23,29 +23,31 @@ and [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-m
 ## Table of Contents
 
 <!-- TOC -->
+
 * [Semver4j](#semver4j)
-  * [Table of Contents](#table-of-contents)
-  * [Installation](#installation)
-    * [Using Maven](#using-maven)
-    * [Using Gradle](#using-gradle)
-          * [Version `v1.0.x` references to original library version `v3.1.0` in source repository.](#version-v10x-references-to-original-library-version-v310-in-source-repository)
-  * [Usage](#usage)
-    * [What is a version?](#what-is-a-version)
-    * [The `Semver` object](#the-semver-object)
-      * [Using constructor](#using-constructor)
-      * [Using `Semver.parse()` method](#using-semverparse-method)
-      * [Using `Semver.coerce()` method](#using-semvercoerce-method)
-    * [Is the version stable?](#is-the-version-stable)
-    * [Comparing the versions](#comparing-the-versions)
-    * [Versions diffs](#versions-diffs)
-    * [Ranges](#ranges)
-      * [External](#external)
-      * [Internal](#internal)
-    * [Modifying the version](#modifying-the-version)
-    * [Builder](#builder)
-    * [Formatting](#formatting)
-  * [Contributing](#contributing)
-  * [Thanks](#thanks)
+    * [Table of Contents](#table-of-contents)
+    * [Installation](#installation)
+        * [Using Maven](#using-maven)
+        * [Using Gradle](#using-gradle)
+            * [Version `v1.0.x`](#version-v10x)
+    * [Usage](#usage)
+        * [What is a version?](#what-is-a-version)
+        * [The `Semver` object](#the-semver-object)
+            * [Using constructor](#using-constructor)
+            * [Using `Semver.parse()` method](#using-semverparse-method)
+            * [Using `Semver.coerce()` method](#using-semvercoerce-method)
+        * [Is the version stable?](#is-the-version-stable)
+        * [Comparing the versions](#comparing-the-versions)
+        * [Versions diffs](#versions-diffs)
+        * [Ranges](#ranges)
+            * [External](#external)
+            * [Internal](#internal)
+        * [Modifying the version](#modifying-the-version)
+        * [Builder](#builder)
+        * [Formatting](#formatting)
+    * [Contributing](#contributing)
+    * [Thanks](#thanks)
+
 <!-- TOC -->
 
 ## Installation
@@ -55,6 +57,7 @@ Add the dependency to your project:
 ### Using Maven
 
 ```xml
+
 <dependency>
     <groupId>org.semver4j</groupId>
     <artifactId>semver4j</artifactId>
@@ -76,7 +79,10 @@ Kotlin
 implementation("org.semver4j:semver4j:5.8.0")
 ```
 
-###### Version `v1.0.x` references to original library version `v3.1.0` in [source repository](https://github.com/vdurmont/semver4j).
+#### Version `v1.0.x`
+
+This version references to original library version `v3.1.0`
+in [source repository](https://github.com/vdurmont/semver4j).
 
 ## Usage
 
@@ -84,11 +90,11 @@ implementation("org.semver4j:semver4j:5.8.0")
 
 In **Semver4j**, a version looks like: `1.2.3-beta.4+sha899d8g79f87`.
 
-- `1` is the major part (required)
-- `2` is the minor part (required)
-- `3` is the patch part (required)
-- `beta` and `4` are the pre-release version (optional)
-- `sha899d8g79f87` is the build metadata (optional)
+- `1` is the `major` part (required)
+- `2` is the `minor` part (required)
+- `3` is the `patch` part (required)
+- `beta` and `4` are the `pre-release` version (optional)
+- `sha899d8g79f87` is the `build` metadata (optional)
 
 ### The `Semver` object
 
@@ -121,7 +127,7 @@ Semver version = Semver.coerce("invalid"); // returns null, cannot coerce this v
 
 You can check if you're working with a stable version by using `isStable()`.
 
-A version is stable if its major number is _strictly_ positive, and it has no pre-release version.
+A version is stable if its `major` number is _strictly_ positive, and it has no `pre-release` version.
 
 Examples:
 
@@ -174,7 +180,7 @@ version.isEquivalentTo("1.2.3+shaABCDEFGHI"); // true
 
 ### Versions diffs
 
-If you want to know what is the main difference between 2 versions, use the `diff()` method.
+If you want to know what is the main difference between two versions, use the `diff()` method.
 It will return a `VersionDiff` enum value among: `NONE`, `MAJOR`, `MINOR`, `PATCH`, `PRE_RELEASE`, `BUILD`.
 
 _It will always return the biggest difference._
@@ -214,20 +220,20 @@ If you want to check if a version satisfies a range, use the `satisfies()` metho
 The internal ranges builds ranges using fluent interface.
 
 ```java
-RangesExpression rangeExpression = equal("1.0.0")
+RangesExpression rangeExpression = eq("1.0.0")
         .and(less("2.0.0"))
         .or(greaterOrEqual("3.0.0")); // (=1.0.0 and <2.0.0) or >=3.0.0
 ```
 
 ### Modifying the version
 
-The `Semver` object is immutable. However, it provides a set of methods that will help you create new versions:
+The `Semver` object is **immutable**. However, it provides a set of methods that will help you create new versions:
 
-- `withIncMajor()` and `withIncMajor(int increment)` returns a `Semver` object with the major part incremented
-- `withIncMinor()` and `withIncMinor(int increment)` returns a `Semver` object with the minor part incremented
-- `withIncPatch()` and `withIncPatch(int increment)` returns a `Semver` object with the patch part incremented
-- `withClearedPreRelease()` returns a `Semver` object with no pre-release version
-- `withClearedBuild()` returns a `Semver` object with no build metadata
+- `withIncMajor()` and `withIncMajor(int increment)` returns a `Semver` object with the `major` part incremented
+- `withIncMinor()` and `withIncMinor(int increment)` returns a `Semver` object with the `minor` part incremented
+- `withIncPatch()` and `withIncPatch(int increment)` returns a `Semver` object with the `patch` part incremented
+- `withClearedPreRelease()` returns a `Semver` object with no `pre-release` version
+- `withClearedBuild()` returns a `Semver` object with no `build` metadata
 
 You can also use built-in versioning methods such as:
 
@@ -235,18 +241,20 @@ You can also use built-in versioning methods such as:
 - `nextMinor()`: `1.2.3-beta.4+sha32iddfu987 => 1.3.0`
 - `nextPatch()`: `1.2.3-beta.4+sha32iddfu987 => 1.2.4`
 
-### Builder
+### Programmatically build `Semver`
+
+#### Builder
 
 `Semver4j` provides an API for programmatically creating `Semver` object.
 
 The newly introduced API looks like:
 
 ```java
-Semver semver = Semver.of()
+Semver semver = Semver.builder()
         .withMajor(1)
         .withMinor(2)
         .withBuild("5bb76cdb")
-        .toSemver();
+        .build();
 ```
 
 And is an equivalent of:
@@ -262,16 +270,17 @@ a `format(Function<Semver, String> formatter)` method from the `Semver` class:
 
 ```java
 Semver semver = new Semver("1.2.3-alpha.1+sha.1234");
-String customVersion = semver.format(sem -> format("%d:%d:%d", sem.getMajor(), sem.getMinor(), sem.getPatch())); // 1:2:2
+String customVersion = semver.format(sem ->
+        format("%d:%d:%d", sem.getMajor(), sem.getMinor(), sem.getPatch())
+); // 1:2:2
 ```
-
-There is also a method in the `SemverBuilder` called `toVersion(Function<Semver, String> formatter)` which behaves
-exactly the same.
 
 ## Contributing
 
 Any pull request or bug report are welcome!
 If you have any suggestion about new features, you can **open an issue**.
+
+For details on contributing to this repository, see the [contributing guide](CONTRIBUTING.md).
 
 ## Thanks
 
