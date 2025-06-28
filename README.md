@@ -46,7 +46,15 @@ formats including:
       * [External ranges](#external-ranges)
       * [Internal ranges](#internal-ranges)
     * [🔄 Modifying versions](#-modifying-versions)
-    * [🏗️ Builder](#-builder)
+    * [🛠️ Programmatically build Semver](#-programmatically-build-semver)
+      * [Using the Builder pattern](#using-the-builder-pattern)
+      * [Using the method `of()`](#using-the-method-of)
+      * [Using the `create()` method](#using-the-create-method)
+    * [🔌 Custom Range Processors](#-custom-range-processors)
+      * [Using custom processors](#using-custom-processors)
+      * [Combining multiple processors](#combining-multiple-processors)
+      * [Creating your own processor](#creating-your-own-processor)
+      * [Using all available processors](#using-all-available-processors)
     * [🎨 Formatting](#-formatting)
   * [🤝 Contributing](#-contributing)
   * [🙏 Thanks](#-thanks)
@@ -90,7 +98,7 @@ the [source repository](https://github.com/vdurmont/semver4j).
 
 ### 🏷️ What is a version?
 
-In **Semver4j**, a version follows this format: `1.2.3-beta.4+sha899d8g79f87`
+In `Semver4j`, a version follows this format: `1.2.3-beta.4+sha899d8g79f87`
 
 - `1` is the `major` version (required) 🔢
 - `2` is the `minor` version (required) 🔢
@@ -239,18 +247,114 @@ Semver newVersion = version.nextMinor(); // 1.3.0
 Semver newVersion = version.nextPatch(); // 1.2.4
 ```
 
-### 🏗️ Builder
+### 🛠️ Programmatically build Semver
 
-Create `Semver` objects programmatically:
+`Semver4j` provides multiple ways to programmatically create `Semver` objects without parsing strings:
+
+#### Using the Builder pattern
 
 ```java
 Semver semver = Semver.builder()
         .withMajor(1)
         .withMinor(2)
+        .withPatch(3)
+        .withPreRelease("alpha")
         .withBuild("5bb76cdb")
         .build();
-// Equivalent to: new Semver("1.2.0+5bb76cdb")
+// Equivalent to: new Semver("1.2.3-alpha+5bb76cdb")
 ```
+
+#### Using the method `of()`
+
+The `of()` method provides a shorthand to initialize a builder with the `major`, `minor`, and `patch` components:
+
+```java
+Semver semver = Semver.of(1, 2, 3)
+        .withPreRelease("beta")
+        .build();
+// Equivalent to: new Semver("1.2.3-beta")
+```
+
+#### Using the `create()` method
+
+The `create()` method is the most concise way to create a basic version with just `major`, `minor`, and `patch`
+components:
+
+```java
+Semver semver = Semver.create(1, 2, 3);
+// Equivalent to: new Semver("1.2.3")
+```
+
+### 🔌 Custom Range Processors
+
+`Semver4j` allows you to customize how version ranges are processed through its processor architecture. This gives you
+the flexibility to support additional range formats or modify the behavior of existing ones.
+
+#### Using custom processors
+
+You can specify which processors to use when creating a `RangeList`:
+
+```java
+// Create a RangeList using only the Ivy processor
+RangeList rangeList = RangeListFactory.create("[1.0.0,2.0.0]", new IvyProcessor());
+
+// The result will be ">=1.0.0 and <=2.0.0"
+```
+
+#### Combining multiple processors
+
+Use `CompositeProcessor` to combine multiple processors:
+
+```java
+// Create a processor that handles both Ivy and Tilde ranges
+Processor customProcessor = CompositeProcessor.of(
+                new IvyProcessor(),
+                new TildeProcessor()
+        );
+
+// Create a RangeList using the custom processor combination
+RangeList rangeList = RangeListFactory.create(
+        "~1.2.3 || [2.0.0,3.0.0]",
+        false, // don't include pre-releases
+        customProcessor
+);
+```
+
+#### Creating your own processor
+
+Implement the `Processor` interface to create a custom range format handler:
+
+```java
+public class CustomProcessor implements Processor {
+    @Override
+    public @Nullable String process(String range, boolean includePreRelease) {
+        // Your logic to process custom range format
+        // Returns null if this processor can't handle the input
+        if (!range.startsWith("custom:")) {
+            return null;
+        }
+
+        // Convert custom format to standard format
+        String version = range.substring(7);
+        return ">=" + version;
+    }
+}
+```
+
+#### Using all available processors
+
+To use all built-in processors (which is the default behavior):
+
+```java
+// Use all available processors
+Processor allProcessors = CompositeProcessor.all();
+
+// Create a RangeList with all processors
+RangeList rangeList = RangeListFactory.create("^1.0.0 || ~2.0.0");
+```
+
+This processor architecture gives you the flexibility to support custom version range formats for any project-specific
+needs.
 
 ### 🎨 Formatting
 
