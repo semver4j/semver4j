@@ -14,6 +14,7 @@ contributing.
 2. 🏗 **Test Structure**
     - Tests should follow the given-when-then pattern:
    ```java
+   @Test
    void shouldSome() {
        // given
 
@@ -22,6 +23,8 @@ contributing.
        // then
    }
    ```
+    - All test methods should start with the word "should" following BDD (Behavior-Driven Development) principles.
+    - Example: `shouldReturnCorrectVersionDiff()`, `shouldThrowExceptionWhenInvalidInput()`.
 
 3. 🔍 **Assertion Library**
     - We use AssertJ for all assertions in tests.
