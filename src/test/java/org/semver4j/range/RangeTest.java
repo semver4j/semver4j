@@ -1,34 +1,34 @@
-package org.semver4j;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.semver4j.Range.RangeOperator;
-
-import java.util.stream.Stream;
+package org.semver4j.range;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.semver4j.Range.RangeOperator.*;
+import static org.semver4j.Semver.ZERO;
+import static org.semver4j.range.Range.RangeOperator.*;
+
+import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.semver4j.range.Range.RangeOperator;
 
 class RangeTest {
     @Test
     void shouldCheckSatisfiedByAny() {
-        //given
-        Range range = new Range(Semver.ZERO, GTE);
+        // given
+        Range range = new Range(ZERO, GTE);
 
-        //when/then
+        // when/then
         assertThat(range.isSatisfiedByAny()).isTrue();
     }
 
     @Test
     void shouldCheckSatisfiedByForEqual() {
-        //given
+        // given
         Range range = new Range("1.2.3", EQ);
 
-        //when/then
+        // when/then
         assertThat(range.isSatisfiedBy("1.2.3")).isTrue();
 
         assertThat(range.isSatisfiedBy("2.2.3")).isFalse();
@@ -42,20 +42,20 @@ class RangeTest {
 
     @Test
     void shouldCheckSatisfiedByForEqualWithPreRelease() {
-        //given
+        // given
         Range range = new Range("1.2.3-alpha", EQ);
 
-        //when/then
+        // when/then
         assertFalse(range.isSatisfiedBy("1.2.3"));
         assertFalse(range.isSatisfiedBy("1.2.3-beta"));
     }
 
     @Test
     void shouldCheckSatisfiedByForLowerThan() {
-        //given
+        // given
         Range range = new Range("1.2.3", LT);
 
-        //when/then
+        // when/then
         assertThat(range.isSatisfiedBy("1.2.3")).isFalse();
         assertThat(range.isSatisfiedBy("1.2.4")).isFalse();
         assertThat(range.isSatisfiedBy("1.2.2")).isTrue();
@@ -63,10 +63,10 @@ class RangeTest {
 
     @Test
     void shouldCheckSatisfiedByForLowerThanOrEqual() {
-        //given
+        // given
         Range range = new Range("1.2.3", LTE);
 
-        //when/then
+        // when/then
         assertThat(range.isSatisfiedBy("1.2.4")).isFalse();
         assertThat(range.isSatisfiedBy("1.2.3")).isTrue();
         assertThat(range.isSatisfiedBy("1.2.2")).isTrue();
@@ -74,10 +74,10 @@ class RangeTest {
 
     @Test
     void shouldCheckSatisfiedByForGreaterThan() {
-        //given
+        // given
         Range range = new Range("1.2.3", GT);
 
-        //when/then
+        // when/then
         assertThat(range.isSatisfiedBy("1.2.3")).isFalse();
         assertThat(range.isSatisfiedBy("1.2.2")).isFalse();
         assertThat(range.isSatisfiedBy("1.2.4")).isTrue();
@@ -85,10 +85,10 @@ class RangeTest {
 
     @Test
     void shouldCheckSatisfiedByForGreaterThanOrEqual() {
-        //given
+        // given
         Range range = new Range("1.2.3", GTE);
 
-        //when/then
+        // when/then
         assertThat(range.isSatisfiedBy("1.2.2")).isFalse();
         assertThat(range.isSatisfiedBy("1.2.3")).isTrue();
         assertThat(range.isSatisfiedBy("1.2.4")).isTrue();
@@ -97,13 +97,13 @@ class RangeTest {
     @ParameterizedTest
     @MethodSource("prettyPrint")
     void shouldPrettyPrintRange(String expected, RangeOperator rangeOperator) {
-        //given
+        // given
         Range range = new Range("1.2.3", rangeOperator);
 
-        //when
+        // when
         String actual = range.toString();
 
-        //then
+        // then
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -113,7 +113,6 @@ class RangeTest {
                 arguments("<1.2.3", LT),
                 arguments("<=1.2.3", LTE),
                 arguments(">1.2.3", GT),
-                arguments(">=1.2.3", GTE)
-        );
+                arguments(">=1.2.3", GTE));
     }
 }

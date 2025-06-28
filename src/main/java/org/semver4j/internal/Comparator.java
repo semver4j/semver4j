@@ -1,14 +1,15 @@
 package org.semver4j.internal;
 
-import org.jspecify.annotations.NullMarked;
+import static java.lang.Math.max;
+
+import java.util.List;
 import org.jspecify.annotations.Nullable;
 import org.semver4j.Semver;
 
-import java.util.List;
-
-import static java.lang.Math.max;
-
-@NullMarked
+/**
+ * Utility class for comparing semantic versions according to the SemVer specification. This class provides
+ * functionality to compare two {@link Semver} objects.
+ */
 public class Comparator {
     private static final String ALL_DIGITS = "^\\d+$";
     private static final String CONTAINS_DIGITS = ".*\\d.*";
@@ -17,10 +18,18 @@ public class Comparator {
 
     private static final String UNDEFINED_MARKER = "undef";
 
-    private Comparator() {
-    }
+    /** Private constructor to prevent instantiation of this utility class. */
+    private Comparator() {}
 
-    public static int compareTo(final Semver version, final Semver other) {
+    /**
+     * Compares two semantic versions.
+     *
+     * @param version the first version to compare
+     * @param other the second version to compare
+     * @return a negative integer if version is less than other, zero if they are equal, a positive integer if version
+     *     is greater than other
+     */
+    public static int compareTo(Semver version, Semver other) {
         int result = mainCompare(version, other);
         if (result == 0) {
             return preReleaseCompare(version, other);
@@ -28,7 +37,7 @@ public class Comparator {
         return result;
     }
 
-    private static int mainCompare(final Semver version, final Semver other) {
+    private static int mainCompare(Semver version, Semver other) {
         int majorCompare = Long.compare(version.getMajor(), other.getMajor());
         if (majorCompare == 0) {
             int minorCompare = Long.compare(version.getMinor(), other.getMinor());
@@ -42,7 +51,7 @@ public class Comparator {
         }
     }
 
-    private static int preReleaseCompare(final Semver version, final Semver other) {
+    private static int preReleaseCompare(Semver version, Semver other) {
         if (!version.getPreRelease().isEmpty() && other.getPreRelease().isEmpty()) {
             return -1;
         } else if (version.getPreRelease().isEmpty() && !other.getPreRelease().isEmpty()) {
@@ -51,7 +60,8 @@ public class Comparator {
             return 0;
         }
 
-        int maxElements = max(version.getPreRelease().size(), other.getPreRelease().size());
+        int maxElements =
+                max(version.getPreRelease().size(), other.getPreRelease().size());
 
         int i = 0;
         do {
@@ -76,7 +86,7 @@ public class Comparator {
         return 0;
     }
 
-    private static int compareIdentifiers(final String a, final String b) {
+    private static int compareIdentifiers(String a, String b) {
         // Only attempt to parse fully numeric string sequences so that we can avoid
         // raising a costly exception
         if (a.matches(ALL_DIGITS) && b.matches(ALL_DIGITS)) {
@@ -101,7 +111,7 @@ public class Comparator {
         return 0;
     }
 
-    private static @Nullable Integer checkAlphanumericPrerelease(final String a, final String b) {
+    private static @Nullable Integer checkAlphanumericPrerelease(String a, String b) {
         String[] tokenArrA = a.split(TRAILING_DIGITS_EXTRACT);
         String[] tokenArrB = b.split(TRAILING_DIGITS_EXTRACT);
         if (tokenArrA.length != tokenArrB.length) {
@@ -120,18 +130,13 @@ public class Comparator {
             } else {
                 return compareIdentifiers(
                         a.substring(a.indexOf(leadingDigitsArrA[0]) + 1),
-                        b.substring(b.indexOf(leadingDigitsArrB[0]) + 1)
-                );
+                        b.substring(b.indexOf(leadingDigitsArrB[0]) + 1));
             }
         }
         return null;
     }
 
-    private static String getString(final int i, final List<String> list) {
-        if (list.size() > i) {
-            return list.get(i);
-        } else {
-            return UNDEFINED_MARKER;
-        }
+    private static String getString(int i, List<String> list) {
+        return list.size() > i ? list.get(i) : UNDEFINED_MARKER;
     }
 }

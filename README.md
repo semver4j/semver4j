@@ -9,52 +9,65 @@
 
 ---
 
-> ### This is an active copy of the great [semver4j](https://github.com/vdurmont/semver4j) library created by [@vdurmont](https://github.com/vdurmont), no longer maintained 😭
+> ### 🔄 This is an active fork of the excellent [semver4j](https://github.com/vdurmont/semver4j) library created by [@vdurmont](https://github.com/vdurmont), which is no longer maintained 😭
 
 ---
 
-**Semver4j** is a lightweight Java library that helps you to handle versions.
-It follows the rules of the [semantic versioning](http://semver.org) specification.
+## 🚀 Overview
 
-It also provides support for several range checking: [node-semver](https://github.com/npm/node-semver),
-[CocoaPods](https://guides.cocoapods.org/using/the-podfile.html)
-and [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html).
+**Semver4j** is a lightweight Java library that helps you handle version strings according to
+the [semantic versioning](http://semver.org) specification. It provides robust support for multiple range checking
+formats including:
 
-## Table of Contents
+- 📦 [node-semver](https://github.com/npm/node-semver) (NPM style)
+- 🍫 [CocoaPods](https://guides.cocoapods.org/using/the-podfile.html)
+- 🌿 [Ivy](https://ant.apache.org/ivy/history/latest-milestone/settings/version-matchers.html)
+
+## 🧾 Table of Contents
 
 <!-- TOC -->
 * [Semver4j](#semver4j)
-  * [Table of Contents](#table-of-contents)
-  * [Installation](#installation)
+  * [🚀 Overview](#-overview)
+  * [🧾 Table of Contents](#-table-of-contents)
+  * [⚙️ Installation](#-installation)
     * [Using Maven](#using-maven)
     * [Using Gradle](#using-gradle)
-          * [Version `v1.0.x` references to original library version `v3.1.0` in source repository.](#version-v10x-references-to-original-library-version-v310-in-source-repository)
-  * [Usage](#usage)
-    * [What is a version?](#what-is-a-version)
-    * [The `Semver` object](#the-semver-object)
+    * [Version `v1.0.x`](#version-v10x)
+  * [📝 Usage](#-usage)
+    * [🏷️ What is a version?](#-what-is-a-version)
+    * [🧩 The object `Semver`](#-the-object-semver)
       * [Using constructor](#using-constructor)
       * [Using `Semver.parse()` method](#using-semverparse-method)
       * [Using `Semver.coerce()` method](#using-semvercoerce-method)
-    * [Is the version stable?](#is-the-version-stable)
-    * [Comparing the versions](#comparing-the-versions)
-    * [Versions diffs](#versions-diffs)
-    * [Ranges](#ranges)
-      * [External](#external)
-      * [Internal](#internal)
-    * [Modifying the version](#modifying-the-version)
-    * [Builder](#builder)
-    * [Formatting](#formatting)
-  * [Contributing](#contributing)
-  * [Thanks](#thanks)
+    * [✅ Is the version stable?](#-is-the-version-stable)
+    * [🔍 Comparing versions](#-comparing-versions)
+    * [📊 Version differences](#-version-differences)
+    * [📏 Ranges](#-ranges)
+      * [External ranges](#external-ranges)
+      * [Internal ranges](#internal-ranges)
+    * [🔄 Modifying versions](#-modifying-versions)
+    * [🛠️ Programmatically build Semver](#-programmatically-build-semver)
+      * [Using the Builder pattern](#using-the-builder-pattern)
+      * [Using the method `of()`](#using-the-method-of)
+      * [Using the `create()` method](#using-the-create-method)
+    * [🔌 Custom Range Processors](#-custom-range-processors)
+      * [Using custom processors](#using-custom-processors)
+      * [Combining multiple processors](#combining-multiple-processors)
+      * [Creating your own processor](#creating-your-own-processor)
+      * [Using all available processors](#using-all-available-processors)
+    * [🎨 Formatting](#-formatting)
+  * [🤝 Contributing](#-contributing)
+  * [🙏 Thanks](#-thanks)
 <!-- TOC -->
 
-## Installation
+## ⚙️ Installation
 
 Add the dependency to your project:
 
 ### Using Maven
 
 ```xml
+
 <dependency>
     <groupId>org.semver4j</groupId>
     <artifactId>semver4j</artifactId>
@@ -66,33 +79,36 @@ Add the dependency to your project:
 
 Groovy
 
-```
+```groovy
 implementation 'org.semver4j:semver4j:5.8.0'
 ```
 
 Kotlin
 
-```
+```kotlin
 implementation("org.semver4j:semver4j:5.8.0")
 ```
 
-###### Version `v1.0.x` references to original library version `v3.1.0` in [source repository](https://github.com/vdurmont/semver4j).
+### Version `v1.0.x`
 
-## Usage
+This version references the original library version `v3.1.0` in
+the [source repository](https://github.com/vdurmont/semver4j).
 
-### What is a version?
+## 📝 Usage
 
-In **Semver4j**, a version looks like: `1.2.3-beta.4+sha899d8g79f87`.
+### 🏷️ What is a version?
 
-- `1` is the major part (required)
-- `2` is the minor part (required)
-- `3` is the patch part (required)
-- `beta` and `4` are the pre-release version (optional)
-- `sha899d8g79f87` is the build metadata (optional)
+In `Semver4j`, a version follows this format: `1.2.3-beta.4+sha899d8g79f87`
 
-### The `Semver` object
+- `1` is the `major` version (required) 🔢
+- `2` is the `minor` version (required) 🔢
+- `3` is the `patch` version (required) 🔢
+- `beta.4` is the `pre-release` identifier (optional) 🧪
+- `sha899d8g79f87` is the `build` metadata (optional) 🔍
 
-You can create `Semver` object in number of ways.
+### 🧩 The object `Semver`
+
+You can create a `Semver` object in several ways:
 
 #### Using constructor
 
@@ -109,93 +125,80 @@ Semver version = Semver.parse("invalid"); // returns null, cannot parse this ver
 
 #### Using `Semver.coerce()` method
 
-Library can help you to create valid `Semver` object when the version is not valid. This aims to provide forgiving
-translation from not-semver into semver.
+The library can help you create valid objects even when the version string isn't valid: `Semver`
 
 ```java
-Semver version = Semver.coerce("..1"); // it produces the same result as new Semver("1.0.0")
+Semver version = Semver.coerce("..1"); // produces the same result as new Semver("1.0.0")
 Semver version = Semver.coerce("invalid"); // returns null, cannot coerce this version
 ```
 
-### Is the version stable?
+### ✅ Is the version stable?
 
-You can check if you're working with a stable version by using `isStable()`.
-
-A version is stable if its major number is _strictly_ positive, and it has no pre-release version.
-
-Examples:
+Check if you're working with a stable version using `isStable()`:
 
 ```java
-// true
-new Semver("1.2.3").isStable(); // major is > 0 and has no pre-release version
-new Semver("1.2.3+sHa.0nSFGKjkjsdf").isStable(); // major is > 0 and has only build metadata without pre-release version
+// ✅ Stable versions (returns true)
+boolean stable = new Semver("1.2.3").isStable(); // major is > 0 and has no pre-release version
+boolean stable = new Semver("1.2.3+sHa.0nSFGKjkjsdf").isStable(); // major is > 0 and has only build metadata
 
-// false
-new Semver("0.1.2").isStable()); // major is < 1
-new Semver("0.1.2+sHa.0nSFGKjkjsdf").isStable(); // major is < 1
-new Semver("1.2.3-BETA.11+sHa.0nSFGKjkjsdf").isStable(); // major is > 0 but has pre-release version BETA.11
+// ❌ Unstable versions (returns false)
+boolean stable = new Semver("0.1.2").isStable(); // major is < 1
+boolean stable = new Semver("0.1.2+sHa.0nSFGKjkjsdf").isStable(); // major is < 1
+boolean stable = new Semver("1.2.3-BETA.11+sHa.0nSFGKjkjsdf").isStable(); // has pre-release version
 ```
 
-### Comparing the versions
-
-- `isGreaterThan()` returns true if the version is strictly greater than the other one.
+### 🔍 Comparing versions
 
 ```java
 Semver version = new Semver("1.2.3");
-version.isGreaterThan("1.2.2"); // true
-version.isGreaterThan("1.2.4"); // false
-version.isGreaterThan("1.2.3"); // false
+
+// Greater than
+boolean greaterThan = version.isGreaterThan("1.2.2"); // true ✅
+boolean greaterThan = version.isGreaterThan("1.2.4"); // false ❌
+boolean greaterThan = version.isGreaterThan("1.2.3"); // false ❌
+
+// Lower than
+boolean lowerThan = version.isLowerThan("1.2.2"); // false ❌
+boolean lowerThan = version.isLowerThan("1.2.4"); // true ✅
+boolean lowerThan = version.isLowerThan("1.2.3"); // false ❌
+
+// Equal to (exact match)
+boolean equalTo = version.isEqualTo("1.2.3+sha123456789"); // false ❌ (build metadata differs)
+
+// Equivalent to (ignores build metadata)
+boolean equivalentTo = version.isEquivalentTo("1.2.3+sha123456789"); // true ✅
+boolean equivalentTo = version.isEquivalentTo("1.2.3+shaABCDEFGHI"); // true ✅
 ```
 
-- `isLowerThan()` returns true if the version is strictly lower than the other one.
+### 📊 Version differences
 
-```java
-Semver version = new versionver("1.2.3");
-version.isLowerThan("1.2.2"); // false
-version.isLowerThan("1.2.4"); // true
-version.isLowerThan("1.2.3"); // false
-```
-
-- `isEqualTo()` returns true if the versions are exactly the same.
-
-```java
-Semver version = new Semver("1.2.3+sha123456789");
-version.isEqualTo("1.2.3+sha123456789"); // true
-version.isEqualTo("1.2.3+shaABCDEFGHI"); // false
-```
-
-- `isEquivalentTo()` returns true if the versions are the same (does not take the build metadata into account).
-
-```java
-Semver version = new Semver("1.2.3+sha123456789");
-version.isEquivalentTo("1.2.3+sha123456789"); // true
-version.isEquivalentTo("1.2.3+shaABCDEFGHI"); // true
-```
-
-### Versions diffs
-
-If you want to know what is the main difference between 2 versions, use the `diff()` method.
-It will return a `VersionDiff` enum value among: `NONE`, `MAJOR`, `MINOR`, `PATCH`, `PRE_RELEASE`, `BUILD`.
-
-_It will always return the biggest difference._
+Find the **most significant** difference between versions with `diff()`:
 
 ```java
 Semver version = new Semver("1.2.3-beta.4+sha899d8g79f87");
-version.diff("1.2.3-beta.4+sha899d8g79f87"); // NONE
-version.diff("2.3.4-alpha.5+sha32iddfu987"); // MAJOR
-version.diff("1.3.4-alpha.5+sha32iddfu987"); // MINOR
-version.diff("1.2.4-alpha.5+sha32iddfu987"); // PATCH
-version.diff("1.2.3-alpha.5+sha32iddfu987"); // PRE_RELEASE
-version.diff("1.2.3-beta.4+sha32iddfu987");  // BUILD
+
+Semver.VersionDiff diff = version.diff("1.2.3-beta.4+sha899d8g79f87"); // NONE
+Semver.VersionDiff diff = version.diff("2.3.4-alpha.5+sha32iddfu987"); // MAJOR
+Semver.VersionDiff diff = version.diff("1.3.4-alpha.5+sha32iddfu987"); // MINOR
+Semver.VersionDiff diff = version.diff("1.2.4-alpha.5+sha32iddfu987"); // PATCH
+Semver.VersionDiff diff = version.diff("1.2.3-alpha.5+sha32iddfu987"); // PRE_RELEASE
+Semver.VersionDiff diff = version.diff("1.2.3-beta.4+sha32iddfu987");  // BUILD
 ```
 
-### Ranges
+### 📏 Ranges
 
-#### External
+#### External ranges
 
-If you want to check if a version satisfies a range, use the `satisfies()` method.
+Check if a version satisfies a range with the `satisfies()` method:
 
-`Semver4j` can interpret the following range implementations:
+```java
+// Using string-based ranges
+Semver version = new Semver("1.2.3");
+RangeList rangeList = RangeListFactory.create(">=1.0.0 <2.0.0");
+boolean satisfies = version.satisfies(rangeList); // true ✅
+```
+
+`Semver4j` supports multiple range formats:
 
 - [NPM](https://github.com/npm/node-semver)
     - [Primitive ranges](https://github.com/npm/node-semver#ranges) `<`, `<=`, `>`, `>=` and `=`
@@ -209,70 +212,167 @@ If you want to check if a version satisfies a range, use the `satisfies()` metho
     - Version Range Matcher `[1.0,2.0]`, `[1.0,2.0[`, `]1.0,2.0]`, `]1.0,2.0[`, `[1.0,)`, `]1.0,)`, `(,2.0]`
       and `(,2.0[`
 
-#### Internal
+#### Internal ranges
 
-The internal ranges builds ranges using fluent interface.
+Build ranges using the fluent interface:
 
 ```java
-RangesExpression rangesExpression = equal("1.0.0")
-        .and(less("2.0.0"))
-        .or(greaterOrEqual("3.0.0")); // (=1.0.0 and <2.0.0) or >=3.0.0
+// (=1.0.0 and <2.0.0) or >=3.0.0
+RangeExpression rangeExpression = eq("1.0.0")
+                .and(less("2.0.0"))
+                .or(greaterOrEqual("3.0.0"));
+
+boolean satisfies = semver.satisfies(rangeExpression);
 ```
 
-### Modifying the version
+### 🔄 Modifying versions
 
-The `Semver` object is immutable. However, it provides a set of methods that will help you create new versions:
-
-- `withIncMajor()` and `withIncMajor(int increment)` returns a `Semver` object with the major part incremented
-- `withIncMinor()` and `withIncMinor(int increment)` returns a `Semver` object with the minor part incremented
-- `withIncPatch()` and `withIncPatch(int increment)` returns a `Semver` object with the patch part incremented
-- `withClearedPreRelease()` returns a `Semver` object with no pre-release version
-- `withClearedBuild()` returns a `Semver` object with no build metadata
-
-You can also use built-in versioning methods such as:
-
-- `nextMajor()`: `1.2.3-beta.4+sha32iddfu987 => 2.0.0`
-- `nextMinor()`: `1.2.3-beta.4+sha32iddfu987 => 1.3.0`
-- `nextPatch()`: `1.2.3-beta.4+sha32iddfu987 => 1.2.4`
-
-### Builder
-
-`Semver4j` provides an API for programmatically creating `Semver` object.
-
-The newly introduced API looks like:
+The `Semver` object is **immutable**, but provides methods to create new versions:
 
 ```java
-Semver semver = Semver.of()
+Semver version = new Semver("1.2.3-beta.4+sha899d8g79f87");
+
+// Increment versions
+Semver newVersion = version.withIncMajor(); // 2.0.0
+Semver newVersion = version.withIncMinor(); // 1.3.0
+Semver newVersion = version.withIncPatch(); // 1.2.4
+
+// Clear parts
+Semver newVersion = version.withClearedPreRelease(); // 1.2.3+sha899d8g79f87
+Semver newVersion = version.withClearedBuild(); // 1.2.3-beta.4
+
+// Next versions (automatically clears pre-release and build)
+Semver newVersion = version.nextMajor(); // 2.0.0
+Semver newVersion = version.nextMinor(); // 1.3.0
+Semver newVersion = version.nextPatch(); // 1.2.4
+```
+
+### 🛠️ Programmatically build Semver
+
+`Semver4j` provides multiple ways to programmatically create `Semver` objects without parsing strings:
+
+#### Using the Builder pattern
+
+```java
+Semver semver = Semver.builder()
         .withMajor(1)
         .withMinor(2)
+        .withPatch(3)
+        .withPreRelease("alpha")
         .withBuild("5bb76cdb")
-        .toSemver();
+        .build();
+// Equivalent to: new Semver("1.2.3-alpha+5bb76cdb")
 ```
 
-And is an equivalent of:
+#### Using the method `of()`
+
+The `of()` method provides a shorthand to initialize a builder with the `major`, `minor`, and `patch` components:
 
 ```java
-Semver semver = new Semver("1.2.0+5bb76cdb");
+Semver semver = Semver.of(1, 2, 3)
+        .withPreRelease("beta")
+        .build();
+// Equivalent to: new Semver("1.2.3-beta")
 ```
 
-### Formatting
+#### Using the `create()` method
 
-Sometimes you want to format `Semver` using custom formatters. You can do this using
-a `format(Function<Semver, String> formatter)` method from the `Semver` class:
+The `create()` method is the most concise way to create a basic version with just `major`, `minor`, and `patch`
+components:
+
+```java
+Semver semver = Semver.create(1, 2, 3);
+// Equivalent to: new Semver("1.2.3")
+```
+
+### 🔌 Custom Range Processors
+
+`Semver4j` allows you to customize how version ranges are processed through its processor architecture. This gives you
+the flexibility to support additional range formats or modify the behavior of existing ones.
+
+#### Using custom processors
+
+You can specify which processors to use when creating a `RangeList`:
+
+```java
+// Create a RangeList using only the Ivy processor
+RangeList rangeList = RangeListFactory.create("[1.0.0,2.0.0]", new IvyProcessor());
+
+// The result will be ">=1.0.0 and <=2.0.0"
+```
+
+#### Combining multiple processors
+
+Use `CompositeProcessor` to combine multiple processors:
+
+```java
+// Create a processor that handles both Ivy and Tilde ranges
+Processor customProcessor = CompositeProcessor.of(
+                new IvyProcessor(),
+                new TildeProcessor()
+        );
+
+// Create a RangeList using the custom processor combination
+RangeList rangeList = RangeListFactory.create(
+        "~1.2.3 || [2.0.0,3.0.0]",
+        false, // don't include pre-releases
+        customProcessor
+);
+```
+
+#### Creating your own processor
+
+Implement the `Processor` interface to create a custom range format handler:
+
+```java
+public class CustomProcessor implements Processor {
+    @Override
+    public @Nullable String process(String range, boolean includePreRelease) {
+        // Your logic to process custom range format
+        // Returns null if this processor can't handle the input
+        if (!range.startsWith("custom:")) {
+            return null;
+        }
+
+        // Convert custom format to standard format
+        String version = range.substring(7);
+        return ">=" + version;
+    }
+}
+```
+
+#### Using all available processors
+
+To use all built-in processors (which is the default behavior):
+
+```java
+// Use all available processors
+Processor allProcessors = CompositeProcessor.all();
+
+// Create a RangeList with all processors
+RangeList rangeList = RangeListFactory.create("^1.0.0 || ~2.0.0");
+```
+
+This processor architecture gives you the flexibility to support custom version range formats for any project-specific
+needs.
+
+### 🎨 Formatting
+
+Format versions using custom formatters:
 
 ```java
 Semver semver = new Semver("1.2.3-alpha.1+sha.1234");
-String customVersion = semver.format(sem -> format("%d:%d:%d", sem.getMajor(), sem.getMinor(), sem.getPatch())); // 1:2:2
+String customVersion = semver.format(sem ->
+        String.format("%d:%d:%d", sem.getMajor(), sem.getMinor(), sem.getPatch())
+); // "1:2:3"
 ```
 
-There is also a method in the `SemverBuilder` called `toVersion(Function<Semver, String> formatter)` which behaves
-exactly the same.
+## 🤝 Contributing
 
-## Contributing
+Pull requests and bug reports are welcome! If you have suggestions for new features, please open an issue.
 
-Any pull request or bug report are welcome!
-If you have any suggestion about new features, you can **open an issue**.
+For details on contributing to this repository, see the [contributing guide](CONTRIBUTING.md).
 
-## Thanks
+## 🙏 Thanks
 
 Logo created by Tomek Babik [@tomekbbk](https://github.com/tomekbbk).

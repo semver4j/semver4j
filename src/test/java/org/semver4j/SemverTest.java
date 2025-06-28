@@ -1,47 +1,61 @@
 package org.semver4j;
 
+import static java.lang.String.format;
+import static java.lang.String.join;
+import static java.util.Arrays.asList;
+import static java.util.Collections.nCopies;
+import static java.util.Collections.sort;
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.ThrowableAssert.*;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.semver4j.Semver.VersionDiff.*;
+import static org.semver4j.Semver.coerce;
+import static org.semver4j.Semver.isValid;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.semver4j.Semver.VersionDiff;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Stream;
-
-import static java.lang.String.format;
-import static java.lang.String.join;
-import static java.util.Arrays.asList;
-import static java.util.Collections.nCopies;
-import static java.util.Collections.sort;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.semver4j.Semver.VersionDiff.*;
-import static org.semver4j.Semver.coerce;
-import static org.semver4j.Semver.isValid;
+import org.semver4j.range.RangeExpression;
 
 class SemverTest {
     @ParameterizedTest
-    @ValueSource(strings = {"1.Y.3", "1.2.Y", "1.1.1.1", "1.0.0+", "1.0.0-", "1.0.0-alpha..1", "1.0.0-001", "1.0.0-äöü", "1.2.3."})
+    @ValueSource(
+            strings = {
+                "1.Y.3",
+                "1.2.Y",
+                "1.1.1.1",
+                "1.0.0+",
+                "1.0.0-",
+                "1.0.0-alpha..1",
+                "1.0.0-001",
+                "1.0.0-äöü",
+                "1.2.3."
+            })
     void shouldThrowExceptionWhenSemverIsNotValid(String version) {
-        //when/then
-        assertThatThrownBy(() -> new Semver(version))
+        // when
+        ThrowingCallable throwingCallable = () -> new Semver(version);
+
+        // then
+        assertThatCode(throwingCallable)
                 .isInstanceOf(SemverException.class)
                 .hasMessage(format(Locale.ROOT, "Version [%s] is not valid semver.", version));
     }
 
     @Test
     void shouldParseValidSemverWithAllSections() {
-        //given
+        // given
         String version = "1.2.3-beta.11+sha.0nsfgkjkjsdf";
 
-        //when
+        // when
         Semver semver = new Semver(version);
 
-        //then
+        // then
         assertThat(semver.getMajor()).isEqualTo(1);
         assertThat(semver.getMinor()).isEqualTo(2);
         assertThat(semver.getPatch()).isEqualTo(3);
@@ -51,16 +65,22 @@ class SemverTest {
 
     @Test
     void shouldThrowExceptionWhenIsWithoutPatch() {
-        //when/then
-        assertThatThrownBy(() -> new Semver("1.2-beta.11+sha.0nsfgkjkjsdf"))
+        // when
+        ThrowingCallable throwingCallable = () -> new Semver("1.2-beta.11+sha.0nsfgkjkjsdf");
+
+        // then
+        assertThatCode(throwingCallable)
                 .isInstanceOf(SemverException.class)
                 .hasMessage("Version [1.2-beta.11+sha.0nsfgkjkjsdf] is not valid semver.");
     }
 
     @Test
     void shouldThrowExceptionWhenIsWithoutMinor() {
-        //when/then
-        assertThatThrownBy(() -> new Semver("1-beta.11+sha.0nsfgkjkjsdf"))
+        // when
+        ThrowingCallable throwingCallable = () -> new Semver("1-beta.11+sha.0nsfgkjkjsdf");
+
+        // then
+        assertThatCode(throwingCallable)
                 .isInstanceOf(SemverException.class)
                 .hasMessage("Version [1-beta.11+sha.0nsfgkjkjsdf] is not valid semver.");
     }
@@ -68,39 +88,39 @@ class SemverTest {
     @ParameterizedTest
     @ValueSource(strings = {"1.2.3+sHa.0nSFGKjkjsdf", "1.2.3"})
     void shouldCheckVersionIsStable(String version) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         boolean stable = semver.isStable();
 
-        //then
+        // then
         assertThat(stable).isTrue();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"1.2.3-BETA.11+sHa.0nSFGKjkjsdf", "0.1.2+sHa.0nSFGKjkjsdf", "0.1.2"})
     void shouldCheckVersionIsNotStable(String version) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         boolean stable = semver.isStable();
 
-        //then
+        // then
         assertThat(stable).isFalse();
     }
 
     @ParameterizedTest
     @MethodSource("nextMajor")
     void shouldSetNextMajor(String version, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.nextMajor();
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -111,20 +131,19 @@ class SemverTest {
                 arguments("1.2.3-4", "2.0.0"),
                 arguments("1.2.3-alpha.0.beta", "2.0.0"),
                 arguments("1.0.0-1", "1.0.0"),
-                arguments("1.2.3+build.098", "2.0.0+build.098")
-        );
+                arguments("1.2.3+build.098", "2.0.0+build.098"));
     }
 
     @ParameterizedTest
     @MethodSource("incrementMajor")
     void shouldIncrementMajor(String version, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.withIncMajor();
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -135,20 +154,19 @@ class SemverTest {
                 arguments("1.2.3-4", "2.2.3-4"),
                 arguments("1.2.3-alpha.0.beta", "2.2.3-alpha.0.beta"),
                 arguments("1.0.0-1", "2.0.0-1"),
-                arguments("1.2.3+build.098", "2.2.3+build.098")
-        );
+                arguments("1.2.3+build.098", "2.2.3+build.098"));
     }
 
     @ParameterizedTest
     @MethodSource("incrementMajorByNumber")
     void shouldIncrementMajorByNumber(String version, int number, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.withIncMajor(number);
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -159,20 +177,19 @@ class SemverTest {
                 arguments("1.2.3-4", 2, "3.2.3-4"),
                 arguments("1.2.3-alpha.0.beta", 2, "3.2.3-alpha.0.beta"),
                 arguments("1.0.0-1", 2, "3.0.0-1"),
-                arguments("1.2.3+build.098", 2, "3.2.3+build.098")
-        );
+                arguments("1.2.3+build.098", 2, "3.2.3+build.098"));
     }
 
     @ParameterizedTest
     @MethodSource("nextMinor")
     void shouldNextMinor(String version, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.nextMinor();
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -183,20 +200,19 @@ class SemverTest {
                 arguments("1.2.3-4", "1.3.0"),
                 arguments("1.2.3-alpha.0.beta", "1.3.0"),
                 arguments("1.2.0-1", "1.2.0"),
-                arguments("1.2.3+build.098", "1.3.0+build.098")
-        );
+                arguments("1.2.3+build.098", "1.3.0+build.098"));
     }
 
     @ParameterizedTest
     @MethodSource("incrementMinor")
     void shouldIncrementMinor(String version, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.withIncMinor();
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -207,20 +223,19 @@ class SemverTest {
                 arguments("1.2.3-4", "1.3.3-4"),
                 arguments("1.2.3-alpha.0.beta", "1.3.3-alpha.0.beta"),
                 arguments("1.2.0-1", "1.3.0-1"),
-                arguments("1.2.3+build.098", "1.3.3+build.098")
-        );
+                arguments("1.2.3+build.098", "1.3.3+build.098"));
     }
 
     @ParameterizedTest
     @MethodSource("incrementMinorByNumber")
     void shouldIncrementMinorByNumber(String version, int number, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.withIncMinor(number);
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -231,20 +246,19 @@ class SemverTest {
                 arguments("1.2.3-4", 2, "1.4.3-4"),
                 arguments("1.2.3-alpha.0.beta", 2, "1.4.3-alpha.0.beta"),
                 arguments("1.2.0-1", 2, "1.4.0-1"),
-                arguments("1.2.3+build.098", 2, "1.4.3+build.098")
-        );
+                arguments("1.2.3+build.098", 2, "1.4.3+build.098"));
     }
 
     @ParameterizedTest
     @MethodSource("nextPatch")
     void shouldNextPatch(String version, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.nextPatch();
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -255,20 +269,19 @@ class SemverTest {
                 arguments("1.2.3-4", "1.2.3"),
                 arguments("1.2.3-alpha.0.beta", "1.2.3"),
                 arguments("1.2.0-1", "1.2.0"),
-                arguments("1.2.3+build.098", "1.2.4+build.098")
-        );
+                arguments("1.2.3+build.098", "1.2.4+build.098"));
     }
 
     @ParameterizedTest
     @MethodSource("incrementPatch")
     void shouldIncrementPatch(String version, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.withIncPatch();
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -279,20 +292,19 @@ class SemverTest {
                 arguments("1.2.3-4", "1.2.4-4"),
                 arguments("1.2.3-alpha.0.beta", "1.2.4-alpha.0.beta"),
                 arguments("1.2.0-1", "1.2.1-1"),
-                arguments("1.2.3+build.098", "1.2.4+build.098")
-        );
+                arguments("1.2.3+build.098", "1.2.4+build.098"));
     }
 
     @ParameterizedTest
     @MethodSource("incrementPatchByNumber")
     void shouldIncrementPatchByNumber(String version, int number, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.withIncPatch(number);
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -303,20 +315,19 @@ class SemverTest {
                 arguments("1.2.3-4", 2, "1.2.5-4"),
                 arguments("1.2.3-alpha.0.beta", 2, "1.2.5-alpha.0.beta"),
                 arguments("1.2.0-1", 2, "1.2.2-1"),
-                arguments("1.2.3+build.098", 2, "1.2.5+build.098")
-        );
+                arguments("1.2.3+build.098", 2, "1.2.5+build.098"));
     }
 
     @ParameterizedTest
     @MethodSource("withPreRelease")
     void shouldReturnSemverWithPreRelease(String version, String preRelease, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.withPreRelease(preRelease);
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -325,20 +336,19 @@ class SemverTest {
                 arguments("1.2.3", "beta", "1.2.3-beta"),
                 arguments("1.2.3", "beta.1", "1.2.3-beta.1"),
                 arguments("1.2.3-old", "new", "1.2.3-new"),
-                arguments("1.2.3+build.098", "alpha.1", "1.2.3-alpha.1+build.098")
-        );
+                arguments("1.2.3+build.098", "alpha.1", "1.2.3-alpha.1+build.098"));
     }
 
     @ParameterizedTest
     @MethodSource("withBuild")
     void shouldReturnSemverWithBuild(String version, String build, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.withBuild(build);
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -347,20 +357,19 @@ class SemverTest {
                 arguments("1.2.3", "1234", "1.2.3+1234"),
                 arguments("1.2.3", "sha.342t51", "1.2.3+sha.342t51"),
                 arguments("1.2.3-alpha.1", "new", "1.2.3-alpha.1+new"),
-                arguments("1.2.3+build.098", "build.100", "1.2.3+build.100")
-        );
+                arguments("1.2.3+build.098", "build.100", "1.2.3+build.100"));
     }
 
     @ParameterizedTest
     @MethodSource("withClearedPreRelease")
     void shouldReturnSemverWithClearedPreRelease(String version, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.withClearedPreRelease();
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -370,20 +379,19 @@ class SemverTest {
                 arguments("1.2.3-rc", "1.2.3"),
                 arguments("1.2.3-alpha.1", "1.2.3"),
                 arguments("1.2.3-beta.2+build.098", "1.2.3+build.098"),
-                arguments("1.2.3+build.098", "1.2.3+build.098")
-        );
+                arguments("1.2.3+build.098", "1.2.3+build.098"));
     }
 
     @ParameterizedTest
     @MethodSource("withClearedBuild")
     void shouldReturnSemverWithClearedBuild(String version, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.withClearedBuild();
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -392,20 +400,19 @@ class SemverTest {
                 arguments("1.2.3", "1.2.3"),
                 arguments("1.2.3-rc", "1.2.3-rc"),
                 arguments("1.2.3-beta.2+build.098", "1.2.3-beta.2"),
-                arguments("1.2.3+build.098", "1.2.3")
-        );
+                arguments("1.2.3+build.098", "1.2.3"));
     }
 
     @ParameterizedTest
     @MethodSource("withClearedPreReleaseAndBuild")
     void shouldReturnSemverWithClearedPreReleaseAndBuild(String version, String expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         Semver actualSemver = semver.withClearedPreReleaseAndBuild();
 
-        //then
+        // then
         assertThat(actualSemver.getVersion()).isEqualTo(expected);
     }
 
@@ -414,38 +421,51 @@ class SemverTest {
                 arguments("1.2.3", "1.2.3"),
                 arguments("1.2.3-rc", "1.2.3"),
                 arguments("1.2.3-beta.2+build.098", "1.2.3"),
-                arguments("1.2.3+build.098", "1.2.3")
-        );
+                arguments("1.2.3+build.098", "1.2.3"));
     }
 
     @Test
     void shouldSortVersions() {
-        //given
-        List<Semver> semvers = asList(new Semver("1.2.3"), new Semver("1.2.3-rc3"),
-                new Semver("1.2.3-rc2"), new Semver("1.2.3-rc1"), new Semver("1.2.2"),
-                new Semver("1.2.2-rc2"), new Semver("1.2.2-rc1"), new Semver("1.2.0"),
-                new Semver("1.2.2-beta.1")
-        );
+        // given
+        List<Semver> semvers = asList(
+                new Semver("1.2.3"),
+                new Semver("1.2.3-rc3"),
+                new Semver("1.2.3-rc2"),
+                new Semver("1.2.3-rc1"),
+                new Semver("1.2.2"),
+                new Semver("1.2.2-rc2"),
+                new Semver("1.2.2-rc1"),
+                new Semver("1.2.0"),
+                new Semver("1.2.2-beta.1"));
 
-        //when
+        // when
         sort(semvers);
 
-        //then
+        // then
         assertThat(semvers)
                 .extracting(Semver::getVersion)
-                .containsExactly("1.2.0", "1.2.2-beta.1", "1.2.2-rc1", "1.2.2-rc2", "1.2.2", "1.2.3-rc1", "1.2.3-rc2", "1.2.3-rc3", "1.2.3");
+                .containsExactly(
+                        "1.2.0",
+                        "1.2.2-beta.1",
+                        "1.2.2-rc1",
+                        "1.2.2-rc2",
+                        "1.2.2",
+                        "1.2.3-rc1",
+                        "1.2.3-rc2",
+                        "1.2.3-rc3",
+                        "1.2.3");
     }
 
     @ParameterizedTest
     @MethodSource("apiCompatible")
     void shouldCheckIsApiCompatible(String version, boolean expected) {
-        //given
+        // given
         Semver semver = new Semver("1.2.3");
 
-        //when
+        // when
         boolean apiCompatible = semver.isApiCompatible(version);
 
-        //then
+        // then
         assertThat(apiCompatible).isEqualTo(expected);
     }
 
@@ -458,20 +478,19 @@ class SemverTest {
                 arguments("1.2.4", true),
                 arguments("1.4.2", true),
                 arguments("2.0.0", false),
-                arguments("2.2.3", false)
-        );
+                arguments("2.2.3", false));
     }
 
     @ParameterizedTest
     @MethodSource("greaterThan")
     void shouldCheckIsVersionGreaterThan(String version1, String version2, boolean expected) {
-        //given
+        // given
         Semver semver = new Semver(version1);
 
-        //when
+        // when
         boolean greaterThan = semver.isGreaterThan(version2);
 
-        //then
+        // then
         assertThat(greaterThan).isEqualTo(expected);
     }
 
@@ -492,7 +511,6 @@ class SemverTest {
                 arguments("1.0.0-beta1b", "1.0.0-beta1a", true),
                 arguments("1.0.16-lp-zc1-bate+fix-zc1", "1.0.16-lp-zc1", true),
                 arguments("1.0.0-a1a1b", "1.0.0-a1a1a", true),
-
                 arguments("1.0.0-alpha", "1.0.0-alpha.1", false),
                 arguments("1.0.0-alpha.1", "1.0.0-alpha.beta", false),
                 arguments("1.0.0-alpha.beta", "1.0.0-beta", false),
@@ -506,20 +524,19 @@ class SemverTest {
                 arguments("1.0.0-alpha.12.ab-c", "1.0.0-alpha.12.ab-c", false),
                 arguments("1.0.0-rc3", "1.0.0-rc11", false),
                 arguments("1.0.0-beta11", "1.0.0-rc3", false),
-                arguments("1.24.1-A-20240111143213", "1.24.1-A-20240111143214", false)
-        );
+                arguments("1.24.1-A-20240111143213", "1.24.1-A-20240111143214", false));
     }
 
     @ParameterizedTest
     @MethodSource("greaterThanOrEqual")
     void shouldCheckIsVersionGreaterThanOrEqual(String version1, String version2, boolean expected) {
-        //given
+        // given
         Semver semver = new Semver(version1);
 
-        //when
+        // when
         boolean greaterThanOrEqualTo = semver.isGreaterThanOrEqualTo(version2);
 
-        //then
+        // then
         assertThat(greaterThanOrEqualTo).isEqualTo(expected);
     }
 
@@ -537,7 +554,6 @@ class SemverTest {
                 arguments("1.0.0-alpha.12.ab-c", "1.0.0-alpha.12.ab-c", true),
                 arguments("1.0.0-alpha.12.ab-c+sha.123", "1.0.0-alpha.12.ab-c+sha.123", true),
                 arguments("1.0.0-alpha.12.ab-c+sha.123", "1.0.0-alpha.12.ab-c+sha.987", true),
-
                 arguments("1.0.0-alpha", "1.0.0-alpha.1", false),
                 arguments("1.0.0-alpha.1", "1.0.0-alpha.beta", false),
                 arguments("1.0.0-alpha.beta", "1.0.0-beta", false),
@@ -545,20 +561,19 @@ class SemverTest {
                 arguments("1.0.0-beta.2", "1.0.0-beta.11", false),
                 arguments("1.0.0-beta.11", "1.0.0-rc.1", false),
                 arguments("1.0.0-rc.1", "1.0.0", false),
-                arguments("0.0.1", "5.0.0", false)
-        );
+                arguments("0.0.1", "5.0.0", false));
     }
 
     @ParameterizedTest
     @MethodSource("lowerThan")
     void shouldCheckIsVersionLowerThan(String version1, String version2, boolean expected) {
-        //given
+        // given
         Semver semver = new Semver(version1);
 
-        //when
+        // when
         boolean lowerThan = semver.isLowerThan(version2);
 
-        //then
+        // then
         assertThat(lowerThan).isEqualTo(expected);
     }
 
@@ -573,7 +588,6 @@ class SemverTest {
                 arguments("1.0.0-rc.1", "1.0.0", true),
                 arguments("1.0.0-rc3", "1.0.0-rc11", true),
                 arguments("1.0.0-rc.3.x-3", "1.0.0-rc.3.x-13", true),
-
                 arguments("1.0.0-rc.3.x-13", "1.0.0-beta11", false),
                 arguments("1.0.0", "1.0.0", false),
                 arguments("1.0.0-alpha.12", "1.0.0-alpha.12", false),
@@ -584,20 +598,19 @@ class SemverTest {
                 arguments("1.0.0-beta.2", "1.0.0-beta", false),
                 arguments("1.0.0-beta.11", "1.0.0-beta.2", false),
                 arguments("1.0.0-rc.1", "1.0.0-beta.11", false),
-                arguments("1.0.0", "1.0.0-rc.1", false)
-        );
+                arguments("1.0.0", "1.0.0-rc.1", false));
     }
 
     @ParameterizedTest
     @MethodSource("lowerThanOrEqual")
     void shouldCheckIsVersionLowerThanOrEqual(String version1, String version2, boolean expected) {
-        //given
+        // given
         Semver semver = new Semver(version1);
 
-        //when
+        // when
         boolean lowerThanOrEqualTo = semver.isLowerThanOrEqualTo(version2);
 
-        //then
+        // then
         assertThat(lowerThanOrEqualTo).isEqualTo(expected);
     }
 
@@ -613,27 +626,25 @@ class SemverTest {
                 arguments("1.0.0", "1.0.0", true),
                 arguments("1.0.0-alpha.12", "1.0.0-alpha.12", true),
                 arguments("1.0.0-alpha.12.x-yz", "1.0.0-alpha.12.x-yz", true),
-
                 arguments("1.0.0-alpha.1", "1.0.0-alpha", false),
                 arguments("1.0.0-alpha.beta", "1.0.0-alpha.1", false),
                 arguments("1.0.0-beta", "1.0.0-alpha.beta", false),
                 arguments("1.0.0-beta.2", "1.0.0-beta", false),
                 arguments("1.0.0-beta.11", "1.0.0-beta.2", false),
                 arguments("1.0.0-rc.1", "1.0.0-beta.11", false),
-                arguments("1.0.0", "1.0.0-rc.1", false)
-        );
+                arguments("1.0.0", "1.0.0-rc.1", false));
     }
 
     @ParameterizedTest
     @MethodSource("equivalent")
     void shouldCheckIsVersionEquivalent(String version1, String version2, boolean expected) {
-        //given
+        // given
         Semver semver = new Semver(version1);
 
-        //when
+        // when
         boolean equalTo = semver.isEquivalentTo(version2);
 
-        //then
+        // then
         assertThat(equalTo).isEqualTo(expected);
     }
 
@@ -648,26 +659,24 @@ class SemverTest {
                 arguments("1.0.0-rc.1", "1.0.0", false),
                 arguments("1.0.0", "1.2.0", false),
                 arguments("1.0.0", "1.0.2", false),
-
                 arguments("2021.1.6", "2021.1.6", true),
                 arguments("1.0.0", "1.0.0", true),
                 arguments("1.0.0-alpha.12", "1.0.0-alpha.12", true),
                 arguments("1.0.0-alpha.12.x-yz", "1.0.0-alpha.12.x-yz", true),
                 arguments("1.0.0-alpha.12.x-yz+sha.1", "1.0.0-alpha.12.x-yz+sha.sdhbfu3", true),
-                arguments("1.0.0+sha.1", "1.0.0+sha.2", true)
-        );
+                arguments("1.0.0+sha.1", "1.0.0+sha.2", true));
     }
 
     @ParameterizedTest
     @MethodSource("equal")
     void shouldCheckIsVersionEqual(String version1, String version2, boolean expected) {
-        //given
+        // given
         Semver semver = new Semver(version1);
 
-        //when
+        // when
         boolean equalTo = semver.isEqualTo(version2);
 
-        //then
+        // then
         assertThat(equalTo).isEqualTo(expected);
     }
 
@@ -684,24 +693,22 @@ class SemverTest {
                 arguments("1.0.0", "1.0.2", false),
                 arguments("1.0.0+sha.1", "1.0.0+sha.2", false),
                 arguments("1.0.0-alpha.12+sha.1", "1.0.0-alpha.12+sha.2", false),
-
                 arguments("1.0.0", "1.0.0", true),
                 arguments("1.0.0-alpha.12", "1.0.0-alpha.12", true),
                 arguments("1.0.0-alpha.12.x-yz", "1.0.0-alpha.12.x-yz", true),
-                arguments("1.0.0-alpha.12.x-yz+sha.1", "1.0.0-alpha.12.x-yz+sha.1", true)
-        );
+                arguments("1.0.0-alpha.12.x-yz+sha.1", "1.0.0-alpha.12.x-yz+sha.1", true));
     }
 
     @ParameterizedTest
     @MethodSource("diff")
     void shouldReturnDiff(String version, VersionDiff expected) {
-        //given
+        // given
         Semver sem = new Semver("1.2.3-beta.4+sha899d8g79f87");
 
-        //when
+        // when
         VersionDiff diff = sem.diff(version);
 
-        //then
+        // then
         assertThat(diff).isEqualTo(expected);
     }
 
@@ -714,45 +721,44 @@ class SemverTest {
                 arguments("1.2.3-alpha.4+sha32iddfu987", PRE_RELEASE),
                 arguments("1.2.3-beta.5+sha32iddfu987", PRE_RELEASE),
                 arguments("1.2.3-beta.4+sha32iddfu987", BUILD),
-                arguments("1.2.3-beta.4+sha899-d8g79f87", BUILD)
-        );
+                arguments("1.2.3-beta.4+sha899-d8g79f87", BUILD));
     }
 
     @Test
     void shouldReturnNullWhenCannotParseVersion() {
-        //when
+        // when
         Semver version = Semver.parse("1.0");
 
-        //then
+        // then
         assertThat(version).isNull();
     }
 
     @Test
     void shouldReturnSemverWhenCanParseVersion() {
-        //when
+        // when
         Semver version = Semver.parse("1.0.0");
 
-        //then
+        // then
         assertThat(version).isInstanceOf(Semver.class);
     }
 
     @Test
     void shouldTreatParsedVersionsAsEqual() {
-        //when
+        // when
         Semver parsed = Semver.parse("1.0.0-rc.1");
         Semver parsedWithV = Semver.parse("v1.0.0-rc.1");
 
-        //then
+        // then
         assertThat(parsed).isEqualTo(parsedWithV);
     }
 
     @ParameterizedTest
     @MethodSource("coerceVersions")
     void shouldTryCoerceVersion(String versionToCoerce, String expected) {
-        //when
+        // when
         Semver semver = coerce(versionToCoerce);
 
-        //then
+        // then
         assertThat(semver.toString()).isEqualTo(expected);
     }
 
@@ -809,37 +815,36 @@ class SemverTest {
                 arguments(format(Locale.ROOT, "1.%s.3.4", repeat("2", 17)), "1.0.0"),
                 arguments(format(Locale.ROOT, "1.2.%s.4", repeat("3", 17)), "1.2.0"),
                 arguments("10", "10.0.0"),
-                arguments("3.2.1-rc.2", "3.2.1-rc.2")
-        );
+                arguments("3.2.1-rc.2", "3.2.1-rc.2"));
     }
 
     @Test
     void shouldReturnNullWhenTryCoerceNullableVersion() {
-        //when
+        // when
         Semver semver = coerce(null);
 
-        //then
+        // then
         assertThat(semver).isNull();
     }
 
     @Test
     void shouldReturnNullWhenVersionHasInvalidString() {
-        //given
+        // given
         String invalid = "broken-version";
 
-        //when
+        // when
         Semver semver = coerce(invalid);
 
-        //then
+        // then
         assertThat(semver).isNull();
     }
 
     @Test
     void shouldCreateSemverWithHyphenInBuildSection() {
-        //when
+        // when
         Semver semver = new Semver("1.2.3+123-abc");
 
-        //then
+        // then
         assertThat(semver.getMajor()).isEqualTo(1);
         assertThat(semver.getMinor()).isEqualTo(2);
         assertThat(semver.getPatch()).isEqualTo(3);
@@ -849,10 +854,10 @@ class SemverTest {
 
     @Test
     void shouldCreateSemverWithHyphenInPreReleaseSection() {
-        //when
+        // when
         Semver semver = new Semver("1.2.3-alpha-abc+123");
 
-        //then
+        // then
         assertThat(semver.getMajor()).isEqualTo(1);
         assertThat(semver.getMinor()).isEqualTo(2);
         assertThat(semver.getPatch()).isEqualTo(3);
@@ -862,25 +867,25 @@ class SemverTest {
 
     @Test
     void shouldSemverBeSymmetric() {
-        //given
+        // given
         Semver version1 = new Semver("2.10.1");
-        Semver version2 = coerce("2.99");
+        Semver version2 = new Semver("2.99.0");
 
-        //when
+        // when
         boolean equalTo1 = version1.isEqualTo(version2);
         boolean equalTo2 = version2.isEqualTo(version1);
 
-        //then
+        // then
         assertThat(equalTo1).isEqualTo(equalTo2);
     }
 
     @Test
     void shouldComparatorsBeSymmetric() {
-        //given
-        Semver version1 = coerce("2.0");
+        // given
+        Semver version1 = new Semver("2.0.0");
         Semver version2 = new Semver("2.0.0");
 
-        //when
+        // when
         boolean greaterThan1 = version1.isGreaterThan(version2);
         boolean greaterThan2 = version2.isGreaterThan(version1);
 
@@ -890,7 +895,7 @@ class SemverTest {
         boolean lowerThan1 = version1.isLowerThan(version2);
         boolean lowerThan2 = version2.isLowerThan(version1);
 
-        //then
+        // then
         assertThat(greaterThan1).isEqualTo(greaterThan2);
 
         assertThat(equivalentTo1).isEqualTo(equivalentTo2);
@@ -901,26 +906,26 @@ class SemverTest {
     @ParameterizedTest
     @MethodSource({"getParametersNoIncludePrerelease", "getParametersCommon"})
     void shouldCheckSatisfiesNoIncludePrerelease(String version, String range, boolean expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         boolean satisfies = semver.satisfies(range);
 
-        //then
+        // then
         assertThat(satisfies).isEqualTo(expected);
     }
 
     @ParameterizedTest
     @MethodSource({"getParametersIncludePrerelease", "getParametersCommon"})
     void shouldCheckSatisfiesIncludePrerelease(String version, String range, boolean expected) {
-        //given
+        // given
         Semver semver = new Semver(version);
 
-        //when
+        // when
         boolean satisfies = semver.satisfies(range, true);
 
-        //then
+        // then
         assertThat(satisfies).isEqualTo(expected);
     }
 
@@ -964,54 +969,52 @@ class SemverTest {
                 // AND ranges
                 arguments("2.0.1-alpha", ">2.0.0 <3.0.0", false),
 
-                //Complex ranges
-                arguments("2.3.4-alpha", "1.x || ^2", false)
-        );
+                // Complex ranges
+                arguments("2.3.4-alpha", "1.x || ^2", false));
     }
 
     static Stream<Arguments> getParametersIncludePrerelease() {
-            return Stream.of(
-                    // Minor versions:
-                    arguments("1.0.0-beta", "1.0", true),
+        return Stream.of(
+                // Minor versions:
+                arguments("1.0.0-beta", "1.0", true),
 
-                    // Major versions:
-                    arguments("1.0.0-beta", "1", true),
+                // Major versions:
+                arguments("1.0.0-beta", "1", true),
 
-                    // Hyphen ranges:
-                    arguments("1.2.4-beta+exp.sha.5114f85", "1.2.3 - 2.3.4", true),
-                    arguments("1.2.4-beta+exp.sha.5114f85", "1.2.3-beta - 2.3.4", true),
+                // Hyphen ranges:
+                arguments("1.2.4-beta+exp.sha.5114f85", "1.2.3 - 2.3.4", true),
+                arguments("1.2.4-beta+exp.sha.5114f85", "1.2.3-beta - 2.3.4", true),
 
-                    // Wildcard ranges:
-                    arguments("1.0.0-beta", "*", true),
-                    arguments("3.1.5-beta", "3.1.x", true),
-                    arguments("3.1.5-beta+exp.sha.5114f85", "3.1.x", true),
+                // Wildcard ranges:
+                arguments("1.0.0-beta", "*", true),
+                arguments("3.1.5-beta", "3.1.x", true),
+                arguments("3.1.5-beta+exp.sha.5114f85", "3.1.x", true),
 
-                    // Tilde ranges
-                    arguments("1.2.4-beta", "~1.2.3", true),
-                    arguments("1.2.3-beta", "~1.2.3", false),
-                    arguments("1.2.4-beta+exp.sha.5114f85", "~1.2.3", true),
-                    arguments("1.2.7-beta", "~1.2", true),
-                    arguments("1.2.3-beta", "~1.2", true),
-                    arguments("1.2.7-beta", "~1", true),
-                    arguments("1.2.3-beta", "~1", true),
+                // Tilde ranges
+                arguments("1.2.4-beta", "~1.2.3", true),
+                arguments("1.2.3-beta", "~1.2.3", false),
+                arguments("1.2.4-beta+exp.sha.5114f85", "~1.2.3", true),
+                arguments("1.2.7-beta", "~1.2", true),
+                arguments("1.2.3-beta", "~1.2", true),
+                arguments("1.2.7-beta", "~1", true),
+                arguments("1.2.3-beta", "~1", true),
 
-                    // Caret ranges
-                    arguments("1.5.4-beta", "^1.2.3", true),
-                    arguments("0.2.4-beta", "^0.2.3", true),
-                    arguments("0.0.3-beta", "^0.0.3", false),
-                    arguments("0.0.0-beta", "^0.0.0", false),
+                // Caret ranges
+                arguments("1.5.4-beta", "^1.2.3", true),
+                arguments("0.2.4-beta", "^0.2.3", true),
+                arguments("0.0.3-beta", "^0.0.3", false),
+                arguments("0.0.0-beta", "^0.0.0", false),
 
-                    // Comparators
-                    arguments("3.3.1-alpha", ">=2.4.x", true),
-                    arguments("3.3.1-alpha", ">=3.3.x", true),
-                    arguments("3.0.0-alpha", "<3.0.0", true),
+                // Comparators
+                arguments("3.3.1-alpha", ">=2.4.x", true),
+                arguments("3.3.1-alpha", ">=3.3.x", true),
+                arguments("3.0.0-alpha", "<3.0.0", true),
 
-                    // AND ranges
-                    arguments("2.0.1-alpha", ">2.0.0 <3.0.0", true),
+                // AND ranges
+                arguments("2.0.1-alpha", ">2.0.0 <3.0.0", true),
 
-                    //Complex ranges
-                    arguments("2.3.4-alpha", "1.x || ^2", true)
-            );
+                // Complex ranges
+                arguments("2.3.4-alpha", "1.x || ^2", true));
     }
 
     static Stream<Arguments> getParametersCommon() {
@@ -1112,7 +1115,6 @@ class SemverTest {
                 arguments("1.9.9", "=2.0.0", false),
                 arguments("1.9.9", "=2.0", false),
                 arguments("1.9.9", "=2", false),
-
                 arguments("2.0.1", ">2.0.0", true),
                 arguments("3.0.0", ">2.0.0", true),
                 arguments("3.0.0", ">2.0", true),
@@ -1124,7 +1126,6 @@ class SemverTest {
                 arguments("2.0.1", ">2", false),
                 arguments("2.0.0", ">2", false),
                 arguments("1.9.9", ">2", false),
-
                 arguments("1.9.9", "<2.0.0", true),
                 arguments("1.9.9", "<2.0", true),
                 arguments("1.9.9", "<2", true),
@@ -1137,7 +1138,6 @@ class SemverTest {
                 arguments("2.0.0", "<2", false),
                 arguments("2.0.1", "<2", false),
                 arguments("3.0.0", "<2", false),
-
                 arguments("2.0.0", ">=2.0.0", true),
                 arguments("2.0.1", ">=2.0.0", true),
                 arguments("3.0.0", ">=2.0.0", true),
@@ -1149,7 +1149,6 @@ class SemverTest {
                 arguments("1.9.9", ">=2.0.0", false),
                 arguments("1.9.9", ">=2.0", false),
                 arguments("1.9.9", ">=2", false),
-
                 arguments("3.3.1", ">=2.4.x", true),
                 arguments("1.9.9", "<=2.0.0", true),
                 arguments("2.0.0", "<=2.0.0", true),
@@ -1165,13 +1164,11 @@ class SemverTest {
                 arguments("3.0.0", "<=2.0.0", false),
                 arguments("3.0.0", "<=2.0", false),
                 arguments("3.0.0", "<=2", false),
-
                 arguments("3.0.0-alpha", ">3.0.0", false),
 
                 // AND ranges:
                 arguments("2.0.1", ">2.0.0 <3.0.0", true),
                 arguments("2.0.1", ">2.0 <3.0", false),
-
                 arguments("1.2.0", "1.2 <1.2.8", true),
                 arguments("1.2.7", "1.2 <1.2.8", true),
                 arguments("1.1.9", "1.2 <1.2.8", false),
@@ -1188,7 +1185,6 @@ class SemverTest {
                 arguments("2.0.1", ">1.2.1 <1.2.8 || >2.0.0", true),
                 arguments("1.2.1", ">1.2.1 <1.2.8 || >2.0.0", false),
                 arguments("2.0.0", ">1.2.1 <1.2.8 || >2.0.0", false),
-
                 arguments("1.2.2", ">1.2.1 <1.2.8 || >2.0.0 <3.0.0", true),
                 arguments("1.2.7", ">1.2.1 <1.2.8 || >2.0.0 <3.0.0", true),
                 arguments("2.0.1", ">1.2.1 <1.2.8 || >2.0.0 <3.0.0", true),
@@ -1197,7 +1193,6 @@ class SemverTest {
                 arguments("1.2.8", ">1.2.1 <1.2.8 || >2.0.0 <3.0.0", false),
                 arguments("2.0.0", ">1.2.1 <1.2.8 || >2.0.0 <3.0.0", false),
                 arguments("3.0.0", ">1.2.1 <1.2.8 || >2.0.0 <3.0.0", false),
-
                 arguments("1.2.2", "1.2.2 - 1.2.7 || 2.0.1 - 2.9.9", true),
                 arguments("1.2.7", "1.2.2 - 1.2.7 || 2.0.1 - 2.9.9", true),
                 arguments("2.0.1", "1.2.2 - 1.2.7 || 2.0.1 - 2.9.9", true),
@@ -1206,7 +1201,6 @@ class SemverTest {
                 arguments("1.2.8", "1.2.2 - 1.2.7 || 2.0.1 - 2.9.9", false),
                 arguments("2.0.0", "1.2.2 - 1.2.7 || 2.0.1 - 2.9.9", false),
                 arguments("3.0.0", "1.2.2 - 1.2.7 || 2.0.1 - 2.9.9", false),
-
                 arguments("1.2.0", "1.2 <1.2.8 || >2.0.0", true),
                 arguments("1.2.7", "1.2 <1.2.8 || >2.0.0", true),
                 arguments("1.2.7", "1.2 <1.2.8 || >2.0.0", true),
@@ -1215,107 +1209,95 @@ class SemverTest {
                 arguments("1.2.9", "1.2 <1.2.8 || >2.0.0", false),
                 arguments("2.0.0", "1.2 <1.2.8 || >2.0.0", false),
                 arguments("2.6.9", "<= 2.6.8 || >= 3.0.0 <= 3.0.1", false),
-
                 arguments("1.2.2", " ~> 1.2.3 ", false),
                 arguments("1.2.3", " ~> 1.2.3 ", true),
                 arguments("1.2.4", " ~> 1.2.3 ", true),
                 arguments("1.3.0", " ~> 1.2.3 ", false),
                 arguments("2.2.0", " ~> 2.2 ", true),
                 arguments("2.3.0", " ~> 2.2 ", false),
-
                 arguments("0.0.9", "[1.0,2.0]", false),
                 arguments("1.0.0", "[1.0,2.0]", true),
                 arguments("2.0.0", "[1.0,2.0]", true),
                 arguments("1.5.6", "[1.0,2.0]", true),
                 arguments("2.0.1", "[1.0,2.0]", false),
-
                 arguments("2.0.0", "[1.0,2.0[", false),
                 arguments("1.0.0", "[1.0,2.0[", true),
                 arguments("0.0.9", "[1.0,2.0[", false),
                 arguments("2.0.1", "[1.0,2.0[", false),
                 arguments("1.5.6", "[1.0,2.0[", true),
-
                 arguments("1.0.0", "]1.0,2.0]", false),
                 arguments("1.5.6", "]1.0,2.0]", true),
                 arguments("2.0.0", "]1.0,2.0]", true),
                 arguments("2.0.1", "]1.0,2.0]", false),
-
                 arguments("1.0.0", "]1.0,2.0[", false),
                 arguments("2.0.0", "]1.0,2.0[", false),
                 arguments("1.5.6", "]1.0,2.0[", true),
-
                 arguments("1.0.0", "[1.0,)", true),
                 arguments("1.0.100", "[1.0,)", true),
                 arguments("100.0.1", "[1.0,)", true),
                 arguments("0.0.9", "[1.0,)", false),
-
                 arguments("1.0.0", "]1.0,)", false),
                 arguments("1.0.100", "]1.0,)", true),
                 arguments("100.0.1", "]1.0,)", true),
                 arguments("0.0.9", "]1.0,)", false),
-
                 arguments("2.0.0", "(,2.0]", true),
                 arguments("2.0.10", "(,2.0]", false),
                 arguments("3.0.10", "(,2.0]", false),
                 arguments("1.0.100", "(,2.0]", true),
                 arguments("0.0.9", "(,2.0]", true),
-
                 arguments("2.0.0", "(,2.0[", false),
                 arguments("2.0.10", "(,2.0[", false),
                 arguments("3.0.10", "(,2.0[", false),
                 arguments("1.0.100", "(,2.0[", true),
                 arguments("0.0.9", "(,2.0[", true),
-
                 arguments("1.2.0", "1.2.+", true),
                 arguments("1.1.90", "1.2.+", false),
                 arguments("1.3.0", "1.2.+", false),
                 arguments("1.2.90", "1.2.+", true),
-
                 arguments("1.0.0", "1.+", true),
                 arguments("2.0.0", "1.+", false),
                 arguments("2.0.1", "1.+", false),
                 arguments("1.3.0", "1.+", true),
                 arguments("1.2.90", "1.+", true),
-
                 arguments("0.0.0", "latest.integration", true));
     }
 
     @Test
     void shouldReturnTrueIfVersionIsValid() {
-        //given
+        // given
         String version = "1.2.3-alpha.1+sha.1234";
 
-        //when
+        // when
         boolean valid = isValid(version);
 
-        //then
+        // then
         assertThat(valid).isTrue();
     }
 
     @Test
     void shouldReturnFalseIfVersionIsValid() {
-        //given
+        // given
         String version = "1.2alpha.1+sha.1234";
 
-        //when
+        // when
         boolean valid = isValid(version);
 
-        //then
+        // then
         assertThat(valid).isFalse();
     }
 
     @Test
     void shouldSatisfiesVersionUsingExpression() {
-        //given
+        // given
         Semver semver = new Semver("1.1.1");
 
-        RangesExpression expression = RangesExpression.less("1.0.0")
-                .or(RangesExpression.greater("10.0.1").or(RangesExpression.equal("1.1.1")));
+        RangeExpression expression = RangeExpression.less("1.0.0")
+                .or(RangeExpression.greater("10.0.1").or(RangeExpression.eq("1.1.1")));
 
-        //when
+        // when
         boolean satisfies = semver.satisfies(expression);
 
-        //then
+        // then
         assertThat(satisfies).isTrue();
     }
 
@@ -1325,65 +1307,51 @@ class SemverTest {
 
     @Test
     void shouldBuildDefaultSemverUsingBuilder() {
-        //given
+        // given
         Semver.Builder builder = new Semver.Builder();
 
-        //when
-        Semver semver = builder.toSemver();
+        // when
+        Semver semver = builder.build();
 
-        //then
+        // then
         assertThat(semver.getVersion()).isEqualTo("0.0.0");
     }
 
     @Test
     void shouldBuildBasicSemver() {
-        //when
-        Semver semver = Semver.of(1, 2, 3);
+        // when
+        Semver semver = Semver.create(1, 2, 3);
 
-        //then
+        // then
         assertThat(semver.getVersion()).isEqualTo("1.2.3");
     }
 
     @Test
-    void shouldUseCustomFormatterInBuilder() {
-        //given
-        Semver.Builder builder = Semver.of()
-                .withMajor(1)
-                .withMinor(2)
-                .withPatch(3)
-                .withPreRelease("alpha")
-                .withBuild("5bb76cdb");
-
-        //when
-        String version = builder.toVersion(semver -> {
-            String preRelease = join("&", semver.getPreRelease());
-            String build = join("&", semver.getBuild());
-            return format(Locale.ROOT, "%d:%d:%d|%s*%s", semver.getMajor(), semver.getMinor(), semver.getPatch(), preRelease, build);
-        });
-
-        //then
-        assertThat(version).isEqualTo("1:2:3|alpha*5bb76cdb");
-    }
-
-    @Test
     void shouldUseCustomFormatter() {
-        //given
-        Semver actualSemver = Semver.of()
+        // given
+        Semver actualSemver = Semver.builder()
                 .withMajor(1)
                 .withMinor(2)
                 .withPatch(3)
                 .withPreRelease("alpha")
                 .withBuild("5bb76cdb")
-                .toSemver();
+                .build();
 
-        //when
+        // when
         String version = actualSemver.format(semver -> {
             String preRelease = join("&", semver.getPreRelease());
             String build = join("&", semver.getBuild());
-            return format(Locale.ROOT, "%d:%d:%d|%s*%s", semver.getMajor(), semver.getMinor(), semver.getPatch(), preRelease, build);
+            return format(
+                    Locale.ROOT,
+                    "%d:%d:%d|%s*%s",
+                    semver.getMajor(),
+                    semver.getMinor(),
+                    semver.getPatch(),
+                    preRelease,
+                    build);
         });
 
-        //then
+        // then
         assertThat(version).isEqualTo("1:2:3|alpha*5bb76cdb");
     }
 }

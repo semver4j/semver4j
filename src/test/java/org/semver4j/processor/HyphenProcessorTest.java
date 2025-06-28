@@ -1,13 +1,12 @@
 package org.semver4j.processor;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+
+import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class HyphenProcessorTest {
     private final HyphenProcessor hyphenProcessor = new HyphenProcessor();
@@ -28,8 +27,7 @@ class HyphenProcessorTest {
                 arguments("1.2.3-alpha - 2.1.4-beta", ">=1.2.3-alpha <=2.1.4-beta"),
                 arguments("1.2 - 2.1.4-beta", ">=1.2.0 <=2.1.4-beta"),
                 arguments("1.2.3-alpha - 2.1.4", ">=1.2.3-alpha <2.1.5"),
-                arguments("INVALID", null)
-        );
+                arguments("INVALID", null));
     }
 
     @ParameterizedTest
@@ -48,7 +46,6 @@ class HyphenProcessorTest {
                 arguments("1.2.3-alpha - 2.1.4-beta", ">=1.2.3-alpha <=2.1.4-beta"),
                 arguments("1.2 - 2.1.4-beta", ">=1.2.0-0 <=2.1.4-beta"),
                 arguments("1.2.3-alpha - 2.1.4", ">=1.2.3-alpha <2.1.5-0"),
-                arguments("INVALID", null)
-        );
+                arguments("INVALID", null));
     }
 }

@@ -1,13 +1,12 @@
 package org.semver4j.processor;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+
+import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class CaretProcessorTest {
     private final CaretProcessor processor = new CaretProcessor();
@@ -27,8 +26,7 @@ class CaretProcessorTest {
                 arguments("^0.0.1", ">=0.0.1 <0.0.2"),
                 arguments("^1.0.0-alpha.1", ">=1.0.0-alpha.1 <2.0.0"),
                 arguments("^0.1.1-alpha.1", ">=0.1.1-alpha.1 <0.2.0"),
-                arguments("INVALID", null)
-        );
+                arguments("INVALID", null));
     }
 
     @ParameterizedTest
@@ -46,7 +44,6 @@ class CaretProcessorTest {
                 arguments("^0.0.1", ">=0.0.1 <0.0.2-0"),
                 arguments("^1.0.0-alpha.1", ">=1.0.0-alpha.1 <2.0.0-0"),
                 arguments("^0.1.1-alpha.1", ">=0.1.1-alpha.1 <0.2.0-0"),
-                arguments("INVALID", null)
-        );
+                arguments("INVALID", null));
     }
 }

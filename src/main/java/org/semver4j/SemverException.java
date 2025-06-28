@@ -1,11 +1,6 @@
 package org.semver4j;
 
-import org.jspecify.annotations.NullMarked;
-
-/**
- * Thrown when something went wrong with parsing semver string.
- */
-@NullMarked
+/** Thrown when something went wrong with parsing semver string. */
 public class SemverException extends IllegalArgumentException {
     public SemverException(String message) {
         super(message);
