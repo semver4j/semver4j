@@ -80,6 +80,12 @@ public class VersionParser {
      *
      * <p>Includes {@code major}, {@code minor}, and {@code pat h} version numbers, as well as optional
      * {@code pre-release} identifiers and {@code build} metadata.
+     *
+     * @param major the major version number
+     * @param minor the minor version number
+     * @param patch the patch version number
+     * @param preRelease the list of pre-release identifiers, if any
+     * @param build the list of build metadata identifiers, if any
      */
     public record Version(int major, int minor, int patch, List<String> preRelease, List<String> build) {
         Version(int major, int minor, int patch) {
