@@ -47,6 +47,15 @@ public class Range {
     }
 
     /**
+     * Returns the operator used in this range constraint.
+     *
+     * @return the operator component of this range.
+     */
+    public RangeOperator getRangeOperator() {
+        return rangeOperator;
+    }
+
+    /**
      * Returns the version used in this range constraint.
      *
      * @return the version component of this range

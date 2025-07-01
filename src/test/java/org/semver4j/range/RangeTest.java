@@ -107,6 +107,17 @@ class RangeTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @Test
+    void shouldReturnTheOperator() {
+        // given
+        Range rangeWithEq = new Range("1.2.3", EQ);
+        Range rangeWithGte = new Range("1.2.3", GTE);
+
+        // when/then
+        assertThat(rangeWithEq.getRangeOperator()).isEqualTo(EQ);
+        assertThat(rangeWithGte.getRangeOperator()).isEqualTo(GTE);
+    }
+
     static Stream<Arguments> prettyPrint() {
         return Stream.of(
                 arguments("=1.2.3", EQ),
