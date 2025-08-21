@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set Java ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
@@ -47,7 +47,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set Java 23
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 23
