@@ -5,6 +5,8 @@ import static java.util.Collections.emptyList;
 import static java.util.Objects.hash;
 import static java.util.Objects.requireNonNull;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -23,7 +25,10 @@ import org.semver4j.range.RangeListFactory;
  * <p>This implementation adheres to the SemVer 2.0.0 specification and provides a comprehensive API for version
  * parsing, comparison, manipulation, and validation.
  */
-public class Semver implements Comparable<Semver> {
+public class Semver implements Comparable<Semver>, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     /** A constant {@link Semver} version object representing {@code 0.0.0}. */
     public static final Semver ZERO = new Semver("0.0.0");
 
