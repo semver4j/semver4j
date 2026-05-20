@@ -12,6 +12,10 @@ import static org.semver4j.Semver.VersionDiff.*;
 import static org.semver4j.Semver.coerce;
 import static org.semver4j.Semver.isValid;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
@@ -1353,5 +1357,26 @@ class SemverTest {
 
         // then
         assertThat(version).isEqualTo("1:2:3|alpha*5bb76cdb");
+    }
+
+    @Test
+    void shouldSerializeAndDeserialize() throws Exception {
+        // given
+        Semver semver = Semver.create(1, 2, 3);
+
+        // when
+        final var serialized = new ByteArrayOutputStream();
+        try (final var oos = new ObjectOutputStream(serialized)) {
+            oos.writeObject(semver);
+        }
+        final Semver deserializedSemver;
+        try (final var ois = new ObjectInputStream(new ByteArrayInputStream(serialized.toByteArray()))) {
+            deserializedSemver = (Semver) ois.readObject();
+        }
+
+        // then
+        assertThat(deserializedSemver)
+                .isNotSameAs(semver)
+                .isEqualTo(semver);
     }
 }
