@@ -16,6 +16,7 @@ jobs:
         java:
           - 17
           - 21
+          - 25
       fail-fast: false
     steps:
       - name: Check out code
