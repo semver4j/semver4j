@@ -32,7 +32,7 @@ jobs:
           cache: maven
 
       - name: Build with Apache Maven
-        run: ./mvnw clean verify -Dgpg.skip
+        run: ./mvnw --batch-mode clean verify -Dgpg.skip
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v6
@@ -57,4 +57,4 @@ jobs:
       - name: Compile with Apache Maven and NullAway
         run: |
           cp -v .mvn/nullaway.jvm.config .mvn/jvm.config
-          ./mvnw clean compile -P nullaway
+          ./mvnw --batch-mode clean compile -P nullaway
