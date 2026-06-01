@@ -55,6 +55,4 @@ jobs:
           cache: maven
 
       - name: Compile with Apache Maven and NullAway
-        run: |
-          cp -v .mvn/nullaway.jvm.config .mvn/jvm.config
-          ./mvnw --batch-mode clean compile -P nullaway
+        run: ./mvnw --batch-mode clean compile -P nullaway
