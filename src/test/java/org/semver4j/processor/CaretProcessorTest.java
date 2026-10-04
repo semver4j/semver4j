@@ -19,6 +19,10 @@ class CaretProcessorTest {
 
     static Stream<Arguments> shouldParseCaretRange() {
         return Stream.of(
+                arguments("^0", ">=0.0.0 <1.0.0"),
+                arguments("^0.x", ">=0.0.0 <1.0.0"),
+                arguments("^0.0", ">=0.0.0 <0.1.0"),
+                arguments("^0.0.x", ">=0.0.0 <0.1.0"),
                 arguments("^1", ">=1.0.0 <2.0.0"),
                 arguments("^1.1", ">=1.1.0 <2.0.0"),
                 arguments("^1.1.1", ">=1.1.1 <2.0.0"),
@@ -37,6 +41,10 @@ class CaretProcessorTest {
 
     static Stream<Arguments> shouldParseCaretRangeIncludePrerelease() {
         return Stream.of(
+                arguments("^0", ">=0.0.0-0 <1.0.0-0"),
+                arguments("^0.x", ">=0.0.0-0 <1.0.0-0"),
+                arguments("^0.0", ">=0.0.0-0 <0.1.0-0"),
+                arguments("^0.0.x", ">=0.0.0-0 <0.1.0-0"),
                 arguments("^1", ">=1.0.0-0 <2.0.0-0"),
                 arguments("^1.1", ">=1.1.0-0 <2.0.0-0"),
                 arguments("^1.1.1", ">=1.1.1 <2.0.0-0"),

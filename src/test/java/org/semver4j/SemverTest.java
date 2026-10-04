@@ -1023,6 +1023,18 @@ class SemverTest {
 
     static Stream<Arguments> getParametersCommon() {
         return Stream.of(
+                // Caret ranges with omitted or wildcard components after zero:
+                arguments("0.0.0", "^0", true),
+                arguments("0.5.0", "^0", true),
+                arguments("1.0.0", "^0", false),
+                arguments("0.5.0", "^0.x", true),
+                arguments("1.0.0", "^0.x", false),
+                arguments("0.0.0", "^0.0", true),
+                arguments("0.0.5", "^0.0", true),
+                arguments("0.1.0", "^0.0", false),
+                arguments("0.0.5", "^0.0.x", true),
+                arguments("0.1.0", "^0.0.x", false),
+
                 // Fully-qualified versions:
                 arguments("1.0.0", "1.0.0", true),
                 arguments("1.0.0", "=1.0.0", true),
