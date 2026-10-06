@@ -92,9 +92,9 @@ public class CaretProcessor implements Processor {
             from = format(Locale.ROOT, "%s%d.%d.%d", GTE.asString(), major, minor, patch);
         }
 
-        if (major > 0) {
+        if (major > 0 || isX(minor)) {
             to = format(Locale.ROOT, "%s%d.0.0%s", LT.asString(), (major + 1), preReleaseMarker);
-        } else if (minor > 0) {
+        } else if (minor > 0 || isX(patch)) {
             to = format(Locale.ROOT, "%s%d.%d.0%s", LT.asString(), major, (minor + 1), preReleaseMarker);
         } else {
             to = format(Locale.ROOT, "%s%d.%d.%d%s", LT.asString(), major, minor, (patch + 1), preReleaseMarker);
