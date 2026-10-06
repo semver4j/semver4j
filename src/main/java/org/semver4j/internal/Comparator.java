@@ -2,6 +2,7 @@ package org.semver4j.internal;
 
 import static java.lang.Math.max;
 
+import java.math.BigInteger;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 import org.semver4j.Semver;
@@ -88,11 +89,10 @@ public class Comparator {
 
     private static int compareIdentifiers(String a, String b) {
         // Only attempt to parse fully numeric string sequences so that we can avoid
-        // raising a costly exception
+        // raising a costly exception. BigInteger is used because the SemVer spec
+        // places no upper bound on numeric identifiers, so they can exceed a long.
         if (a.matches(ALL_DIGITS) && b.matches(ALL_DIGITS)) {
-            long aAsLong = Long.parseLong(a);
-            long bAsLong = Long.parseLong(b);
-            return Long.compare(aAsLong, bAsLong);
+            return new BigInteger(a).compareTo(new BigInteger(b));
         }
 
         if (a.matches(CONTAINS_DIGITS) && b.matches(CONTAINS_DIGITS)) {

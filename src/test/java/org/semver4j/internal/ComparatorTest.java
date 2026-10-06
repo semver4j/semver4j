@@ -20,4 +20,19 @@ class ComparatorTest {
         assertThat(cmp1).isNegative();
         assertThat(cmp2).isPositive();
     }
+
+    @Test
+    void shouldCompareNumericIdentifiersLargerThanLong() {
+        // given: spec-valid numeric identifiers, one above Long.MAX_VALUE
+        Semver semver1 = new Semver("1.0.0-9223372036854775808");
+        Semver semver2 = new Semver("1.0.0-1");
+
+        // when
+        int cmp1 = Comparator.compareTo(semver1, semver2);
+        int cmp2 = Comparator.compareTo(semver2, semver1);
+
+        // then: numeric identifiers are compared numerically
+        assertThat(cmp1).isPositive();
+        assertThat(cmp2).isNegative();
+    }
 }
