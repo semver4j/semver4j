@@ -2,6 +2,7 @@ package org.semver4j.range;
 
 import static java.util.regex.Pattern.compile;
 import static org.semver4j.internal.Tokenizers.COMPARATOR;
+import static org.semver4j.internal.Tokenizers.HYPHEN;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.semver4j.processor.Processor;
 class RangeExpressionParser {
     private static final Pattern SPLITTER_PATTERN = compile("(\\s*)([<>]?=?)\\s*");
     private static final Pattern COMPARATOR_PATTERN = compile(COMPARATOR);
+    private static final Pattern HYPHEN_PATTERN = compile(HYPHEN);
 
     private final Processor processor;
 
@@ -64,6 +66,21 @@ class RangeExpressionParser {
     }
 
     private String applyProcessors(String range, boolean includePreRelease) {
+        String[] comparators = range.split("\\s+");
+        if (comparators.length == 1 || HYPHEN_PATTERN.matcher(range).matches()) {
+            return processComparator(range, includePreRelease);
+        }
+
+        // each comparator of a section is processed on its own, otherwise a processor that
+        // only understands some of them (e.g. "^1.2.3 <1.5.0") silently drops the others
+        List<String> processed = new ArrayList<>();
+        for (String comparator : comparators) {
+            processed.add(processComparator(comparator, includePreRelease));
+        }
+        return String.join(" ", processed);
+    }
+
+    private String processComparator(String range, boolean includePreRelease) {
         return Optional.ofNullable(processor.process(range, includePreRelease)).orElse(range);
     }
 

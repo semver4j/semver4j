@@ -7,6 +7,7 @@ import static org.semver4j.range.Range.RangeOperator.GTE;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.semver4j.Semver;
 import org.semver4j.processor.IvyProcessor;
@@ -73,5 +74,35 @@ class RangeListFactoryTest {
         // then
         assertThat(ivyRangeList.toString()).hasToString(">=1.0.0 and <=2.0.0");
         assertThat(nonIvyRangeList.get()).isEmpty();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "'^1.2.3 <1.5.0', '>=1.2.3 and <2.0.0 and <1.5.0'",
+        "'>=1.2.0 ~1.4.0', '>=1.2.0 and >=1.4.0 and <1.5.0'",
+        "'<=2.1 ~2.0.2', '<2.2.0 and >=2.0.2 and <2.1.0'",
+        "'~1.2 >1.0.0', '>=1.2.0 and <1.3.0 and >1.0.0'"
+    })
+    void shouldKeepEveryComparatorOfASection(String range, String expected) {
+        // given
+        RangeList rangeList = RangeListFactory.create(range);
+
+        // when
+        String parsed = rangeList.toString();
+
+        // then
+        assertThat(parsed).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldNotBeSatisfiedOutsideCaretRangeCombinedWithComparator() {
+        // given
+        RangeList rangeList = RangeListFactory.create("^1.2.3 <1.5.0");
+
+        // when
+        boolean satisfiedBy = rangeList.isSatisfiedBy(new Semver("0.0.1"));
+
+        // then
+        assertThat(satisfiedBy).isFalse();
     }
 }
