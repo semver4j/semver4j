@@ -100,6 +100,14 @@ public class XRangeProcessor implements Processor {
             compareSign = EMPTY;
         }
 
+        if (isX(major)) {
+            // * or >=* matches every version, >* and <* match none
+            if (compareSign.equals(GT.asString()) || compareSign.equals(LT.asString())) {
+                return NO_VERSION_RANGE;
+            }
+            return allRange(!preReleaseSuffix.isEmpty());
+        }
+
         if (!compareSign.isEmpty() && isX(patch)) {
             return processWithComparisonOperator(compareSign, major, minor, preReleaseSuffix);
         } else if (isX(minor)) {
