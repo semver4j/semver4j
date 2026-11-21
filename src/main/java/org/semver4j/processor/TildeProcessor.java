@@ -86,6 +86,10 @@ public class TildeProcessor implements Processor {
         String explicitPreRelease = matcher.group(4);
         String preRelease = includePreRelease ? LOWEST_PRE_RELEASE : EMPTY;
 
+        if (isX(major)) {
+            return allRange(includePreRelease);
+        }
+
         return createVersionRange(major, minor, patch, explicitPreRelease, preRelease);
     }
 

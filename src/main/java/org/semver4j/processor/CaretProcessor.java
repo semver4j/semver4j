@@ -78,6 +78,10 @@ public class CaretProcessor implements Processor {
         int patch = parseIntWithXSupport(matcher.group(3));
         String preRelease = matcher.group(4);
 
+        if (isX(major)) {
+            return allRange(includePreRelease);
+        }
+
         String from;
         String to;
         String preReleaseMarker = includePreRelease ? LOWEST_PRE_RELEASE : EMPTY;

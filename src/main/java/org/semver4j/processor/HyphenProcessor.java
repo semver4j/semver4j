@@ -69,6 +69,18 @@ public class HyphenProcessor implements Processor {
             return null;
         }
 
+        // A wildcard major (*, x or X) on either side means that side has no bound
+        boolean noFrom = isX(parseIntWithXSupport(matcher.group(2)));
+        boolean noTo = isX(parseIntWithXSupport(matcher.group(8)));
+
+        if (noFrom && noTo) {
+            return allRange(includePreRelease);
+        } else if (noFrom) {
+            return getRangeTo(matcher, includePreRelease);
+        } else if (noTo) {
+            return getRangeFrom(matcher, includePreRelease);
+        }
+
         String rangeFrom = getRangeFrom(matcher, includePreRelease);
         String rangeTo = getRangeTo(matcher, includePreRelease);
 
