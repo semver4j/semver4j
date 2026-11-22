@@ -35,4 +35,26 @@ class ComparatorTest {
         assertThat(cmp1).isPositive();
         assertThat(cmp2).isNegative();
     }
+
+    @Test
+    void shouldCompareAlphanumericIdentifiersLexically() {
+        assertThat(Comparator.compareTo(new Semver("1.2.3-r2"), new Semver("1.2.3-r100")))
+                .isPositive();
+        assertThat(Comparator.compareTo(new Semver("1.2.3-r100"), new Semver("1.2.3-r2")))
+                .isNegative();
+        assertThat(Comparator.compareTo(new Semver("1.2.3-r9223372036854775808"), new Semver("1.2.3-r9")))
+                .isPositive();
+    }
+
+    @Test
+    void shouldOrderNumericIdentifiersBeforeAlphanumericIdentifiers() {
+        assertThat(Comparator.compareTo(new Semver("1.2.3-9"), new Semver("1.2.3--a")))
+                .isNegative();
+    }
+
+    @Test
+    void shouldComparePrereleaseLengthsWithoutTreatingIdentifiersAsMissing() {
+        assertThat(Comparator.compareTo(new Semver("1.2.3-undef"), new Semver("1.2.3-undef.1")))
+                .isNegative();
+    }
 }
