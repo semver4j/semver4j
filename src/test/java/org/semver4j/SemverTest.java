@@ -936,6 +936,7 @@ class SemverTest {
     static Stream<Arguments> getParametersNoIncludePrerelease() {
         return Stream.of(
                 arguments("1.3.4-alpha", "||", false),
+                arguments("1.2.3-alpha", "1.2.3 - *", false),
                 // Minor versions:
                 arguments("1.0.0-beta", "1.0", false),
 
@@ -981,6 +982,10 @@ class SemverTest {
     static Stream<Arguments> getParametersIncludePrerelease() {
         return Stream.of(
                 arguments("1.3.4-alpha", "||", true),
+                // Hyphen ranges include pre-releases of the lower bound:
+                arguments("1.2.3-alpha", "1.2.3 - *", true),
+                arguments("1.2.3-alpha", "1.2.3 - 2.0.0", true),
+                arguments("1.2.3-alpha", "1.2.3+build - 2", true),
                 // Minor versions:
                 arguments("1.0.0-beta", "1.0", true),
 

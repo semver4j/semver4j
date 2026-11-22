@@ -30,10 +30,10 @@ import org.jspecify.annotations.Nullable;
  * <p>If the {@code includePreRelease} flag is set to {@code true}, this processor will translate:
  *
  * <ul>
- *   <li>{@code 1.2.3 - 2.3.4} to {@code ≥1.2.3 <2.3.5-0} - including pre-release versions
+ *   <li>{@code 1.2.3 - 2.3.4} to {@code ≥1.2.3-0 <2.3.5-0} - including pre-release versions on both sides
  *   <li>{@code 1.2 - 2.3.4} to {@code ≥1.2.0-0 <2.3.5-0} - including pre-release versions on both sides
- *   <li>{@code 1.2.3 - 2.3} to {@code ≥1.2.3 <2.4.0-0} - including pre-release versions before 2.4.0
- *   <li>{@code 1.2.3 - 2} to {@code ≥1.2.3 <3.0.0-0} - including pre-release versions before 3.0.0
+ *   <li>{@code 1.2.3 - 2.3} to {@code ≥1.2.3-0 <2.4.0-0} - including pre-release versions on both sides
+ *   <li>{@code 1.2.3 - 2} to {@code ≥1.2.3-0 <3.0.0-0} - including pre-release versions on both sides
  * </ul>
  *
  * <p>Special cases:
@@ -99,8 +99,11 @@ public class HyphenProcessor implements Processor {
             return format(Locale.ROOT, "%s%d.0.0%s", GTE.asString(), fromMajor, preRelease);
         } else if (isX(fromPatch)) {
             return format(Locale.ROOT, "%s%d.%d.0%s", GTE.asString(), fromMajor, fromMinor, preRelease);
-        } else {
+        } else if (isNotBlank(matcher.group(5))) {
             return format(Locale.ROOT, "%s%s", GTE.asString(), from);
+        } else {
+            // Like npm, use the lowest pre-release so e.g. 1.2.3-alpha matches 1.2.3 - 2.0.0
+            return format(Locale.ROOT, "%s%d.%d.%d%s", GTE.asString(), fromMajor, fromMinor, fromPatch, preRelease);
         }
     }
 
