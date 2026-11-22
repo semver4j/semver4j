@@ -936,6 +936,7 @@ class SemverTest {
     static Stream<Arguments> getParametersNoIncludePrerelease() {
         return Stream.of(
                 arguments("1.3.4-alpha", "||", false),
+                arguments("1.2.3-alpha", "1.2.3 - *", false),
                 // Minor versions:
                 arguments("1.0.0-beta", "1.0", false),
 
@@ -981,6 +982,10 @@ class SemverTest {
     static Stream<Arguments> getParametersIncludePrerelease() {
         return Stream.of(
                 arguments("1.3.4-alpha", "||", true),
+                // Hyphen ranges include pre-releases of the lower bound:
+                arguments("1.2.3-alpha", "1.2.3 - *", true),
+                arguments("1.2.3-alpha", "1.2.3 - 2.0.0", true),
+                arguments("1.2.3-alpha", "1.2.3+build - 2", true),
                 // Minor versions:
                 arguments("1.0.0-beta", "1.0", true),
 
@@ -1032,6 +1037,15 @@ class SemverTest {
                 arguments("2.0.0", "^1.2 ^1", false),
                 arguments("1.2.5", "^1.2 <1.3", true),
                 arguments("1.4.2", "^1.2 <1.3", false),
+                // Wildcard major versions:
+                arguments("1.2.3", "x", true),
+                arguments("1.2.3", "*.*.*", true),
+                arguments("1.2.3", ">=*", true),
+                arguments("1.2.3", "^*", true),
+                arguments("1.2.3", "~x", true),
+                arguments("1.9.7", "1.0.0 - x", true),
+                arguments("1.2.3", ">*", false),
+                arguments("1.2.3", "<x", false),
                 // Caret ranges with omitted or wildcard components after zero:
                 arguments("0.0.0", "^0", true),
                 arguments("0.5.0", "^0", true),

@@ -4,6 +4,7 @@ import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static org.semver4j.processor.Processor.LOWEST_PRE_RELEASE;
 import static org.semver4j.range.Range.RangeOperator.GTE;
+import static org.semver4j.range.Range.RangeOperator.LT;
 
 import java.util.Locale;
 import org.jspecify.annotations.Nullable;
@@ -18,6 +19,8 @@ public class Utils {
     public static final String SPACE = " ";
     public static final String ALL_RANGE = format(Locale.ROOT, "%s%s", GTE.asString(), Semver.ZERO);
     public static final String ALL_RANGE_WITH_PRERELEASE = GTE.asString() + Semver.ZERO + LOWEST_PRE_RELEASE;
+    /** Range that matches no version, used for {@code >*} and {@code <*}. */
+    public static final String NO_VERSION_RANGE = LT.asString() + Semver.ZERO + LOWEST_PRE_RELEASE;
 
     /** Marker value used to represent an {@code x}, {@code *}, or {@code +} in version ranges. */
     private static final int X_RANGE_MARKER = -1;
@@ -46,6 +49,16 @@ public class Utils {
      */
     public static boolean isX(int id) {
         return id == X_RANGE_MARKER;
+    }
+
+    /**
+     * Returns the range that matches every version.
+     *
+     * @param includePreRelease whether pre-release versions should match too
+     * @return {@link #ALL_RANGE_WITH_PRERELEASE} if {@code includePreRelease} is {@code true}, else {@link #ALL_RANGE}
+     */
+    public static String allRange(boolean includePreRelease) {
+        return includePreRelease ? ALL_RANGE_WITH_PRERELEASE : ALL_RANGE;
     }
 
     /**

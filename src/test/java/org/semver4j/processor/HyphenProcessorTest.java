@@ -27,6 +27,10 @@ class HyphenProcessorTest {
                 arguments("1.2.3-alpha - 2.1.4-beta", ">=1.2.3-alpha <=2.1.4-beta"),
                 arguments("1.2 - 2.1.4-beta", ">=1.2.0 <=2.1.4-beta"),
                 arguments("1.2.3-alpha - 2.1.4", ">=1.2.3-alpha <2.1.5"),
+                arguments("1.2.3 - *", ">=1.2.3"),
+                arguments("1.2 - x.x", ">=1.2.0"),
+                arguments("* - 2.3.4", "<2.3.5"),
+                arguments("x - X", ">=0.0.0"),
                 arguments("INVALID", null));
     }
 
@@ -38,14 +42,18 @@ class HyphenProcessorTest {
 
     static Stream<Arguments> shouldParseHyphenRangeIncludePrerelease() {
         return Stream.of(
-                arguments("1.2.3 - 2.3.4", ">=1.2.3 <2.3.5-0"),
+                arguments("1.2.3 - 2.3.4", ">=1.2.3-0 <2.3.5-0"),
                 arguments("1.2 - 2.3.4", ">=1.2.0-0 <2.3.5-0"),
                 arguments("1 - 2.3.4", ">=1.0.0-0 <2.3.5-0"),
-                arguments("1.2.3 - 2.3", ">=1.2.3 <2.4.0-0"),
-                arguments("1.2.3 - 2", ">=1.2.3 <3.0.0-0"),
+                arguments("1.2.3 - 2.3", ">=1.2.3-0 <2.4.0-0"),
+                arguments("1.2.3 - 2", ">=1.2.3-0 <3.0.0-0"),
                 arguments("1.2.3-alpha - 2.1.4-beta", ">=1.2.3-alpha <=2.1.4-beta"),
                 arguments("1.2 - 2.1.4-beta", ">=1.2.0-0 <=2.1.4-beta"),
                 arguments("1.2.3-alpha - 2.1.4", ">=1.2.3-alpha <2.1.5-0"),
+                arguments("1.2.3 - *", ">=1.2.3-0"),
+                arguments("1.2.3+build - *", ">=1.2.3-0"),
+                arguments("* - 2.3.4", "<2.3.5-0"),
+                arguments("x - X", ">=0.0.0-0"),
                 arguments("INVALID", null));
     }
 }
