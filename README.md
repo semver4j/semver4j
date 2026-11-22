@@ -71,7 +71,7 @@ Add the dependency to your project:
 <dependency>
     <groupId>org.semver4j</groupId>
     <artifactId>semver4j</artifactId>
-    <version>6.0.0</version>
+    <version>6.1.0</version>
 </dependency>
 ```
 
@@ -80,13 +80,13 @@ Add the dependency to your project:
 Groovy
 
 ```groovy
-implementation 'org.semver4j:semver4j:6.0.0'
+implementation 'org.semver4j:semver4j:6.1.0'
 ```
 
 Kotlin
 
 ```kotlin
-implementation("org.semver4j:semver4j:6.0.0")
+implementation("org.semver4j:semver4j:6.1.0")
 ```
 
 ### Version `v1.0.x`
