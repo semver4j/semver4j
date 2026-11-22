@@ -56,3 +56,19 @@ jobs:
 
       - name: Compile with Apache Maven and NullAway
         run: ./mvnw --batch-mode clean compile -P nullaway
+
+  ci-required:
+    name: CI required
+    needs: [build, nullaway]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check required jobs
+        env:
+          BUILD_RESULT: ${{ needs.build.result }}
+          NULLAWAY_RESULT: ${{ needs.nullaway.result }}
+        run: |
+          if [[ "$BUILD_RESULT" != "success" || "$NULLAWAY_RESULT" != "success" ]]; then
+            echo "Required jobs did not all pass: build=$BUILD_RESULT, nullaway=$NULLAWAY_RESULT"
+            exit 1
+          fi
