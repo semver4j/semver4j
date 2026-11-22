@@ -5,7 +5,6 @@ import static org.semver4j.internal.Tokenizers.COMPARATOR;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.semver4j.processor.CompositeProcessor;
@@ -46,7 +45,7 @@ class RangeExpressionParser {
     RangeList parse(String range, boolean includePreRelease) {
         RangeList rangeList = new RangeList(includePreRelease);
         range = range.trim();
-        String[] rangeSections = range.split("\\|\\|");
+        String[] rangeSections = range.split("\\|\\|", -1);
         for (String rangeSection : rangeSections) {
             rangeSection = stripWhitespacesBetweenRangeOperator(rangeSection);
             rangeSection = applyProcessors(rangeSection, includePreRelease);
@@ -64,7 +63,21 @@ class RangeExpressionParser {
     }
 
     private String applyProcessors(String range, boolean includePreRelease) {
-        return Optional.ofNullable(processor.process(range, includePreRelease)).orElse(range);
+        String processed = processor.process(range, includePreRelease);
+        if (processed != null) {
+            return processed;
+        }
+
+        // A range section may contain several AND-ed expressions, each with its own shorthand.
+        StringBuilder expanded = new StringBuilder();
+        for (String token : range.split("\\s+")) {
+            if (expanded.length() > 0) {
+                expanded.append(' ');
+            }
+            String processedToken = processor.process(token, includePreRelease);
+            expanded.append(processedToken != null ? processedToken : token);
+        }
+        return expanded.toString();
     }
 
     private static List<Range> addRanges(String range) {

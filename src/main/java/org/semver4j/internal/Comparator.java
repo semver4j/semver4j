@@ -1,10 +1,7 @@
 package org.semver4j.internal;
 
-import static java.lang.Math.max;
-
 import java.math.BigInteger;
 import java.util.List;
-import org.jspecify.annotations.Nullable;
 import org.semver4j.Semver;
 
 /**
@@ -13,11 +10,6 @@ import org.semver4j.Semver;
  */
 public class Comparator {
     private static final String ALL_DIGITS = "^\\d+$";
-    private static final String CONTAINS_DIGITS = ".*\\d.*";
-    private static final String TRAILING_DIGITS_EXTRACT = "(?<=\\D)(?=\\d)";
-    private static final String LEADING_DIGITS_EXTRACT = "(?<=\\d)(?=\\D)";
-
-    private static final String UNDEFINED_MARKER = "undef";
 
     /** Private constructor to prevent instantiation of this utility class. */
     private Comparator() {}
@@ -61,82 +53,29 @@ public class Comparator {
             return 0;
         }
 
-        int maxElements =
-                max(version.getPreRelease().size(), other.getPreRelease().size());
-
-        int i = 0;
-        do {
-            String a = getString(i, version.getPreRelease());
-            String b = getString(i, other.getPreRelease());
-
-            i++;
-
-            if (a.equals(UNDEFINED_MARKER) && b.equals(UNDEFINED_MARKER)) {
-                return 0;
-            } else if (b.equals(UNDEFINED_MARKER)) {
-                return 1;
-            } else if (a.equals(UNDEFINED_MARKER)) {
-                return -1;
-            } else if (a.equals(b)) {
-                continue;
+        List<String> identifiers = version.getPreRelease();
+        List<String> otherIdentifiers = other.getPreRelease();
+        for (int i = 0; i < Math.min(identifiers.size(), otherIdentifiers.size()); i++) {
+            int result = compareIdentifiers(identifiers.get(i), otherIdentifiers.get(i));
+            if (result != 0) {
+                return result;
             }
-
-            return compareIdentifiers(a, b);
-        } while (maxElements > i);
-
-        return 0;
+        }
+        return Integer.compare(identifiers.size(), otherIdentifiers.size());
     }
 
     private static int compareIdentifiers(String a, String b) {
         // Only attempt to parse fully numeric string sequences so that we can avoid
         // raising a costly exception. BigInteger is used because the SemVer spec
         // places no upper bound on numeric identifiers, so they can exceed a long.
-        if (a.matches(ALL_DIGITS) && b.matches(ALL_DIGITS)) {
+        boolean aIsNumeric = a.matches(ALL_DIGITS);
+        boolean bIsNumeric = b.matches(ALL_DIGITS);
+        if (aIsNumeric && bIsNumeric) {
             return new BigInteger(a).compareTo(new BigInteger(b));
         }
-
-        if (a.matches(CONTAINS_DIGITS) && b.matches(CONTAINS_DIGITS)) {
-            Integer alphaNumericComparison = checkAlphanumericPrerelease(a, b);
-            if (alphaNumericComparison != null) {
-                return alphaNumericComparison;
-            }
+        if (aIsNumeric != bIsNumeric) {
+            return aIsNumeric ? -1 : 1;
         }
-
-        int i = a.compareTo(b);
-        if (i > 0) {
-            return 1;
-        } else if (i < 0) {
-            return -1;
-        }
-        return 0;
-    }
-
-    private static @Nullable Integer checkAlphanumericPrerelease(String a, String b) {
-        String[] tokenArrA = a.split(TRAILING_DIGITS_EXTRACT);
-        String[] tokenArrB = b.split(TRAILING_DIGITS_EXTRACT);
-        if (tokenArrA.length != tokenArrB.length) {
-            return tokenArrA.length - tokenArrB.length;
-        }
-        if (tokenArrA[0].equals(tokenArrB[0])) {
-            String[] leadingDigitsArrA = tokenArrA[1].split(LEADING_DIGITS_EXTRACT);
-            String[] leadingDigitsArrB = tokenArrB[1].split(LEADING_DIGITS_EXTRACT);
-            long digitA = Long.parseLong(leadingDigitsArrA[0]);
-            long digitB = Long.parseLong(leadingDigitsArrB[0]);
-            int digitComparison = Long.compare(digitA, digitB);
-            if (digitComparison != 0) {
-                return digitComparison;
-            } else if (leadingDigitsArrA.length != leadingDigitsArrB.length) {
-                return leadingDigitsArrA.length - leadingDigitsArrB.length;
-            } else {
-                return compareIdentifiers(
-                        a.substring(a.indexOf(leadingDigitsArrA[0]) + 1),
-                        b.substring(b.indexOf(leadingDigitsArrB[0]) + 1));
-            }
-        }
-        return null;
-    }
-
-    private static String getString(int i, List<String> list) {
-        return list.size() > i ? list.get(i) : UNDEFINED_MARKER;
+        return Integer.signum(a.compareTo(b));
     }
 }

@@ -507,9 +507,9 @@ class SemverTest {
                 arguments("1.0.0-beta.11", "1.0.0-beta.2", true),
                 arguments("1.0.0-rc.1", "1.0.0-beta.11", true),
                 arguments("1.0.0", "1.0.0-rc.1", true),
-                arguments("1.0.0-rc11", "1.0.0-rc3", true),
-                arguments("1.0.0-beta11", "1.0.0-beta3", true),
-                arguments("1.0.0-rc.3.x-13", "1.0.0-rc.3.x-3", true),
+                arguments("1.0.0-rc11", "1.0.0-rc3", false),
+                arguments("1.0.0-beta11", "1.0.0-beta3", false),
+                arguments("1.0.0-rc.3.x-13", "1.0.0-rc.3.x-3", false),
                 arguments("1.24.1-A-20240111143214", "1.24.1-A-20240111143213", true),
                 arguments("1.0.0-beta1a", "1.0.0-beta1", true),
                 arguments("1.0.0-beta1b", "1.0.0-beta1a", true),
@@ -526,7 +526,7 @@ class SemverTest {
                 arguments("1.0.0-alpha.12", "1.0.0-alpha.12", false),
                 arguments("0.0.1", "5.0.0", false),
                 arguments("1.0.0-alpha.12.ab-c", "1.0.0-alpha.12.ab-c", false),
-                arguments("1.0.0-rc3", "1.0.0-rc11", false),
+                arguments("1.0.0-rc3", "1.0.0-rc11", true),
                 arguments("1.0.0-beta11", "1.0.0-rc3", false),
                 arguments("1.24.1-A-20240111143213", "1.24.1-A-20240111143214", false));
     }
@@ -590,8 +590,8 @@ class SemverTest {
                 arguments("1.0.0-beta.2", "1.0.0-beta.11", true),
                 arguments("1.0.0-beta.11", "1.0.0-rc.1", true),
                 arguments("1.0.0-rc.1", "1.0.0", true),
-                arguments("1.0.0-rc3", "1.0.0-rc11", true),
-                arguments("1.0.0-rc.3.x-3", "1.0.0-rc.3.x-13", true),
+                arguments("1.0.0-rc3", "1.0.0-rc11", false),
+                arguments("1.0.0-rc.3.x-3", "1.0.0-rc.3.x-13", false),
                 arguments("1.0.0-rc.3.x-13", "1.0.0-beta11", false),
                 arguments("1.0.0", "1.0.0", false),
                 arguments("1.0.0-alpha.12", "1.0.0-alpha.12", false),
@@ -935,6 +935,7 @@ class SemverTest {
 
     static Stream<Arguments> getParametersNoIncludePrerelease() {
         return Stream.of(
+                arguments("1.3.4-alpha", "||", false),
                 // Minor versions:
                 arguments("1.0.0-beta", "1.0", false),
 
@@ -979,6 +980,7 @@ class SemverTest {
 
     static Stream<Arguments> getParametersIncludePrerelease() {
         return Stream.of(
+                arguments("1.3.4-alpha", "||", true),
                 // Minor versions:
                 arguments("1.0.0-beta", "1.0", true),
 
@@ -1023,6 +1025,13 @@ class SemverTest {
 
     static Stream<Arguments> getParametersCommon() {
         return Stream.of(
+                arguments("1.3.4", "||", true),
+                arguments("1.3.4", "1.2.3 ||", true),
+                arguments("1.3.4", "|| 1.2.3", true),
+                arguments("1.4.2", "^1.2 ^1", true),
+                arguments("2.0.0", "^1.2 ^1", false),
+                arguments("1.2.5", "^1.2 <1.3", true),
+                arguments("1.4.2", "^1.2 <1.3", false),
                 // Caret ranges with omitted or wildcard components after zero:
                 arguments("0.0.0", "^0", true),
                 arguments("0.5.0", "^0", true),
