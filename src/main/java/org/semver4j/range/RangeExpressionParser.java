@@ -16,7 +16,7 @@ import org.semver4j.processor.Processor;
  * operations.
  */
 class RangeExpressionParser {
-    private static final Pattern SPLITTER_PATTERN = compile("(\\s*)([<>]?=?)\\s*");
+    private static final Pattern SPLITTER_PATTERN = compile("(\\s*)(~>?|\\^|[<>]?=?)\\s*");
     private static final Pattern COMPARATOR_PATTERN = compile(COMPARATOR);
 
     private final Processor processor;

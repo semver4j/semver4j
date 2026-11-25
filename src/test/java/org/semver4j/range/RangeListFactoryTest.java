@@ -7,6 +7,7 @@ import static org.semver4j.range.Range.RangeOperator.GTE;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.semver4j.Semver;
 import org.semver4j.processor.IvyProcessor;
@@ -59,6 +60,46 @@ class RangeListFactoryTest {
 
         // then
         assertThat(range).isEqualTo("(>=14.14.20 and <15.0.0) or (>=16.0.0 and <17.0.0)");
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "^1.2.0 <1.5.0, >=1.2.0 and <2.0.0 and <1.5.0",
+        "<1.5.0 ^1.2.0, <1.5.0 and >=1.2.0 and <2.0.0",
+        "~1.2.0 >=1.2.5, >=1.2.0 and <1.3.0 and >=1.2.5",
+        "^1.2 ^1, >=1.2.0 and <2.0.0 and >=1.0.0 and <2.0.0",
+        "~>1.2 1.x, >=1.2.0 and <1.3.0 and >=1.0.0 and <2.0.0",
+        "^ 1.2.0 < 1.5.0, >=1.2.0 and <2.0.0 and <1.5.0",
+        "~> 1.2.0  >=1.2.5, >=1.2.0 and <1.3.0 and >=1.2.5",
+    })
+    void shouldKeepCaretAndTildeNextToOtherComparators(String range, String expected) {
+        // given
+        RangeList rangeList = RangeListFactory.create(range);
+
+        // when
+        String actual = rangeList.toString();
+
+        // then
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "^1.2.0 <1.5.0, 1.4.9, true",
+        "^1.2.0 <1.5.0, 0.5.0, false",
+        "^1.2.0 >=1.2.5, 5.0.0, false",
+        "~1.2.0 >=1.2.5, 1.3.0, false",
+        "~ 1.2.0 >=1.2.5, 1.2.6, true",
+    })
+    void shouldSatisfyEveryComparatorInTheSet(String range, String version, boolean expected) {
+        // given
+        RangeList rangeList = RangeListFactory.create(range);
+
+        // when
+        boolean satisfiedBy = rangeList.isSatisfiedBy(new Semver(version));
+
+        // then
+        assertThat(satisfiedBy).isEqualTo(expected);
     }
 
     @Test
