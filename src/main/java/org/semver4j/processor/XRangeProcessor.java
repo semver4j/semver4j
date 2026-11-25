@@ -61,7 +61,7 @@ public class XRangeProcessor implements Processor {
      *
      * @param range the version range string to process
      * @param includePreRelease whether to include pre-release versions in the range
-     * @return the processed range string if the input contains valid X-Range expressions, or {@code null} if this
+     * @return the processed range string if the input contains only valid X-Range expressions, or {@code null} if this
      *     processor cannot handle the input
      */
     @Override
@@ -72,13 +72,11 @@ public class XRangeProcessor implements Processor {
         List<String> processedRanges = new ArrayList<>();
         for (String rangeVersion : rangeVersions) {
             String processedRange = processRangeVersion(rangeVersion, preReleaseSuffix);
-            if (processedRange != null) {
-                processedRanges.add(processedRange);
+            if (processedRange == null) {
+                // Another shorthand (e.g. ^1.2) must not be dropped from the set
+                return null;
             }
-        }
-
-        if (processedRanges.isEmpty()) {
-            return null;
+            processedRanges.add(processedRange);
         }
 
         return join(SPACE, processedRanges);
